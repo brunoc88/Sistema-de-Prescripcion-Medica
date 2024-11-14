@@ -1,2 +1,33 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# Coverage directory for code coverage reports
+coverage/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+
+# IDE configuration files
+.vscode/
+.idea/
+
+# Package-lock file (optional, you can keep it if you want deterministic installs)
+package-lock.json
+
+# Temporary files
+*.pid
+*.seed
+*.pid.lock
