@@ -4,7 +4,7 @@ const routerObra = express.Router();
 
 routerObra.post('/alta',obraSocialController.altaObraSocial)
 
-routerObra.patch('/baja/:id',obraSocialController.borrarObraSocial)
+routerObra.patch('/baja/:id',obraSocialController.bajarObraSocial)
 
 
 

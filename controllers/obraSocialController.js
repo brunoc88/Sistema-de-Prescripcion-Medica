@@ -31,22 +31,22 @@ exports.altaObraSocial = async (req, res) => {
 exports.altaObraSocial = async (req, res) => {
     try {
         // Asignamos el objeto completo de req.body a una variable
-        const obraNueva = req.body;
+        const data = req.body;
 
         // Validamos que los campos necesarios no sean nulos ni vacíos
-        if (!obraNueva.nombre || !obraNueva.plan) {
-            return res.status(400).json({ message: 'Los campos nombre y plan son obligatorios' });
+        if (!data.nombre) {
+            return res.status(400).json({ message: 'El campo nombre es obligatorios' });
         }
 
         // Buscamos si el plan ya existe
-        const buscarPlan = await ObraSocial.findOne({ where: { plan: obraNueva.plan } });
+        const buscarPlan = await ObraSocial.findOne({ where: { nombre: data.nombre } });
         //si ya es verdad que existe entonces devuelve un 400
         if (buscarPlan) {
-            return res.status(400).json({ message: 'Ya existe una obra social con ese plan' });
+            return res.status(400).json({ message: 'Ya existe una obra social con ese nombre!' });
         }
 
         // Si todo está bien, creamos la nueva obra social pasando todo el objeto directamente
-        const nuevaObraSocial = await ObraSocial.create(obraNueva);
+        const nuevaObraSocial = await ObraSocial.create(data);
 
         res.status(201).json({ message: 'Obra Social creada exitosamente', obraSocial: nuevaObraSocial });
     } catch (error) {
@@ -56,7 +56,7 @@ exports.altaObraSocial = async (req, res) => {
 };
 
 
-exports.borrarObraSocial = async (req, res) => {
+exports.bajarObraSocial = async (req, res) => {
     try {
         const { id } = req.params; // Suponiendo que el ID se pasa como parámetro de la URL
 

@@ -3,7 +3,8 @@ const db = require('./config/db');//solicito db
 const app = express();
 const path = require('path');
 const routerObra = require('./routers/obraSocialRoutes');
-
+const routerPlan = require('./routers/planRouter');
+const routerPaciente = require('./routers/pacienteRouter');
 
 
 // Configurar Pug como motor de vistas
@@ -23,6 +24,8 @@ app.get('/',(req,res)=>{
 
 //rutas
 app.use('/obra',routerObra);
+app.use('/plan',routerPlan);
+app.use('/paciente',routerPaciente);
 
 // Sincronizar base de datos
 db.sync()

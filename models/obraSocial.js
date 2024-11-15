@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const Paciente = require('./paciente');
+const Plan = require('./plan');
+
 
 const ObraSocial = sequelize.define('ObraSocial', {
   id: {
@@ -10,12 +11,8 @@ const ObraSocial = sequelize.define('ObraSocial', {
   },
   nombre: {
     type: DataTypes.STRING,
-    allowNull: false
-  },
-  plan: {
-    type: DataTypes.INTEGER,
     allowNull: false,
-    unique: true
+    unique:true
   },
   estado: {
     type: DataTypes.BOOLEAN,
@@ -27,13 +24,16 @@ const ObraSocial = sequelize.define('ObraSocial', {
   timestamps: false
 });
 
-ObraSocial.hasMany(Paciente,{
-    foreignKey: 'idObra',// Nombre de la columna en Paciente que será la clave foránea
-    sourceKey:'id'// La clave primaria de ObraSocial, que se usará para la relación
+
+ObraSocial.hasMany(Plan,{
+    foreignKey: 'idObra',
+    sourceKey:'id'
 })
-Paciente.belongsTo(ObraSocial,{
-    foreignKey: 'idObra',// Columna en Paciente que tiene la clave foránea
-    targetKey:'id'// La columna de ObraSocial que se utilizará para la relación
+Plan.belongsTo(ObraSocial, {
+  foreignKey: 'idObra',
+  targetKey: 'id'
 })
+
+
 
 module.exports = ObraSocial;
