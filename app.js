@@ -1,11 +1,13 @@
 const express = require('express');//solicito express
-const db = require('./config/db');//solicito db
+const sequelize = require('./config/db');//solicito db
 const app = express();
 const path = require('path');
-const routerObra = require('./routers/obraSocialRoutes');
+const routerObra = require('./routers/obraSocialRouter');
 const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');
-
+const routerEspecialidad = require('./routers/especialidadRouter');
+const routerProfesion = require('./routers/profesionRouter');
+const routerProfesional = require('./routers/profesionalRouter');
 
 // Configurar Pug como motor de vistas
 app.set('view engine', 'pug');
@@ -26,11 +28,15 @@ app.get('/',(req,res)=>{
 app.use('/obra',routerObra);
 app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);
+app.use('/especialidad',routerEspecialidad);
+app.use('/profesion',routerProfesion);
+app.use('/profesional',routerProfesional);
 
 // Sincronizar base de datos
-db.sync()
+sequelize.sync({})
   .then(() => {
     console.log('Base de datos sincronizada');
+    console.log(sequelize.models);
   })
   .catch((err) => {
     console.error('Error al sincronizar la base de datos', err);

@@ -3,7 +3,8 @@ const { Sequelize } = require('sequelize');
 // Configuración de la conexión
 const sequelize = new Sequelize('test', 'root', '', {
     host: 'localhost',
-    dialect: 'mysql' // Puede ser 'mysql', 'postgres', 'sqlite', 'mssql', según el tipo de base de datos
+    dialect: 'mysql', // Puede ser 'mysql', 'postgres', 'sqlite', 'mssql', según el tipo de base de datos
+    logging: console.log, // Activar logs para debugging
 });
 
 // Probar la conexión

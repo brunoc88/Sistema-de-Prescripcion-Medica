@@ -27,7 +27,12 @@ const Paciente = sequelize.define('Paciente', {
   sexo: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  estado:{
+    type:DataTypes.BOOLEAN,
+    defaultValue:true,
+    allowNull:false
+  } 
 }, {
   freezeTableName: true,
   timestamps: false
