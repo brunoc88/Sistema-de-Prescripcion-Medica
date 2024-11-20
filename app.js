@@ -21,7 +21,8 @@ app.set('views', path.join(__dirname, 'views'));
 //procesa los datos enviados del cliente al servidor
 app.use(express.json());//datos enviados como json
 app.use(express.urlencoded({ extended: false }));// datos enviados como formulario
-
+// Configurar la carpeta pública
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/',(req,res)=>{
     res.render('index');

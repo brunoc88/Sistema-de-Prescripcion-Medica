@@ -49,12 +49,10 @@ exports.altaProfesional = async (req, res) => {
         );
         const profesion = await Profesion.findByPk(data.idProfesion);
 
-        if (!profesion) {
-            return res.status(404).json({ message: "Profesión no encontrada" });
-        }
+        
 
         // Asociar especialidades (IDs) a la profesión
-        await profesion.addEspecialidad(data.idEspecialidad);
+        await profesion.addEspecialidads(data.idEspecialidad);
         await nuevoProfesional.addProfesions(data.idProfesion);
         
         res.status(201).json({

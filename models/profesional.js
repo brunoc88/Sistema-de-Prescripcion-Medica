@@ -23,12 +23,12 @@ const Profesional = sequelize.define(
             allowNull:false
         },
         dni:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull:false,
             unique:true
         },
         matricula:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull:false
         },
         estado:{
@@ -41,28 +41,6 @@ const Profesional = sequelize.define(
         timestamps: false
     }
 )
-/*
-
-Profesional.belongsTo(Profesion, {
-    foreignKey: 'idProfesion', // Clave foránea en Profesional
-    targetKey: 'idProfesion'   // Clave primaria en Profesion
-});
-
-
-Profesion.hasMany(Profesional, {
-    foreignKey: 'idProfesion', // Clave foránea en Profesional
-    sourceKey: 'idProfesion'   // Clave primaria en Profesion
-});
-
-Profesional.belongsTo(Especialidad,{
-    foreignKey: 'especialidadId',
-    targetKey: 'idEspecialidad'
-})
-
-Especialidad.hasOne(Profesional,{
-    foreignKey: 'especialidadId',
-    sourceKey: 'idEspecialidad'
-})*/
 
 
 module.exports = Profesional;

@@ -16,7 +16,7 @@ const Paciente = sequelize.define('Paciente', {
     allowNull: false
   },
   dni: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
