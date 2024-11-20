@@ -1,0 +1,21 @@
+doctype html
+html(lang="es")
+  head
+    title Alta Obra Social
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    
+  body
+    h1 Alta Obra Social
+
+    //- Formulario para crear una nueva Obra Social
+    form(action="/obra/alta" method="POST")
+      div
+        label(for="nombre") Nombre de la Obra Social:
+        input(type="text" name="nombre" required placeholder="Ingrese el nombre")
+      div
+        button(type="submit") Crear Obra Social
+
+    //- Mensajes de error (opcional)
+    if message
+      p.error-message #{message}

@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+  h1 Formulario de Plan
+  div(class="row")
+    div(class="col-md-4")
+      form(action="/plan/alta", method="post")
+        div(class="mb-3")
+          label(for="nombre") Nombre:
+          input(type="text", name="nombre", class="form-control")
+        
+        div(class="mb-3")
+          label(for="obra") Obra Social:
+          select(name="idObra", id="idObra", class="form-select")
+            if obraSociales && obraSociales.length > 0
+              each obra in obraSociales
+                option(value=obra.id) #{obra.nombre}
+            else
+              option(value="") No hay obras sociales disponibles
+          
+        button(type="submit", class="btn btn-primary mt-2") Guardar
+
+  h2 Listado de planes creados
+  table.table.table-striped
+    thead
+      tr
+        th Num
+        th Obra Social
+        th Nombre
+        th Estado
+    tbody
+      if planesActivos && planesActivos.length > 0
+        each p in planesActivos
+          tr
+            td #{p.idPlan}
+            td #{p.ObraSocial.nombre}
+            td #{p.nombre}
+            td #{p.estado ? 'Activo' : 'Inactivo'}
+      else
+        tr
+          td(colspan="4") No hay planes creados
+
+

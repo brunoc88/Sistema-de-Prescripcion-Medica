@@ -11,8 +11,7 @@ const Plan = sequelize.define(
     },
     nombre: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+        allowNull: false
     },
     estado: {
         type: DataTypes.BOOLEAN,

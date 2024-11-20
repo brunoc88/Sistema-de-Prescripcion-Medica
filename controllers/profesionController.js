@@ -1,5 +1,14 @@
 const Profesion = require('../models/profesion');
 
+exports.getForm = async(req,res)=>{
+    try {
+        res.status(200).render('profesion/indexProfesion');
+    } catch (error) {
+        return res.status(500).json('Error al solicitar pagina: '+error);
+    }
+}
+
+
 exports.altaProfesion = async (req,res)=>{
     try {
         const data = req.body;

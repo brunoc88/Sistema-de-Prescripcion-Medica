@@ -9,6 +9,9 @@ const routerEspecialidad = require('./routers/especialidadRouter');
 const routerProfesion = require('./routers/profesionRouter');
 const routerProfesional = require('./routers/profesionalRouter');
 
+const profeProsional = require('./models/profesionalProfesion');
+const profeEspecialidad = require('./models/profesionEspecialidad');
+
 // Configurar Pug como motor de vistas
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));

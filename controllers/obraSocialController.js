@@ -48,7 +48,8 @@ exports.altaObraSocial = async (req, res) => {
         // Si todo está bien, creamos la nueva obra social pasando todo el objeto directamente
         const nuevaObraSocial = await ObraSocial.create(data);
 
-        res.status(201).json({ message: 'Obra Social creada exitosamente', obraSocial: nuevaObraSocial });
+        //res.status(201).json({ message: 'Obra Social creada exitosamente', obraSocial: nuevaObraSocial });
+        res.redirect('/obra/indexObra');
     } catch (error) {
         console.error('Error al crear la Obra Social:', error);
         res.status(500).json({ message: 'Error al crear la Obra Social', error });
@@ -77,4 +78,13 @@ exports.bajarObraSocial = async (req, res) => {
     }
 };
 
+
+exports.crearObra = async (req,res)=>{
+    try {
+        res.status(200);
+        res.render('obra/indexObra.pug');
+    } catch (error) {
+        res.status(500).send('Hubo un problema al acceder a la pagina' + error);
+    }
+};
 

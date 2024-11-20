@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const Profesion = require('./profesion');
-const Especialidad = require('./especialidad');
+//const Profesion = require('./profesion');
+//const Especialidad = require('./especialidad');
 
 const Profesional = sequelize.define(
     'Profesional',{
@@ -41,7 +41,7 @@ const Profesional = sequelize.define(
         timestamps: false
     }
 )
-
+/*
 
 Profesional.belongsTo(Profesion, {
     foreignKey: 'idProfesion', // Clave foránea en Profesional
@@ -62,7 +62,7 @@ Profesional.belongsTo(Especialidad,{
 Especialidad.hasOne(Profesional,{
     foreignKey: 'especialidadId',
     sourceKey: 'idEspecialidad'
-})
+})*/
 
 
 module.exports = Profesional;
