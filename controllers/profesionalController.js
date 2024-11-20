@@ -48,6 +48,9 @@ exports.altaProfesional = async (req, res) => {
             domicilio: data.domicilio}
         );
         const profesion = await Profesion.findByPk(data.idProfesion);
+        if(!profesion){
+            return res.status(400).json('No existe profesion!');
+        }
 
         
 
