@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h1 Formulario de Plan
+  div(class="row")
+    div(class="col-md-4")
+      form(action="/plan/editar", method="post")
+        div(class="mb-3")
+          label(for="nombre") Nombre:
+          input(type="text", name="nombre", value=plan.nombre, class="form-control")
+
+        div(class="mb-3")
+          label(for="obra") Obra Social:
+          select(name="idObra", id="idObra", class="form-select")
+            // Si obraSociales no es undefined, itera sobre él
+            if obraSociales && obraSociales.length > 0
+              each obra in obraSociales
+                option(value=obra.id, selected=plan.idObra == obra.id ? 'selected' : '') #{obra.nombre}
+            else
+              option(value="") No hay obras sociales disponibles
+
+        button(type="submit", class="btn btn-primary mt-2") Guardar

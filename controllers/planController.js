@@ -1,5 +1,7 @@
 const Plan = require('../models/plan');
 const Obrasocial = require('../models/obraSocial');
+const { where } = require('sequelize');
+
 
 
 exports.getForm = async(req,res)=>{
@@ -39,6 +41,30 @@ exports.getForm = async(req,res)=>{
    
 }
 
+exports.getFormEditar = async (req,res) => {
+    try {
+        const id = req.params.idPlan;
+        const obraS = await Obrasocial.findAll({where:{estado:true}})
+        const buscarPlan = await Plan.findOne({where:
+            {idPlan:id},
+            include:{
+                model: Obrasocial,
+                attributes:['nombre']
+            }
+        })
+        if(!buscarPlan){
+            return res.status(404).json('no existe el plan');
+        }
+        res.status(200).render('plan/editarPlan',{
+            plan:buscarPlan, obraSociales:obraS});
+       // res.json(buscarPlan);
+    } catch (error) {
+        return res.status(500).json('Error al cargar formulario '+error);
+    }
+}
+
+
+
 exports.altaPlan = async (req, res) => {
     try {
         const data = req.body;
@@ -53,7 +79,7 @@ exports.altaPlan = async (req, res) => {
 
         const nuevoPlan = await Plan.create(data);
         
-        res.redirect('/plan/alta');
+        res.redirect('/plan/index');
     } catch (error) {
         console.error('Error al crear plan:', error);
         res.status(500).json({ message: 'Error al crear plan', error });

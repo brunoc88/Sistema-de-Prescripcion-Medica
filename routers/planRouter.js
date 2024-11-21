@@ -2,7 +2,9 @@ const express = require('express');
 const planController = require('../controllers/planController');
 const routerPlan = express.Router();
 
-routerPlan.get('/alta',planController.getForm);
+routerPlan.get('/index',planController.getForm);
+
+routerPlan.get('/editar/:idPlan',planController.getFormEditar)
 
 routerPlan.post('/alta',planController.altaPlan);
 

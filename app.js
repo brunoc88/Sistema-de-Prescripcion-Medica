@@ -2,6 +2,7 @@ const express = require('express');//solicito express
 const sequelize = require('./config/db');//solicito db
 const app = express();
 const path = require('path');
+const methodOverride = require('method-override');
 const routerObra = require('./routers/obraSocialRouter');
 const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');
@@ -18,6 +19,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 //middlewares para manejo de datos
+// Usar method-override para procesar el campo _method
+app.use(methodOverride('_method'));
+
 //procesa los datos enviados del cliente al servidor
 app.use(express.json());//datos enviados como json
 app.use(express.urlencoded({ extended: false }));// datos enviados como formulario

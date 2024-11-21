@@ -1,36 +1,35 @@
 doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-        script(src="/js/main.js") 
-        
-    body 
-    form(action='/profesional/alta', method='POST')
-        label(for='nombre') Nombre:
-        input(type="text", name="nombre")
-        br
-        label(for='apellido') Apellido:
-        input(type="text", name="apellido")
-        br
-        label(for='domicilio') Domicilio:
-        input(type="text", name="domicilio")
-        br
-        label(for='dni') DNI:
-        input(type="text", name="dni")
-        br
-        label(for='matricula') Matrícula:
-        input(type="text", name="matricula")
-        br
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+     
+    title Document
+  body 
+    form(action='/profesional/alta', method='POST', id='profesionalForm')
+      label(for='nombre') Nombre:
+      input(type="text", name="nombre")
+      br
+      label(for='apellido') Apellido:
+      input(type="text", name="apellido")
+      br
+      label(for='domicilio') Domicilio:
+      input(type="text", name="domicilio")
+      br
+      label(for='dni') DNI:
+      input(type="text", name="dni")
+      br
+      label(for='matricula') Matrícula:
+      input(type="text", name="matricula")
+      br
+      div(id="profesionContainer")
         label(for="profesiones") Profesión:
-        select(name="idProfesion", class="profesion-select") 
+        select(name="idProfesiones" class="profesion-select")
           each pro in profesiones
             option(value=pro.idProfesion) #{pro.nombre}
-        br
-        label(for="especialidades") Especialidad:
-        select(name="idEspecialidad", class="especialidad-select") 
-          each especialidad in especialidades
-            option(value=especialidad.idEspecialidad) #{especialidad.nombre}
-        br
-        button(type='submit') Guardar
+      button(type='button', id='addProfesion') + Añadir otra profesión
+      br
+      div(id="profesionExtraContainer")
+      button(type='submit') Guardar
+      script(src="/js/main.js")
+    
