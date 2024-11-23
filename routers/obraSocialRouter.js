@@ -3,7 +3,7 @@ const obraSocialController = require('../controllers/obraSocialController');
 const routerObra = express.Router();
 
 
-routerObra.get('/alta',obraSocialController.crearObra);
+routerObra.get('/index',obraSocialController.cargarObras);
 
 routerObra.post('/alta',obraSocialController.altaObraSocial)
 

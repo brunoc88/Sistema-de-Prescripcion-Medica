@@ -38,10 +38,10 @@ exports.altaObraSocial = async (req, res) => {
             return res.status(400).json({ message: 'El campo nombre es obligatorios' });
         }
 
-        // Buscamos si el plan ya existe
-        const buscarPlan = await ObraSocial.findOne({ where: { nombre: data.nombre } });
+        // Buscamos si ya existe una obra con ese nombre
+        const buscarObra = await ObraSocial.findOne({ where: { nombre: data.nombre } });
         //si ya es verdad que existe entonces devuelve un 400
-        if (buscarPlan) {
+        if (buscarObra) {
             return res.status(400).json({ message: 'Ya existe una obra social con ese nombre!' });
         }
 
@@ -79,12 +79,15 @@ exports.bajarObraSocial = async (req, res) => {
 };
 
 
-exports.crearObra = async (req,res)=>{
+exports.cargarObras = async (req,res)=>{
     try {
-        res.status(200);
-        res.render('obra/indexObra.pug');
+        const obrasCreadas = await ObraSocial.findAll({where:{estado:true}});
+        if(!obrasCreadas){
+            return res.status(400).json('No se encontraron Obras sociales!');
+        }
+        res.status(200).render('obra/index.pug', {obrasCreadas});
     } catch (error) {
         res.status(500).send('Hubo un problema al acceder a la pagina' + error);
-    }
+    };
 };
 

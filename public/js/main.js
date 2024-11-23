@@ -1,8 +1,12 @@
 const btnAddPro = document.getElementById('addProfesion');
 
-btnAddPro.addEventListener('click', () => {
-    const divProfesiones = document.getElementById("profesionContainer");
 
+
+btnAddPro.addEventListener('click', () => {
+   
+    
+    const divProfesiones = document.getElementById("profesionContainer");
+    
     // Clonar el primer select existente
     const originalSelect = divProfesiones.querySelector('.profesion-select');
     const nuevoSelectProfesion = originalSelect.cloneNode(true);
@@ -15,16 +19,20 @@ btnAddPro.addEventListener('click', () => {
     divProExtra.className = 'profesion-extra';
 
     divProExtra.appendChild(nuevoSelectProfesion);
-
+    
     // Añadir botón eliminar
     const btnEliminar = document.createElement('button');
     btnEliminar.type = 'button';
     btnEliminar.innerText = 'Eliminar';
-    btnEliminar.addEventListener('click', () => divProExtra.remove());
+    btnEliminar.addEventListener('click', () => {
+   
+    divProExtra.remove()});
     divProExtra.appendChild(btnEliminar);
 
     divProfesiones.appendChild(divProExtra);
-});
+    }
+    
+);
 
 
 

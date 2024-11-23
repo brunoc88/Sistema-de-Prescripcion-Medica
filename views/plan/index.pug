@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  h1 Formulario de Plan
+  h1 Crear un Plan
   div(class="row")
     div(class="col-md-4")
       form(action="/plan/alta", method="post")
@@ -38,8 +38,8 @@ block content
             td #{p.nombre}
             td #{p.estado ? 'Activo' : 'Inactivo'}
             td
-              form(action=`/plan/baja/${p.idPlan}`, method="POST")
-                input(type="hidden", name="_method", value="PATCH")
+              form(action=`baja/${p.idPlan}?_method=PATCH`, method='post')
+                
                 button(type="submit", class="btn btn-danger") Baja
       else
         tr

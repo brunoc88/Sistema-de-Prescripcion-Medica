@@ -33,7 +33,7 @@ exports.getForm = async(req,res)=>{
         if(!planesActivos){
             return res.status(400).json('No hay planes!');
         }
-        res.render('plan/indexPlan', { obraSociales,planesActivos});
+        res.render('plan/index', { obraSociales,planesActivos});
         //res.status(200).json(planesActivos);
     } catch (error) {
         return res.status(500).json('Error'+ error);
@@ -87,6 +87,7 @@ exports.altaPlan = async (req, res) => {
 };
 
 exports.bajarPlan = async (req,res) =>{
+    console.log(`Entrando en bajarPlan con idPlan: ${req.params.idPlan}`);
     try{
         const {idPlan} = req.params;
         const buscarPlan = await Plan.findByPk(idPlan)
