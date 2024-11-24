@@ -9,6 +9,13 @@ routerObra.post('/alta',obraSocialController.altaObraSocial)
 
 routerObra.patch('/baja/:id',obraSocialController.bajarObraSocial)
 
+routerObra.patch('/activar/:id',obraSocialController.activarObraSocial)
+
+routerObra.get('/editar/:id',obraSocialController.editarObraSocialGet)
+
+routerObra.patch('/editarEnviar/:id',obraSocialController.editarObraSocialPatch)
+
+
 
 
 module.exports = routerObra;

@@ -49,7 +49,7 @@ exports.altaObraSocial = async (req, res) => {
         const nuevaObraSocial = await ObraSocial.create(data);
 
         //res.status(201).json({ message: 'Obra Social creada exitosamente', obraSocial: nuevaObraSocial });
-        res.redirect('/obra/indexObra');
+        res.redirect('/obra/index');
     } catch (error) {
         console.error('Error al crear la Obra Social:', error);
         res.status(500).json({ message: 'Error al crear la Obra Social', error });
@@ -71,7 +71,8 @@ exports.bajarObraSocial = async (req, res) => {
          // Realizamos el "borrado lógico" cambiando el estado a falso
          await ObraSocial.update({ estado: false }, { where: { id } });
 
-        res.status(200).json({ message: 'Obra Social eliminada lógicamente', obraSocial });
+        //res.status(200).json({ message: 'Obra Social eliminada lógicamente', obraSocial });
+        res.redirect('/obra/index');
     } catch (error) {
         console.error('Error al borrar la Obra Social:', error);
         res.status(500).json({ message: 'Error al borrar la Obra Social', error });
@@ -81,7 +82,7 @@ exports.bajarObraSocial = async (req, res) => {
 
 exports.cargarObras = async (req,res)=>{
     try {
-        const obrasCreadas = await ObraSocial.findAll({where:{estado:true}});
+        const obrasCreadas = await ObraSocial.findAll();
         if(!obrasCreadas){
             return res.status(400).json('No se encontraron Obras sociales!');
         }
@@ -89,5 +90,57 @@ exports.cargarObras = async (req,res)=>{
     } catch (error) {
         res.status(500).send('Hubo un problema al acceder a la pagina' + error);
     };
+};
+
+//para volver a activarla
+exports.activarObraSocial = async(req,res)=>{
+    try{
+        const id = req.params.id;
+    
+        const obraSocial = await ObraSocial.findByPk(id);
+
+        if (!obraSocial) {
+            return res.status(404).json({ message: 'Obra Social no encontrada' });
+        }
+
+         // reactivamos la obra
+        await ObraSocial.update({ estado: true }, { where: { id } });
+
+        //res.status(200).json({ message: 'Obra Social eliminada lógicamente', obraSocial });
+        res.redirect('/obra/index');
+
+    }catch(error){
+        
+        res.status(500).json({ message: 'Error al borrar la Obra Social', error });
+    }
+    
+}
+
+exports.editarObraSocialGet = async (req, res) => {
+    try {
+        const id = req.params.id; // Corregir el acceso al parámetro
+        const obra = await ObraSocial.findByPk(id);
+
+        // Validar si se encontró la obra
+        if (!obra) {
+            return res.status(400).json('No se encontró la obra social');
+        }
+
+        // Renderizar la vista y pasar la obra como contexto
+        res.render('obra/editar',  {obra });
+    } catch (error) {
+        return res.status(500).json('Hubo un problema: ' + error.message);
+    }
+};
+
+exports.editarObraSocialPatch = async (req, res) => {
+    try {
+        const data = req.body; 
+        const id = req.params.id;
+        await ObraSocial.update({ nombre: data.nombre}, { where: { id } });
+        res.redirect('/obra/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un problema: ' + error.message);
+    }
 };
 

@@ -1,10 +1,11 @@
 extends ../layout
 
 block content
+  
   h1 Obras Sociales
 
   h2 Crear Obra Social
-  form(action="/obra/crear", method="POST")
+  form(action="/obra/alta", method="POST")
     div(class="mb-3")
       label(for="nombre") Nombre de la Obra Social:
       input(type="text", name="nombre", class="form-control", required)
@@ -17,6 +18,7 @@ block content
         th ID
         th Nombre
         th Estado
+        th Acciones
     tbody
       if obrasCreadas.length > 0
         each obra in obrasCreadas
@@ -25,8 +27,15 @@ block content
             td #{obra.nombre}
             td #{obra.estado ? 'Activo' : 'Inactivo'}
             td
-              form(action=`/obra/baja/${obra.id}?_method=PATCH`, method='POST')
-                button(type="submit", class="btn btn-danger") Baja
+              div(class="btn-group")
+                form(action=`/obra/editar/${obra.id}`, method="GET")
+                  button(type="submit", class="btn btn-primary mx-2") Editar
+                if obra.estado == 1
+                  form(action=`/obra/baja/${obra.id}?_method=PATCH`, method='POST')
+                    button(type="submit", class="btn btn-danger mx-2") Baja
+                else
+                  form(action=`/obra/activar/${obra.id}?_method=PATCH`, method='POST')
+                    button(type="submit", class="btn btn-success mx-2") Alta
       else
         tr
-          td(colspan="3") No hay obras sociales registradas
+          td(colspan="4") No hay obras sociales registradas
