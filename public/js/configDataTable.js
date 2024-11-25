@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
           previous: "Anterior",
           next: "Siguiente"
         },
-        info: "Mostrando _START_ a _END_ de _TOTAL_ registros"
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        zeroRecords: "No encontrado" // Cambia el mensaje cuando no se encuentran registros
       }
     });
   });

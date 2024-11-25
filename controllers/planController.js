@@ -13,11 +13,8 @@ exports.getForm = async(req,res)=>{
         //obtengo los datos de los planes que esten activos y tambien uso join para asociarlo a la
         //obra social, asi obtengo el nombre de la obra social
         //tanto la obra social como el plan tienen que estar activos
-        const planesActivos = await Plan.findAll({
+        const planes = await Plan.findAll({
             attributes:['nombre','estado','idPlan'],
-            where:{
-                estado:true
-            },
             include:{
                 model: Obrasocial,
                 attributes:['nombre'],
@@ -30,10 +27,10 @@ exports.getForm = async(req,res)=>{
         if(!obraSociales){
             return res.status(400).json('No hay obras sociales cargadas');
         }
-        if(!planesActivos){
+        if(!planes){
             return res.status(400).json('No hay planes!');
         }
-        res.render('plan/index', { obraSociales,planesActivos});
+        res.render('plan/index', { obraSociales,planes});
         //res.status(200).json(planesActivos);
     } catch (error) {
         return res.status(500).json('Error'+ error);
@@ -74,11 +71,12 @@ exports.altaPlan = async (req, res) => {
 
         const buscarPlan = await Plan.findOne({ where: { nombre: data.nombre,idObra: data.idObra }});
         if (buscarPlan) {
-            return res.status(400).json({ message: 'Nombre de plan ya registrado!' });
+            req.message.erroMessage = 'Nombre de plan ya registrado!';
+            return res.status(400).redirect('/plan/index');
         }
 
         const nuevoPlan = await Plan.create(data);
-        
+        req.message.message = `Plan: ${data.nombre} creado con exito!`;
         res.redirect('/plan/index');
     } catch (error) {
         console.error('Error al crear plan:', error);

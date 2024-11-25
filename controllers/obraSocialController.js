@@ -1,32 +1,5 @@
 const ObraSocial = require('../models/obraSocial');
 
-//con sintaxis de desestructuración
-/*
-exports.altaObraSocial = async (req, res) => {
-    try {
-        const { nombre, plan, estado } = req.body;
-         // Validamos que los campos necesarios no sean nulos ni vacíos
-         if (!nombre || !plan) {
-            return res.status(400).json({ message: 'Los campos nombre y plan son obligatorios' });
-        }
-        
-        // Verificamos si ya existe el plan
-        const buscarPlan = await ObraSocial.findOne({ where: { plan: plan } });
-
-        // Si el array tiene registros, el plan ya existe
-        if (buscarPlan) {
-            return res.status(400).json({ message: 'Ya se encuentra registrado ese plan en la obra social' });
-        }
-
-        const nuevaObraSocial = await ObraSocial.create({nombre, plan, estado });
-        res.status(201).json({ message: 'Obra Social creada exitosamente', obraSocial: nuevaObraSocial });
-    } catch (error) {
-        console.error('Error al crear la Obra Social:', error);
-        res.status(500).json({ message: 'Error al crear la Obra Social', error });
-    }
-};*/
-
-//sin sitaxis de desestructuración
 
 exports.altaObraSocial = async (req, res) => {
     try {
@@ -47,11 +20,9 @@ exports.altaObraSocial = async (req, res) => {
       req.session.message = `¡La Obra Social: ${data.nombre} fue creada exitosamente!`;
       return res.status(200).redirect('/obra/index');
     } catch (error) {
-      console.error('Error al crear la Obra Social:', error);
-      req.session.errorMessage = 'Hubo un problema al crear la obra social.';
-      return res.status(500).redirect('/obra/index');
+        return res.status(500).json('Se produjo un error: '+error);
     }
-  };
+};
   
 
 exports.bajarObraSocial = async (req, res) => {
@@ -62,9 +33,7 @@ exports.bajarObraSocial = async (req, res) => {
         const obraSocial = await ObraSocial.findByPk(id);
 
         if (!obraSocial) {
-            //return res.status(404).json({ message: 'Obra Social no encontrada' });
-            req.session.errorMessage = 'Obra Social no encontrada!';
-            return res.status(404).redirect('/obra/index');
+            return res.status(404).json({ message: 'Obra Social no encontrada' });
         }
 
          // Realizamos el "borrado lógico" cambiando el estado a falso
@@ -75,9 +44,8 @@ exports.bajarObraSocial = async (req, res) => {
         return res.status(200).redirect('/obra/index');
     } catch (error) {
         //console.error('Error al borrar la Obra Social:', error);
-        //res.status(500).json({ message: 'Error al borrar la Obra Social', error });
-        req.session.errorMessage = 'Hubo un erro al borrar la obra social!';
-        return res.status(500).redirect('/obra/index');
+        res.status(500).json({ message: 'Error al borrar la Obra Social', error });
+        
     }
 };
 
@@ -90,7 +58,7 @@ exports.cargarObras = async (req,res)=>{
         }
         res.status(200).render('obra/index.pug', {obrasCreadas});
     } catch (error) {
-        res.status(500).send('Hubo un problema al acceder a la pagina' + error);
+        return res.status(500).json('Se produjo un error: '+error);
     };
 };
 
@@ -102,9 +70,7 @@ exports.activarObraSocial = async(req,res)=>{
         const obraSocial = await ObraSocial.findByPk(id);
 
         if (!obraSocial) {
-            //return res.status(404).json({ message: 'Obra Social no encontrada' });
-            req.session.errorMessage = 'Obra social no encontrada!';
-            return res.status(404).redirect('/obra/index');
+            return res.status(404).json({ message: 'Obra Social no encontrada' });
         }
 
          // reactivamos la obra
@@ -115,13 +81,11 @@ exports.activarObraSocial = async(req,res)=>{
         return res.status(200).redirect('/obra/index');
 
     }catch(error){
-        //res.status(500).json({ message: 'Error al borrar la Obra Social', error });
-        req.session.errorMessage = 'Error al borrar la Obra Social';
-        return res.status(500).redirect('/obra/index');
+        res.status(500).json({ message: 'Error al borrar la Obra Social', error });
     }
     
 }
-
+//cargar vista formulario editar
 exports.editarObraSocialGet = async (req, res) => {
     try {
         const id = req.params.id; 
@@ -129,17 +93,13 @@ exports.editarObraSocialGet = async (req, res) => {
 
         // Validar si se encontró la obra
         if (!obra) {
-            //return res.status(400).json('No se encontró la obra social');
-            req.session.errorMessage = 'No se encontró la obra social';
-            return res.status(400).redirect('/obra/index');
+            return res.status(400).json('No se encontró la obra social');
         }
 
         // Renderizar la vista y pasar la obra como contexto
         return res.status(200).render('obra/editar',  {obra });
     } catch (error) {
-        //return res.status(500).json('Hubo un problema: ' + error.message);
-        req.session.errorMessage = 'Hubo un problema';
-        return res.status(500).redirect('/obra/index');
+        return res.status(500).json('Hubo un problema: ' + error.message);
     }
 };
 
@@ -158,9 +118,7 @@ exports.editarObraSocialPatch = async (req, res) => {
         req.session.message = `Obra Social: ${data.nombre} Actualizada con exito!`;
         return res.status(200).redirect('/obra/index');
     } catch (error) {
-        //return res.status(500).json('Hubo un problema: ' + error.message);
-        req.session.errorMessage = 'Hubo un problema';
-        return res.status(500).redirect('/obra/index');
+        return res.status(500).json('Hubo un problema: ' + error.message);
     }
 };
 

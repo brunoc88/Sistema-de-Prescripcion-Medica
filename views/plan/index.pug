@@ -7,7 +7,7 @@ block content
       form(action="/plan/alta", method="post")
         div(class="mb-3")
           label(for="nombre") Nombre:
-          input(type="text", name="nombre", class="form-control")
+          input(type="text", name="nombre", class="form-control" required)
         
         div(class="mb-3")
           label(for="obra") Obra Social:
@@ -21,26 +21,32 @@ block content
         button(type="submit", class="btn btn-primary mt-2") Guardar
 
   h2 Listado de planes creados
-  table.table.table-striped
+  table#myTable.table.table-striped
     thead
       tr
         th Num
+        th Plan
         th Obra Social
-        th Nombre
         th Estado
         th Acciones
     tbody
-      if planesActivos && planesActivos.length > 0
-        each p in planesActivos
+      if planes && planes.length > 0
+        each p in planes
           tr
             td #{p.idPlan}
-            td #{p.ObraSocial.nombre}
             td #{p.nombre}
+            td #{p.ObraSocial.nombre}
             td #{p.estado ? 'Activo' : 'Inactivo'}
             td
-              form(action=`baja/${p.idPlan}?_method=PATCH`, method='post')
-                
-                button(type="submit", class="btn btn-danger") Baja
+              div(class="btn-group")
+              form(action=`/plan/editar/${p.idPlan}`, method="GET")
+                button(type="submit", class="btn btn-primary mx-2") Editar
+              if p.estado == 1
+                form(action=`/plan/baja/${p.idPlan}?_method=PATCH`, method='post')
+                  button(type="submit", class="btn btn-danger") Desactivar
+              else
+                form(action=`/plan/activar/${p.idPlan}?_method=PATCH`, method='POST')
+                  button(type="submit", class="btn btn-success mx-2") Activar
       else
         tr
           td(colspan="5") No hay planes creados
