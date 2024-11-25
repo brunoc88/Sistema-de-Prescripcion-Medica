@@ -17,10 +17,7 @@ exports.getForm = async(req,res)=>{
             attributes:['nombre','estado','idPlan'],
             include:{
                 model: Obrasocial,
-                attributes:['nombre'],
-                where:{
-                    estado:true
-                }
+                attributes:['nombre']
             }
             
         })
