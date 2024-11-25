@@ -2,6 +2,13 @@ extends ../layout
 
 block content
   h1 Crear un Plan
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
   div(class="row")
     div(class="col-md-4")
       form(action="/plan/alta", method="post")
@@ -39,14 +46,15 @@ block content
             td #{p.estado ? 'Activo' : 'Inactivo'}
             td
               div(class="btn-group")
-              form(action=`/plan/editar/${p.idPlan}`, method="GET")
-                button(type="submit", class="btn btn-primary mx-2") Editar
-              if p.estado == 1
-                form(action=`/plan/baja/${p.idPlan}?_method=PATCH`, method='post')
-                  button(type="submit", class="btn btn-danger") Desactivar
-              else
-                form(action=`/plan/activar/${p.idPlan}?_method=PATCH`, method='POST')
-                  button(type="submit", class="btn btn-success mx-2") Activar
+                form(action=`/plan/editar/${p.idPlan}`, method="GET")
+                  button(type="submit", class="btn btn-primary mx-2") Editar
+                
+                if p.estado == 1
+                  form(action=`/plan/baja/${p.idPlan}?_method=PATCH`, method="post")
+                    button(type="submit", class="btn btn-danger") Desactivar
+                else
+                  form(action=`/plan/activar/${p.idPlan}?_method=PATCH`, method="POST")
+                    button(type="submit", class="btn btn-success mx-2") Activar
       else
         tr
           td(colspan="5") No hay planes creados
