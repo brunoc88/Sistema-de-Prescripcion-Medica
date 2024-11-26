@@ -2,21 +2,36 @@ extends ../layout
 
 block content
   h1 Formulario de Plan
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
   div(class="row")
     div(class="col-md-4")
-      form(action="/plan/editar", method="post")
+      form(action=`/plan/editarEnviar/${plan.idPlan}?_method=PUT`, method="post")
         div(class="mb-3")
           label(for="nombre") Nombre:
-          input(type="text", name="nombre", value=plan.nombre, class="form-control")
+          input(type="text", name="nombre", value=plan.nombre, class="form-control" required)
 
         div(class="mb-3")
           label(for="obra") Obra Social:
           select(name="idObra", id="idObra", class="form-select")
-            // Si obraSociales no es undefined, itera sobre él
+            // Verifica si hay obras sociales disponibles
             if obraSociales && obraSociales.length > 0
+              // Primero, mostrar la obra social asociada al plan
               each obra in obraSociales
-                option(value=obra.id, selected=plan.idObra == obra.id ? 'selected' : '') #{obra.nombre}
+                if obra.id == plan.idObra
+                  option(value=obra.id, selected) #{obra.nombre}
+
+              // Luego, mostrar las demás obras sociales
+              each obra in obraSociales
+                if obra.id != plan.idObra
+                  option(value=obra.id) #{obra.nombre}
             else
               option(value="") No hay obras sociales disponibles
 
         button(type="submit", class="btn btn-primary mt-2") Guardar
+        a(href="/plan/index", class="btn btn-secondary mt-2") Volver

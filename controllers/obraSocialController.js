@@ -103,15 +103,17 @@ exports.editarObraSocialGet = async (req, res) => {
     }
 };
 
-exports.editarObraSocialPatch = async (req, res) => {
+exports.actualizarObraSocial = async (req, res) => {
     try {
         const data = req.body; 
         const id = req.params.id;
         const buscarObra = await ObraSocial.findOne({where:{nombre:data.nombre}});
         if(buscarObra){
             //return res.status(400).json('Ya existe esa obra!');
-            req.session.errorMessage = 'Ya existe esa obra!';
-            return res.status(400).redirect('/obra/index');
+            return res.status(409).render('obra/editar',{
+                obra:buscarObra,//le paso los datos de la obra para que se me muestre en la vista recargada
+                errorMessage:'Ya existe esa obra!'
+            });
         }
         await ObraSocial.update({ nombre: data.nombre}, { where: { id } });
         //res.redirect('/obra/index');

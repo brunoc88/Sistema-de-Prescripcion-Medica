@@ -6,7 +6,7 @@ const methodOverride = require('method-override');
 const session = require('express-session');//middleware para mensajes
 
 
-//rutas
+//importamos las rutas
 const routerObra = require('./routers/obraSocialRouter');
 const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');

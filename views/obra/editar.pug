@@ -5,6 +5,14 @@ block content
   h1 Obras Sociales
 
   h2 Editar Obra Social
+
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
   form(action=`/obra/editarEnviar/${obra.id}?_method=PATCH`, method='POST')
     div(class="mb-3")
       label(for="nombre") Nombre de la Obra Social:

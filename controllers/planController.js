@@ -1,6 +1,6 @@
 const Plan = require('../models/plan');
 const Obrasocial = require('../models/obraSocial');
-const { where } = require('sequelize');
+const { where, Op } = require('sequelize');
 
 
 //form de alta
@@ -43,7 +43,7 @@ exports.getFormEditar = async (req,res) => {
             {idPlan:id},
             include:{
                 model: Obrasocial,
-                attributes:['nombre']
+                attributes:['nombre','id']
             }
         })
         if(!buscarPlan){
@@ -56,6 +56,46 @@ exports.getFormEditar = async (req,res) => {
         return res.status(500).json('Error al cargar formulario '+error);
     }
 }
+
+exports.actualizarPlan = async(req, res) => {
+    try {
+        const data = req.body;
+        const id = req.params.idPlan;
+
+        // Consulta que no exista un plan con el mismo nombre en la misma obra social
+        const buscarPlan = await Plan.findOne({
+            where: {
+                nombre: data.nombre, // Nombre del plan
+                idObra: data.idObra  // ID de la obra social
+            },
+            include: {
+                model: Obrasocial,
+                attributes: ['nombre']
+            }
+        });
+         // Obtener todas las obras sociales activas
+         const obraSociales = await Obrasocial.findAll({ where: { estado: true } });
+
+         // Si ya existe un plan con el mismo nombre en la obra social
+         if (buscarPlan) {
+             return res.status(409).render('plan/editarPlan', {
+                 plan: { nombre: data.nombre, idObra: data.idObra },  // Pasar los datos del plan
+                 obraSociales,  // Pasar las obras sociales activas
+                 errorMessage: `Ya existe un plan: ${data.nombre} en la obra social: ${buscarPlan.ObraSocial.nombre}!`
+             });
+         }
+
+        // Actualizar el plan si no hay conflictos
+        await Plan.update({ nombre: data.nombre, idObra: data.idObra }, { where: { idPlan: id } });
+
+        req.session.message = `Plan: ${data.nombre} actualizado con éxito!`;
+        return res.status(200).redirect('/plan/index');
+    } catch (error) {
+        console.error(error);  // Imprimir error para depuración
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+};
+
 
 //crear nuevo plan
 exports.altaPlan = async (req, res) => {
@@ -110,6 +150,9 @@ exports.activarPlan = async (req, res) => {
         }
 
         // Verifico la existencia y estado de la obra social asociada
+        //si mi obra social es null o que si existe y esta descativada
+        //si se cumple lo del if no voy a poder reactivar mi plan
+        //ya que el plan depende de la existencia de la obra
         const buscarObra = await Obrasocial.findOne({ where: { id: buscarPlan.idObra } });
         if (!buscarObra || !buscarObra.estado) {
             req.session.errorMessage = 
