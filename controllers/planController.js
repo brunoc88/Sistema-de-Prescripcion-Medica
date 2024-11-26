@@ -14,13 +14,13 @@ exports.getForm = async(req,res)=>{
         //obra social, asi obtengo el nombre de la obra social
         //tanto la obra social como el plan tienen que estar activos
         const planes = await Plan.findAll({
-            attributes:['nombre','estado','idPlan'],
-            include:{
+            attributes: ['nombre', 'estado', 'idPlan'],
+            include: {
                 model: Obrasocial,
-                attributes:['nombre']
+                attributes: ['nombre', 'estado'] // Incluye 'estado' explícitamente aquí
             }
-            
-        })
+        });
+        
         if(!obraSociales){
             return res.status(400).json('No hay obras sociales cargadas');
         }

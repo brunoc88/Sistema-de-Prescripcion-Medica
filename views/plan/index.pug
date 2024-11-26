@@ -48,13 +48,13 @@ block content
               div(class="btn-group")
                 form(action=`/plan/editar/${p.idPlan}`, method="GET")
                   button(type="submit", class="btn btn-primary mx-2") Editar
-                
-                if p.estado == 1
+                if p.estado == 1 && p.ObraSocial.estado == 1
                   form(action=`/plan/baja/${p.idPlan}?_method=PATCH`, method="post")
-                    button(type="submit", class="btn btn-danger") Desactivar
+                    button(type="submit", class="btn btn-danger" id="btn") Desactivar
                 else
                   form(action=`/plan/activar/${p.idPlan}?_method=PATCH`, method="POST")
-                    button(type="submit", class="btn btn-success mx-2") Activar
+                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar
       else
         tr
           td(colspan="5") No hay planes creados
+  
