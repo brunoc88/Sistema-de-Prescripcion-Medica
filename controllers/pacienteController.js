@@ -1,5 +1,13 @@
 const Paciente = require('../models/paciente');
 
+exports.getPacienteIndex = async(req,res)=>{
+    try {
+        return res.status(200).render('paciente/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: '+error);
+    }
+}
+
 exports.altaPaciente = async (req,res)=>{
     try {
         const data = req.body;

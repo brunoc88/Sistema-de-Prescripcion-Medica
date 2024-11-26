@@ -43,11 +43,15 @@ exports.getFormEditar = async (req,res) => {
             {idPlan:id},
             include:{
                 model: Obrasocial,
-                attributes:['nombre','id']
+                attributes:['nombre','id','estado']
             }
         })
         if(!buscarPlan){
             return res.status(404).json('no existe el plan');
+        }
+        if(!buscarPlan.ObraSocial.estado){
+            req.session.errorMessage = `Error: No se puedo actualizar plan: ${buscarPlan.nombre}, Obra social ${buscarPlan.ObraSocial.nombre} inexistente o desactivada!`;
+            return res.redirect('/plan/index');
         }
         return res.status(200).render('plan/editarPlan',{
             plan:buscarPlan, obraSociales:obraS});
@@ -73,7 +77,7 @@ exports.actualizarPlan = async(req, res) => {
                 attributes: ['nombre']
             }
         });
-         // Obtener todas las obras sociales activas
+         // Obtener todas las obras sociales activas por si falla
          const obraSociales = await Obrasocial.findAll({ where: { estado: true } });
 
          // Si ya existe un plan con el mismo nombre en la obra social
@@ -104,8 +108,9 @@ exports.altaPlan = async (req, res) => {
         if (!data.nombre) {
             return res.status(400).send('Campo vacío!');
         }
-
-        const buscarPlan = await Plan.findOne({ where: { nombre: data.nombre}});
+        //busco si hay una plan relacinado a un obra social para evitar que exista una obra social
+        //que tenga dos planes con el mismo nombre
+        const buscarPlan = await Plan.findOne({ where: { nombre: data.nombre,idObra:data.idObra}});
         if (buscarPlan) {
             req.session.errorMessage = 'Nombre de plan ya registrado!';
             return res.status(400).redirect('/plan/index');
