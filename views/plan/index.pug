@@ -9,6 +9,7 @@ block content
   if errorMessage
     #notification.alert.alert-danger
       | #{errorMessage}
+
   div(class="row")
     div(class="col-md-4")
       form(action="/plan/alta", method="post")
@@ -28,7 +29,7 @@ block content
         button(type="submit", class="btn btn-primary mt-2") Guardar
 
   h2 Listado de planes creados
-  table#myTable.table.table-striped
+  table#myTable.table.table-striped.table-hover
     thead
       tr
         th Num
@@ -40,10 +41,10 @@ block content
       if planes && planes.length > 0
         each p in planes
           tr
-            td #{p.idPlan}
-            td #{p.nombre}
-            td #{p.ObraSocial.nombre}
-            td #{p.estado ? 'Activo' : 'Inactivo'}
+            td #{p.idPlan}  <!-- Asegúrate de que esta columna está presente -->
+            td #{p.nombre}  <!-- Asegúrate de que esta columna está presente -->
+            td #{p.ObraSocial ? p.ObraSocial.nombre : 'No disponible'}  <!-- Maneja posibles valores nulos -->
+            td #{p.estado ? 'Activo' : 'Inactivo'}  <!-- Asegúrate de que esta columna está presente -->
             td
               div(class="btn-group")
                 form(action=`/plan/editar/${p.idPlan}`, method="GET")
@@ -57,4 +58,3 @@ block content
       else
         tr
           td(colspan="5") No hay planes creados
-  

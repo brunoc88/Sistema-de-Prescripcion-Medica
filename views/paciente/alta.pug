@@ -1,0 +1,56 @@
+extends ../layout
+
+block content
+    script(src="/js/main.js",defer)
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    div.container
+        div.row.justify-content-center
+            div.col-md-6.col-12
+                h1.text-center.mb-4 Alta de Paciente
+                form(action="/paciente/alta" method="post" class="needs-validation")
+                    div(class="mb-3")
+                        label(for="nombre" class="form-label") Nombre:
+                        input(type="text" name="nombre" class="form-control" required)
+
+                    div(class="mb-3")
+                        label(for="apellido" class="form-label") Apellido:
+                        input(type="text" name="apellido" class="form-control" required)
+
+                    div(class="mb-3")
+                        label(for="dni" class="form-label") DNI:
+                        input(type="text" name="dni" class="form-control" required)
+
+                    div(class="mb-3")
+                        label(for="sexo" class="form-label") Sexo:
+                        select(name="sexo" class="form-select" required)
+                            option(value="Hombre") Hombre
+                            option(value="Mujer") Mujer
+
+                    div(class="mb-3")
+                        label(for="fechaNacimiento" class="form-label") Fecha de Nacimiento:
+                        input(type="date" name="fechaNacimiento" class="form-control" required)
+
+                    div(class="mb-3")
+                        label(for="obra" class="form-label") Obra social:
+                        select(name="obra" id="obra" class="form-select" required)
+                            if obraSociales && obraSociales.length > 0
+                                each obra in obraSociales
+                                    option(value=obra.id) #{obra.nombre}
+                            else
+                                option(value="" disabled) No hay Obras sociales disponibles
+
+                    div(class="mb-3")
+                        label(for="plan" class="form-label") Plan:
+                        select(name="id_plan",id="id_plan", class="form-select" required)
+                            
+
+                    div(class="d-grid gap-2")
+                        button(type="submit" class="btn btn-primary") Guardar
+                        a(href="/paciente/index" class="btn btn-secondary") Volver

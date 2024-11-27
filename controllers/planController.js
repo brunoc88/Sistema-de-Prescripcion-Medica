@@ -38,7 +38,6 @@ exports.getForm = async(req,res)=>{
 exports.getFormEditar = async (req,res) => {
     try {
         const id = req.params.idPlan;
-        const obraS = await Obrasocial.findAll({where:{estado:true}})
         const buscarPlan = await Plan.findOne({where:
             {idPlan:id},
             include:{
@@ -54,7 +53,7 @@ exports.getFormEditar = async (req,res) => {
             return res.redirect('/plan/index');
         }
         return res.status(200).render('plan/editarPlan',{
-            plan:buscarPlan, obraSociales:obraS});
+            plan:buscarPlan});
        // res.json(buscarPlan);
     } catch (error) {
         return res.status(500).json('Error al cargar formulario '+error);
@@ -83,14 +82,14 @@ exports.actualizarPlan = async(req, res) => {
          // Si ya existe un plan con el mismo nombre en la obra social
          if (buscarPlan) {
              return res.status(409).render('plan/editarPlan', {
-                 plan: { nombre: data.nombre, idObra: data.idObra },  // Pasar los datos del plan
+                 plan: buscarPlan,  // Pasar los datos del plan
                  obraSociales,  // Pasar las obras sociales activas
                  errorMessage: `Ya existe un plan: ${data.nombre} en la obra social: ${buscarPlan.ObraSocial.nombre}!`
              });
          }
 
         // Actualizar el plan si no hay conflictos
-        await Plan.update({ nombre: data.nombre, idObra: data.idObra }, { where: { idPlan: id } });
+        await Plan.update({ nombre: data.nombre }, { where: { idPlan: id } });
 
         req.session.message = `Plan: ${data.nombre} actualizado con éxito!`;
         return res.status(200).redirect('/plan/index');
@@ -176,3 +175,19 @@ exports.activarPlan = async (req, res) => {
     }
 };
 
+
+//obtener plan por obra social
+exports.obtenerPlanesPorObra = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const planes = await Plan.findAll({where:{idObra:id}});
+
+        if(!planes || planes.length === 0){
+            return res.status(404).json('No se encontraron planes relacionados a obras sociales')
+        }
+        return res.status(200).json(planes);
+
+    } catch (error) {
+        return res.status(500).json('Hubo un error' + error.message);
+    }
+}

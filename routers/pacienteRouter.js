@@ -4,6 +4,8 @@ const routePaciente = express.Router();
 
 routePaciente.get('/index',pacienteController.getPacienteIndex);
 
+routePaciente.get('/crear',pacienteController.formCrearPaciente);
+
 routePaciente.post('/alta',pacienteController.altaPaciente);
 
 routePaciente.patch('/baja/:idPaciente',pacienteController.bajaPaciente);
