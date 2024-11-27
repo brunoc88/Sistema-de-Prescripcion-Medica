@@ -179,13 +179,22 @@ exports.activarPlan = async (req, res) => {
 //obtener plan por obra social
 exports.obtenerPlanesPorObra = async(req,res)=>{
     try {
-        const id = req.params.id;
-        const planes = await Plan.findAll({where:{idObra:id}});
+        const nombre = req.params.nombre;
+        const planes = await Plan.findAll({
+            include:{
+                model: Obrasocial,
+                where:{
+                    nombre: nombre
+                }
+            }
+        }
+        );
 
         if(!planes || planes.length === 0){
             return res.status(404).json('No se encontraron planes relacionados a obras sociales')
         }
         return res.status(200).json(planes);
+        
 
     } catch (error) {
         return res.status(500).json('Hubo un error' + error.message);

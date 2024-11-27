@@ -49,7 +49,7 @@ exports.bajarObraSocial = async (req, res) => {
     }
 };
 
-
+//listar obras en el index
 exports.cargarObras = async (req,res)=>{
     try {
         const obrasCreadas = await ObraSocial.findAll();

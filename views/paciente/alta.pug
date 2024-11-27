@@ -40,9 +40,9 @@ block content
                     div(class="mb-3")
                         label(for="obra" class="form-label") Obra social:
                         select(name="obra" id="obra" class="form-select" required)
-                            if obraSociales && obraSociales.length > 0
-                                each obra in obraSociales
-                                    option(value=obra.id) #{obra.nombre}
+                            if ObrasUnicas && ObrasUnicas.length > 0
+                                each obra in ObrasUnicas
+                                    option(value=obra) #{obra}
                             else
                                 option(value="" disabled) No hay Obras sociales disponibles
 

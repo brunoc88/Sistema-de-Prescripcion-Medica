@@ -20,7 +20,7 @@ routerPlan.patch('/baja/:idPlan',planController.bajarPlan);
 routerPlan.patch('/activar/:id',planController.activarPlan);
 
 //obtener planes relacionados a obras sociales
-routerPlan.get('/obraPlanes/:id',planController.obtenerPlanesPorObra)
+routerPlan.get('/obraPlanes/:nombre',planController.obtenerPlanesPorObra)
 
 
 module.exports = routerPlan;

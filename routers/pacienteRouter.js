@@ -8,6 +8,12 @@ routePaciente.get('/crear',pacienteController.formCrearPaciente);
 
 routePaciente.post('/alta',pacienteController.altaPaciente);
 
-routePaciente.patch('/baja/:idPaciente',pacienteController.bajaPaciente);
+routePaciente.put('/editar/:id',pacienteController.formEditarPaciente);
+
+routePaciente.patch('/baja/:id',pacienteController.bajaPaciente);
+
+routePaciente.patch('/activar/:id',pacienteController.reactivarPaciente);
+
+
 
 module.exports = routePaciente;

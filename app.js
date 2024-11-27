@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 
 
 app.get('/',(req,res)=>{
-    res.render('index');
+    res.render('home/index');
 })
 
 //rutas

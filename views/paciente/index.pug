@@ -12,43 +12,43 @@ block content
 
     div
         a(href="/paciente/crear" class="btn btn-success mx-2") Agregar Paciente
-    h2 Listado de pacientes 
+        h2 Listado de pacientes 
 
     table#myTable.table.table-striped
-        thead 
-        tr
-            th id 
-            th Nombre 
-            th Apellido 
-            th Dni 
-            th Sexo 
-            th Fecha de Nacimiento 
-            th Estado 
-            th Obra Social 
-            th Plan 
-            th Acciones 
-        tbody 
-        if pacientes.length > 0 
-          each p in pacientes 
-            tr 
-                td #{p.idPaciente}
-                td #{p.nombre}
-                td #{p.apellido}
-                td #{p.dni}
-                td #{p.sexo}
-                td #{p.fechaNacimiento}
-                td #{p.estado  ? 'Activo' : 'Inactivo'}
-                td #{p.Plan.ObraSocial.nombre}
-                td #{p.Plan.nombre}
-                td
-                    div(class="btn-group")
-                        form(action=`/paciente/editar/${p.idPlan}`, method="GET")
-                            button(type="submit", class="btn btn-primary mx-2") Editar
-                        if p.estado == 1 
-                            form(action=`/paciente/baja/${p.idPlan}?_method=PATCH`, method="post")
-                            button(type="submit", class="btn btn-danger" id="btn") Desactivar
-                        else
-                            form(action=`/paciente/activar/${p.idPlan}?_method=PATCH`, method="POST")
-                            button(type="submit", class="btn btn-success mx-2" id="btn") Activar
-                        
-               
+        thead
+            tr
+                th ID
+                th Nombre
+                th Apellido
+                th Dni
+                th Sexo
+                th Fecha de Nacimiento
+                th Estado
+                th Obra Social
+                th Plan
+                th Acciones   
+
+        tbody
+            if pacientes.length > 0 
+                each p in pacientes 
+                 tr 
+                    td #{p.idPaciente}
+                    td #{p.nombre}
+                    td #{p.apellido}
+                    td #{p.dni}
+                    td #{p.sexo}
+                    td #{p.fechaNacimiento}
+                    td #{p.estado ? 'Activo' : 'Inactivo'}
+                    td #{p.Plan.ObraSocial.nombre}
+                    td #{p.Plan.nombre}
+                    td 
+                        div(class="btn-group")
+                            form(action='/paciente/editar', method="GET")
+                                button(type="submit", class="btn btn-primary mx-2") Editar
+                            if p.estado == 1 
+                                form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
+                                    button(type="submit", class="btn btn-danger" id="btn") Desactivar
+                            else
+                                form(action=`/paciente/activar/${p.idPaciente}?_method=PATCH`, method="POST")
+                                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar
+

@@ -2,6 +2,7 @@ const Paciente = require('../models/paciente');
 const Plan = require('../models/plan');
 const Obra = require('../models/obraSocial');
 
+//listar pacientes en el index
 exports.getPacienteIndex = async(req,res)=>{
     try {
         const pacientes = await Paciente.findAll({
@@ -31,23 +32,34 @@ exports.getPacienteIndex = async(req,res)=>{
 //formulario para crear paciente
 exports.formCrearPaciente = async(req, res) => {
     try {
-        // Buscar las obras sociales activas
-        const obraSociales = await Obra.findAll({ where: { estado: true } });
+        // Buscar las obras sociales activas y tengan un plan
+        const obraSocialesConPlanes = await Plan.findAll({ 
+            where: { estado: true },
+            include: {
+                model: Obra,
+                where: { estado: true },
+                attributes: ['nombre', 'id']
+            },
+            order: [[Obra, 'nombre', 'ASC']] // Ordenar por nombre de obra social
+        });
+        
+        // Extraer nombres únicos de las obras sociales
+        const ObrasUnicas = [...new Set(obraSocialesConPlanes.map(plan => plan.ObraSocial.nombre))];
 
-        if (!obraSociales || obraSociales.length === 0) {
+        
+        if (!ObrasUnicas || ObrasUnicas.length === 0) {
             return res.status(400).json('No hay obras sociales disponibles');
         }
 
         // Renderizar la vista con las obras sociales
-        res.status(200).render('paciente/alta', { obraSociales });
+        res.status(200).render('paciente/alta', {ObrasUnicas});
+       //res.json(ObrasUnicas);
     } catch (error) {
         res.status(500).json('Ha ocurrido un error: ' + error.message);
     }
 };
 
-
-
-
+//post de paciente
 exports.altaPaciente = async (req,res)=>{
     try {
         const data = req.body;
@@ -55,16 +67,35 @@ exports.altaPaciente = async (req,res)=>{
             return res.status(400).send('Campos Vacios');
         }
         const buscarPaciente = await Paciente.findOne({ where: { dni: data.dni } });
-        //const planes = await Plan.findAll({where:{estado:true}});//le paso de nuevo los planes
-        const obraSociales = await Obra.findAll({where:{estado:true}});
+        
+
+        // Buscar las obras sociales activas y tengan un plan
+        const obraSocialesConPlanes = await Plan.findAll({ 
+            where: { estado: true },
+            include: {
+                model: Obra,
+                where: { estado: true },
+                attributes: ['nombre', 'id']
+            },
+            order: [[Obra, 'nombre', 'ASC']] // Ordenar por nombre de obra social
+        });
+        
+        // Extraer nombres únicos de las obras sociales
+        const ObrasUnicas = [...new Set(obraSocialesConPlanes.map(plan => plan.ObraSocial.nombre))];
+
+        
+        if (!ObrasUnicas || ObrasUnicas.length === 0) {
+            return res.status(400).json('No hay obras sociales disponibles');
+        }
+        
         if(buscarPaciente){
             //return res.status(400).send('Ya existe paciente!');
             
-            return res.status(404).render('paciente/alta',{
+            return res.status(409).render('paciente/alta',{
                 errorMessage : 'Ya existe paciente con ese dni!',
                 FormData: data,//pasar dato que el usuario habia ingresado
-                //planes
-                obraSociales
+                //obras con planes
+                ObrasUnicas
             })
         }
         await Paciente.create(data);
@@ -76,9 +107,20 @@ exports.altaPaciente = async (req,res)=>{
     }
 }
 
-exports.bajaPaciente = async (req, res) => {
+//formulario para editar paciente
+exports.formEditarPaciente = async(req,res)=>{
     try {
-        const id = req.params.idPaciente;
+        return res.status(200).render('paciente/editar');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: '+error.message);
+    }
+}
+
+//desactivar paciente
+exports.bajaPaciente = async (req, res) => {
+    console.log('dentro de contrololador');
+    try {
+        const id = req.params.id;
         const buscarPaciente = await Paciente.findByPk(id);
 
         if (!buscarPaciente) {
@@ -88,8 +130,26 @@ exports.bajaPaciente = async (req, res) => {
         // Actualizar el estado del paciente a false
         await Paciente.update({ estado: false }, { where: { idPaciente: id } });
 
-        res.status(200).send('Paciente dado de baja!');
+        //res.status(200).send('Paciente dado de baja!');
+        req.session.message = `Paciente ${buscarPaciente.nombre +' '+buscarPaciente.apellido} eliminado con exito!}`;
+        return res.status(200).redirect('/paciente/index');
     } catch (error) {
         res.status(500).json({ message: 'Error al dar de baja al Paciente', error: error.message });
     }
 };
+
+//reactivar paciente
+exports.reactivarPaciente = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const buscarPaciente = await Paciente.findByPk(id);
+        if(!buscarPaciente){
+            return res.status(404).json('No se encontro paciente!');
+        }
+        await Paciente.update({estado:true},{where:{idPaciente:id}});
+        req.session.message = `Paciente: ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} Activado con `
+        return res.status(200).redirect('/paciente/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: '+error.message);
+    }
+}
