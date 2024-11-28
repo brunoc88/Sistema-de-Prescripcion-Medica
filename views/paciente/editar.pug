@@ -1,8 +1,62 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-    body 
-    h1 EDITAR
+extends ../layout
+
+block content
+    script(src="/js/main.js", defer)
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h1.text-center.mb-4 Edición de Paciente
+
+    div.container
+        div.row.justify-content-center
+            div.col-md-6.col-12
+                form(action=`/paciente/actualizar/${paciente.idPaciente}?_method=PUT` method="POST" class="needs-validation")
+                    div(class="mb-3")
+                        label(for="nombre") Nombre:
+                        input(type="text", id="nombre", name="nombre", value=paciente.nombre, required=true, class="form-control") 
+
+                    div(class="mb-3")
+                        label(for="apellido") Apellido:
+                        input(type="text", id="apellido", name="apellido", value=paciente.apellido, required=true, class="form-control") 
+
+                    div(class="mb-3")
+                        label(for="dni") DNI:
+                        input(type="text", id="dni", name="dni", value=paciente.dni, required=true, class="form-control") 
+
+                    div(class="mb-3")
+                        label(for="sexo") Sexo: 
+                        select(id="sexo", name="sexo", required=true, class="form-select") 
+                            option(value="Hombre", selected=paciente.sexo === "Hombre") Hombre
+                            option(value="Mujer", selected=paciente.sexo === "Mujer") Mujer
+                    
+                    div(class="mb-3")
+                        label(for="fechaNacimiento") Fecha de Nacimiento: 
+                        input(type="date", id="fechaNacimiento", name="fechaNacimiento", value=paciente.fechaNacimiento, required=true, class="form-control")
+
+                    div(class="mb-3")
+                        label(for="obra") Obra Social:
+                        select(id="obra", name="obra", required=true, class="form-select") 
+                            if ObrasUnicas && ObrasUnicas.length > 0
+                                each obra in ObrasUnicas
+                                    option(value=obra, selected=(paciente.Plan.ObraSocial.nombre) === obra) #{obra}
+                            else
+                                option(value="" disabled) No hay Obras sociales disponibles
+                    
+                    div(class="mb-3")
+                        label(for="plan") Plan:
+                        select(id="id_plan", name="id_plan", required=true, class="form-select") 
+                            if PlanesDisponibles && PlanesDisponibles.length > 0
+                                each plan in PlanesDisponibles
+                                    option(value=plan.id, selected=plan.id === paciente.id_plan) #{plan.nombre}
+                            else
+                                option(value="" disabled) No hay planes disponibles
+                    
+                    div(class="d-grid gap-2")
+                        button(type="submit", class="btn btn-primary") Guardar
+                        a(href="/paciente/index", class="btn btn-secondary") Cancelar

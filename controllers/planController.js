@@ -60,6 +60,8 @@ exports.getFormEditar = async (req,res) => {
     }
 }
 
+
+//put de editar plan
 exports.actualizarPlan = async(req, res) => {
     try {
         const data = req.body;
@@ -82,8 +84,8 @@ exports.actualizarPlan = async(req, res) => {
          // Si ya existe un plan con el mismo nombre en la obra social
          if (buscarPlan) {
              return res.status(409).render('plan/editarPlan', {
-                 plan: buscarPlan,  // Pasar los datos del plan
-                 obraSociales,  // Pasar las obras sociales activas
+                 plan: buscarPlan,  // Pasar los datos del plan osea recupero el nombre que habia puesto
+                 obraSociales,  // Paso la obra social que tiene el plan elegido
                  errorMessage: `Ya existe un plan: ${data.nombre} en la obra social: ${buscarPlan.ObraSocial.nombre}!`
              });
          }

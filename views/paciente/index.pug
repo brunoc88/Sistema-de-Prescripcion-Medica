@@ -43,7 +43,7 @@ block content
                     td #{p.Plan.nombre}
                     td 
                         div(class="btn-group")
-                            form(action='/paciente/editar', method="GET")
+                            form(action=`/paciente/editar/${p.idPaciente}`, method="GET")
                                 button(type="submit", class="btn btn-primary mx-2") Editar
                             if p.estado == 1 
                                 form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
