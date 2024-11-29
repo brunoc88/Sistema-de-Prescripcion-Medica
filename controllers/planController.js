@@ -1,9 +1,8 @@
 const Plan = require('../models/plan');
 const Obrasocial = require('../models/obraSocial');
-const { where, Op } = require('sequelize');
 
 
-//form de alta
+//form de alta e index
 exports.getForm = async(req,res)=>{
     try {
         const obraSociales = await Obrasocial.findAll({
@@ -20,13 +19,17 @@ exports.getForm = async(req,res)=>{
                 attributes: ['nombre', 'estado'] // Incluye 'estado' explícitamente aquí
             }
         });
+
+        //si no existen obrasSociales
         
         if(!obraSociales){
             return res.status(400).json('No hay obras sociales cargadas');
         }
+        //si no existen planes
         if(!planes){
             return res.status(400).json('No hay planes!');
         }
+        //cargamos la vista y le pasamos el el nombre del plan y la obra social que pertenece
         res.render('plan/index', { obraSociales,planes});
         //res.status(200).json(planesActivos);
     } catch (error) {
@@ -59,9 +62,7 @@ exports.getFormEditar = async (req,res) => {
         return res.status(500).json('Error al cargar formulario '+error);
     }
 }
-
-
-//put de editar plan
+//PUT de editar plan
 exports.actualizarPlan = async(req, res) => {
     try {
         const data = req.body;
@@ -100,8 +101,6 @@ exports.actualizarPlan = async(req, res) => {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 };
-
-
 //crear nuevo plan
 exports.altaPlan = async (req, res) => {
     try {
@@ -125,7 +124,7 @@ exports.altaPlan = async (req, res) => {
         res.status(500).json({ message: 'Error al crear plan', error });
     }
 };
-
+//descativar plan
 exports.bajarPlan = async (req,res) =>{
     
     try{
@@ -143,7 +142,6 @@ exports.bajarPlan = async (req,res) =>{
         res.status(500).json({ message: 'Error al borrar el plan', error });
     }
 }
-
 //reactivar un plan
 exports.activarPlan = async (req, res) => {
     try {
@@ -176,8 +174,6 @@ exports.activarPlan = async (req, res) => {
         return res.status(500).json({ message: 'Se produjo un error: ' + error.message });
     }
 };
-
-
 //obtener plan por obra social
 exports.obtenerPlanesPorObra = async(req,res)=>{
     try {
