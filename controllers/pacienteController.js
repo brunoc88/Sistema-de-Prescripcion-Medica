@@ -1,8 +1,8 @@
 const Paciente = require('../models/paciente');
 const Plan = require('../models/plan');
 const Obra = require('../models/obraSocial');
-const { Op, where } = require('sequelize');
-const ObraSocial = require('../models/obraSocial');
+const { Op} = require('sequelize');
+
 
 //listar pacientes en el index
 exports.getPacienteIndex = async (req, res) => {
