@@ -10,12 +10,8 @@ const session = require('express-session');//middleware para mensajes
 const routerObra = require('./routers/obraSocialRouter');
 const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');
-const routerEspecialidad = require('./routers/especialidadRouter');
-const routerProfesion = require('./routers/profesionRouter');
-const routerProfesional = require('./routers/profesionalRouter');
 
-const profeProsional = require('./models/profesionalProfesion');
-const profeEspecialidad = require('./models/profesionEspecialidad');
+
 
 // Configurar Pug como motor de vistas
 app.set('view engine', 'pug');
@@ -57,9 +53,6 @@ app.get('/',(req,res)=>{
 app.use('/obra',routerObra);
 app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);
-app.use('/especialidad',routerEspecialidad);
-app.use('/profesion',routerProfesion);
-app.use('/profesional',routerProfesional);
 
 // Sincronizar base de datos
 sequelize.sync({})
