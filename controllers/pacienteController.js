@@ -31,7 +31,7 @@ exports.getPacienteIndex = async (req, res) => {
 }
 
 
-//formulario para crear paciente
+//GET formulario de alta para crear paciente
 exports.formCrearPaciente = async (req, res) => {
     try {
         // Buscar las obras sociales activas y tengan un plan
