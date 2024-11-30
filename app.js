@@ -10,6 +10,8 @@ const session = require('express-session');//middleware para mensajes
 const routerObra = require('./routers/obraSocialRouter');
 const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');
+const routerEspecialidades = require('./routers/especialidadRouter');
+const routerProfesion = require('./routers/profesionRouter');
 
 
 
@@ -53,7 +55,8 @@ app.get('/',(req,res)=>{
 app.use('/obra',routerObra);
 app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);
-
+app.use('/especialidades',routerEspecialidades);
+app.use('/profesion',routerProfesion);
 // Sincronizar base de datos
 sequelize.sync({})
   .then(() => {
