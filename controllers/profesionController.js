@@ -1,5 +1,6 @@
 const Profesion = require('../models/profesion');
 
+//GET vista Index
 exports.indexProfesion = async(req,res)=>{
     try {
         const profesiones = await Profesion.findAll();
@@ -13,7 +14,7 @@ exports.indexProfesion = async(req,res)=>{
         return res.status(500).json('Error al solicitar pagina: '+error);
     }
 }
-
+//POST crear Profesion
 exports.altaProfesion = async (req,res)=>{
     try {
         const data = req.body;
@@ -34,7 +35,7 @@ exports.altaProfesion = async (req,res)=>{
         return res.status(500).json('Error al crear profesion' + error);
     }
 }
-
+//GET vista editar Profesion
 exports.editarProfesion = async(req,res)=>{
     try {
         const id = req.params.id;
@@ -49,7 +50,7 @@ exports.editarProfesion = async(req,res)=>{
         return res.status(500).json('Hubo un error: '+error.message);
     }
 }
-
+//PATCH actualizar Profesion
 exports.actualizarProfesion = async(req,res)=>{
     try {
         const id = req.params.id;
@@ -68,7 +69,7 @@ exports.actualizarProfesion = async(req,res)=>{
         return res.status(500).json('Hubo un error: '+error.message);
     }
 }
-
+//PATCH bajar Profesion
 exports.bajaProfesion = async (req,res)=>{
     try {
         const id = req.params.idProfesion;
@@ -84,7 +85,7 @@ exports.bajaProfesion = async (req,res)=>{
         return res.status(500).json('Error al dar de baja la profesion'+error);
     }
 }
-
+//PATCH reativar Profesion
 exports.reactivarProfesion = async (req,res)=>{
     try {
         const id = req.params.id;

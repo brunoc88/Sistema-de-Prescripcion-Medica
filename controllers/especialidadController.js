@@ -65,7 +65,7 @@ exports.actualizarEspecialidad = async(req,res)=>{
         if(buscarEspecialidad){
             return res.status(409).render('especialidades/editar',{e:buscarEspecialidad, errorMessage:'Ya existe una especialdiad con ese nombre!'});
         }
-        await Especialidad.update({data},{where:{idEspecialidad:id}});
+        await Especialidad.update(data,{where:{idEspecialidad:id}});
         req.session.message = `Especialidad: ${data.nombre} Actualizada con exito!`;
         return res.status(200).redirect('/especialidades/index')
     } catch (error) {
