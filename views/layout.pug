@@ -6,14 +6,16 @@ html(lang="en")
     title #{title} 
     // Bootstrap CSS
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css")
+    // DataTables CSS
+    link(rel="stylesheet", href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css") 
+    //configurarion de dataTable
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")  
+    // Bootstrap JS
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js") 
+    // DataTables JS
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js") 
     // Estilo para las notificaciones
     link(rel='stylesheet', href='/css/notificaciones.css')  
-    //configurarion de dataTable
-    link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css") 
-    // Cargar jQuery primero
-    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
-    // Cargar DataTables después de jQuery
-    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js")
   body
     // Navbar de navegación
     nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
