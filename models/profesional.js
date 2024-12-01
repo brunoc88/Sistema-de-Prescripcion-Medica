@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-//const Profesion = require('./profesion');
+const Profesion = require('./profesion');
 //const Especialidad = require('./especialidad');
 
 const Profesional = sequelize.define(
@@ -29,7 +29,13 @@ const Profesional = sequelize.define(
         },
         matricula:{
             type: DataTypes.STRING,
-            allowNull:false
+            allowNull:false,
+            unique:true
+        },
+        num_refeps:{
+            type: DataTypes.STRING,
+            allowNull:false,
+            unique: true
         },
         estado:{
             type:DataTypes.BOOLEAN,
@@ -42,5 +48,14 @@ const Profesional = sequelize.define(
     }
 )
 
+Profesion.hasMany(Profesional,{
+    foreignKey: 'id_profesion',
+    sourceKey: 'idProfesion'
+})
+
+Profesional.belongsTo(Profesion,{
+    foreignKey: 'id_profesion',
+    targetKey: 'idProfesion'
+})
 
 module.exports = Profesional;

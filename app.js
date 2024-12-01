@@ -12,7 +12,11 @@ const routerPlan = require('./routers/planRouter');
 const routerPaciente = require('./routers/pacienteRouter');
 const routerEspecialidades = require('./routers/especialidadRouter');
 const routerProfesion = require('./routers/profesionRouter');
+const routerProfesional = require('./routers/profesionalRouter');
 
+
+
+const routerRefeps = require('./api/apiRouter');
 
 
 // Configurar Pug como motor de vistas
@@ -57,6 +61,12 @@ app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);
 app.use('/especialidades',routerEspecialidades);
 app.use('/profesion',routerProfesion);
+app.use('/profesional',routerProfesional);
+
+//api
+app.use('/api',routerRefeps);
+
+
 // Sincronizar base de datos
 sequelize.sync({})
   .then(() => {

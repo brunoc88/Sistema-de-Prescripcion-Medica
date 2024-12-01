@@ -12,9 +12,9 @@ routePaciente.post('/alta',pacienteController.altaPaciente);
 routePaciente.get('/editar/:id',pacienteController.formEditarPaciente);
 //PUT para Enviar Paciente Actualizado
 routePaciente.put('/actualizar/:id',pacienteController.ActualizarPaciente);
-
+//PATCH desactivar Paciente
 routePaciente.patch('/baja/:id',pacienteController.bajaPaciente);
-
+//PATCH reactivar Paciente
 routePaciente.patch('/activar/:id',pacienteController.reactivarPaciente);
 
 
