@@ -4,7 +4,7 @@ const app = express();
 const path = require('path');
 const methodOverride = require('method-override');
 const session = require('express-session');//middleware para mensajes
-
+const cookieParser = require('cookie-parser');//nos va a permitir guardar el token en las cookies
 
 //importamos las rutas
 const routerObra = require('./routers/obraSocialRouter');
@@ -13,7 +13,8 @@ const routerPaciente = require('./routers/pacienteRouter');
 const routerEspecialidades = require('./routers/especialidadRouter');
 const routerProfesion = require('./routers/profesionRouter');
 const routerProfesional = require('./routers/profesionalRouter');
-
+const routerUsuario = require('./routers/usuarioRouter');
+const routerHome = require('./routers/homeRouter');
 
 
 const routerRefeps = require('./api/apiRouter');
@@ -34,7 +35,8 @@ app.use(express.urlencoded({ extended: false }));// datos enviados como formular
 // Configurar la carpeta pública
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Usamos cookie-parser para manejar las cookies
+app.use(cookieParser());
 // Configuración de sesión
 app.use(session({
   secret: 'clave-secreta', // Cambia esta clave a algo único
@@ -50,19 +52,20 @@ app.use((req, res, next) => {
   next();
 });
 
-
+/*
 app.get('/',(req,res)=>{
     res.render('home/index');
-})
+})*/
 
 //rutas
+app.use('/',routerHome);
 app.use('/obra',routerObra);
 app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);
 app.use('/especialidades',routerEspecialidades);
 app.use('/profesion',routerProfesion);
 app.use('/profesional',routerProfesional);
-
+app.use('/usuario',routerUsuario);
 //api
 app.use('/api',routerRefeps);
 

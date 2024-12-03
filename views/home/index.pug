@@ -1,4 +1,11 @@
 extends ../layout
 
 block content
- h1 Index Principal
+  h1 Crear un Plan
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}

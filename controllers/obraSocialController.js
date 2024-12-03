@@ -1,6 +1,5 @@
 const ObraSocial = require('../models/obraSocial');
 
-
 exports.altaObraSocial = async (req, res) => {
     try {
       const data = req.body;

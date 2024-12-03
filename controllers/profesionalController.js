@@ -1,13 +1,56 @@
 const Profesional = require('../models/profesional');
-const Profesin = require('../models/profesion');
+const Profesion = require('../models/profesion');
+const Especialidad = require('../models/especialidad');
 const REFEPS = require('../api/refeps');
 const { Model, where } = require('sequelize');
+
+
+exports.indexProfesional = async(req,res)=>{
+    try {
+        //listar profesionales con su profesion y especialidad
+
+        const profesionales = await Profesional.findAll({
+            include: [
+                {
+                    model: Especialidad,
+                    attributes: ['nombre']
+                },
+                {
+                    model: Profesion,
+                    attributes: ['nombre']
+                }
+            ]
+        });
+
+        if(!profesionales){
+            return res.status(404).json('No se encontraron Profesionales registrados!');
+        }
+        //res.status(200).json(profesionales);
+        return res.status(200).render('profesional/index',{profesionales});
+    } catch (error) {
+        return res.status(500).json('Hubo un error: '+error.message);
+    }
+}
+
+exports.vistaAltaProfesional = async(req,res)=>{
+    try {
+        //listo las profesiones activas
+        const profesiones = await Profesion.findAll({where:{estado:true}});
+        //listo la especilaidades activas
+        const especialidades = await Especialidad.findAll({where:{estado:true}});
+        return res.status(200).render('profesional/alta',{profesiones,especialidades});
+        //res.json(profesiones,especialidades);
+    } catch (error) {
+        return res.status(500).json('Hubo un error: '+error.message)
+    }
+}
+
 
 exports.altaProfesional = async (req, res) => {
 
     try {
         const data = req.body;
-        console.log(data.dni);
+        console.log("nombre:" + ""+data.nombre)
         if (!data) {
             return res.status(400).json('formulario vacio!');
         }
@@ -25,13 +68,13 @@ exports.altaProfesional = async (req, res) => {
             return res.status(409).json('Ya existe un profesional registrado con esa matrícula!');
         }
         //busco la profesion del profesionl para pasarla como patron de busqueda
-        const ProfesionDelProfesional = await Profesin.findOne(
+        const ProfesionDelProfesional = await Profesion.findOne(
             {
                 attributes: ['nombre'],
                 where: { idProfesion: data.id_profesion }
             });
 
-
+        console.log("Profesion de " + data.nombre +""+ProfesionDelProfesional.nombre);
         //SI TANTO EL NOMBRE,APELLIDO,PROFESION,NUMERO DE REGISTRO Y SI ESTA HABILIDATO EN LA API
         const buscarRefeps = await REFEPS.findOne({ where: { num_registro: data.num_refeps, estado: true, nombre: data.nombre, apellido: data.apellido, profesion: ProfesionDelProfesional.nombre } });
 

@@ -1,0 +1,56 @@
+extends ../layout 
+
+block content 
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h1 Index Profesionales
+
+    div
+        a(href="/profesional/crear" class="btn btn-success mx-2") Agregar Profesional
+        h2 Listado de profesionales
+
+    table#myTable.table.table-striped
+        thead 
+            tr 
+                th Id 
+                th Nombre
+                th Apellido
+                th Domicilio 
+                th Dni
+                th Profesión
+                th Especialidad
+                th Matrícula 
+                th Estado
+                th Acciones
+        tbody
+            if profesionales && profesionales.length > 0
+                each pro in profesionales 
+                    tr
+                        td #{pro.idProfesional} 
+                        td #{pro.nombre}
+                        td #{pro.apellido}
+                        td #{pro.domicilio}
+                        td #{pro.dni}
+                        td #{pro.Profesion.nombre}
+                        td #{pro.Especialidad.nombre}
+                        td #{pro.matricula}
+                        td #{pro.estado ? 'Activo' : 'Inactivo'} 
+                        td 
+                            div(class="btn-group")
+                                // Botón para editar profesional
+                                form(action=`/profesional/editar/${pro.idProfesional}`, method="GET")
+                                    button(type="submit", class="btn btn-primary mx-2") Editar
+                                // Botón para activar/desactivar profesional
+                                if pro.estado == 1
+                                    form(action=`/profesional/desactivar/${pro.idProfesional}?_method=PATCH`, method="POST")
+                                        button(type="submit", class="btn btn-danger") Desactivar
+                                else
+                                    form(action=`/profesional/activar/${pro.idProfesional}?_method=PATCH`, method="POST")
+                                        button(type="submit", class="btn btn-success mx-2") Activar

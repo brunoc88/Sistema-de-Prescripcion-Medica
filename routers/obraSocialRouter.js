@@ -1,9 +1,10 @@
 const express = require('express');
 const obraSocialController = require('../controllers/obraSocialController');
+const { verifyToken, verifyRole } = require('../public/js/authMiddleware');
 const routerObra = express.Router();
 
 //index de obra
-routerObra.get('/index',obraSocialController.cargarObras);
+routerObra.get('/index',verifyToken, verifyRole('admin'),obraSocialController.cargarObras);
 //crear obra
 routerObra.post('/alta',obraSocialController.altaObraSocial)
 //bajar obra
