@@ -1,0 +1,39 @@
+extends ../layout 
+
+block content 
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    div.container
+        div.row.justify-content-center
+            div.col-md-6.col-12
+
+                h2 Alta de contrato
+                form(action="/contrato/alta", method="post", class="needs-validation") 
+                    div(class="mb-3")
+                        label(for="usuario" class="form-label") Usuario: 
+                        select(name="id_usuario" class="form-select" required)
+                            if usuarios && usuarios.length > 0
+                                each u in usuarios 
+                                    option(value=`${u.id}`) #{u.nombre + ' ' + u.apellido} 
+
+                    div(class="mb-3")
+                        label(for="profesional" class="form-label") Profesional:
+                        select(name="id_profesional" class="form-select" required)
+                            if profesionales && profesionales.length   
+                                each p in profesionales 
+                                    option(value=`${p.idProfesional}`) #{p.nombre + ' ' + p.apellido}
+                
+                    div(class="mb-3")
+                        label(for="fecha de caducidad" class="form-label") Fecha de caducidad: 
+                        input(type="date" name="fechaCaducidad" class="form-control" required)
+
+                    div(class="d-grid gap-2")
+                        button(type ="submit" class="btn btn-primary") Enviar
+                        a(href="/contrato/index" class="btn btn-secondary") Volver

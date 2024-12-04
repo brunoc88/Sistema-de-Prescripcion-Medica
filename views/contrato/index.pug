@@ -1,0 +1,17 @@
+extends ../layout 
+
+block content 
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h1 Index Contrato
+
+    div
+        a(href="/contrato/crear" class="btn btn-success mx-2") Agregar Contrato
+        h2 Listado de contratos

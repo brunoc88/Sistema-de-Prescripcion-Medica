@@ -1,8 +1,10 @@
 const Profesional = require('../models/profesional');
 const Profesion = require('../models/profesion');
 const Especialidad = require('../models/especialidad');
+const Contrato = require('../models/contrato');
 const REFEPS = require('../api/refeps');
-const { Model, where } = require('sequelize');
+const { where } = require('sequelize');
+
 
 
 exports.indexProfesional = async(req,res)=>{
@@ -84,9 +86,23 @@ exports.altaProfesional = async (req, res) => {
         }
 
         await Profesional.create(data);
-        return res.status(200).json(data);
+        //return res.status(200).json(data);
+        req.session.message = `Profesional: ${data.nombre + " " + data.apellido} creado con exito!`;
+        return res.status(200).redirect('/profesiona/index');
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 };
 
+exports.reactivarUnProfesional = async(req,res)=>{
+    try {
+        const id = req.params.id
+        //busco si el profesional esta relacionado con algun contrato activo
+        const profesional = await Contrato.findOne({ where: { id_profesional: id,estado:true } });
+        
+        req.session.errorMessage = "solamente se puede reactivar mediante contrato";
+        return res.redirect('/profesional/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' +error.message);
+    }
+}

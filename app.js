@@ -15,8 +15,9 @@ const routerProfesion = require('./routers/profesionRouter');
 const routerProfesional = require('./routers/profesionalRouter');
 const routerUsuario = require('./routers/usuarioRouter');
 const routerHome = require('./routers/homeRouter');
+const routerContrato = require('./routers/contratoRouter');
 
-
+//api --> sistema externo al nuestro
 const routerRefeps = require('./api/apiRouter');
 
 
@@ -41,7 +42,8 @@ app.use(cookieParser());
 app.use(session({
   secret: 'clave-secreta', // Cambia esta clave a algo único
   resave: false,           // Evita guardar la sesión si no hubo cambios
-  saveUninitialized: true  // Guarda sesiones nuevas aunque no tengan datos
+  saveUninitialized: true,  // Guarda sesiones nuevas aunque no tengan datos
+  cookie: { secure: false } // Si usas HTTPS, ponlo en true
 }));
 //limpiar mensajes
 app.use((req, res, next) => {
@@ -66,6 +68,8 @@ app.use('/especialidades',routerEspecialidades);
 app.use('/profesion',routerProfesion);
 app.use('/profesional',routerProfesional);
 app.use('/usuario',routerUsuario);
+app.use('/contrato',routerContrato);
+
 //api
 app.use('/api',routerRefeps);
 

@@ -44,7 +44,7 @@ const Profesional = sequelize.define(
         },
         estado:{
             type:DataTypes.BOOLEAN,
-            defaultValue:true,
+            defaultValue:false,//porque solo se va activar cuando se hago contrato
             allowNull:false
         }
     },{

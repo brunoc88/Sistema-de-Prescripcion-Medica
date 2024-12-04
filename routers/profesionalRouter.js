@@ -8,4 +8,6 @@ profesionalRouter.get('/crear',profesionalController.vistaAltaProfesional);
 
 profesionalRouter.post('/alta',profesionalController.altaProfesional);
 
+profesionalRouter.patch('/activar/:id',profesionalController.reactivarUnProfesional);
+
 module.exports = profesionalRouter;
