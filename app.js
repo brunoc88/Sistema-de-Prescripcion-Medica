@@ -54,10 +54,10 @@ app.use((req, res, next) => {
   next();
 });
 
-/*
+
 app.get('/',(req,res)=>{
-    res.render('home/index');
-})*/
+    res.render('home/login');
+})
 
 //rutas
 app.use('/home',routerHome);
