@@ -88,7 +88,7 @@ exports.altaProfesional = async (req, res) => {
         await Profesional.create(data);
         //return res.status(200).json(data);
         req.session.message = `Profesional: ${data.nombre + " " + data.apellido} creado con exito!`;
-        return res.status(200).redirect('/profesiona/index');
+        return res.status(200).redirect('/profesional/index');
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }

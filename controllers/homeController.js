@@ -12,40 +12,53 @@ exports.vistaLogin = async (req, res) => {
 }
 //POST login
 exports.login = async (req, res) => {
-    const body = req.body;
-    const user = await Usuario.findOne({ email: body.email });
-    if (user) {
-        // Compara la contraseña del usuario con la contraseña hasheada en la BD
-        const validPassword = await bcrypt.compare(body.password, user.password);
-        if (validPassword) {
-            let token = jwt.sign({ 
+    try {
+        const { email, password } = req.body;
+        // Buscar usuario
+        const user = await Usuario.findOne({ where: { email } });
+        
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        if (!user.estado) {
+            return res.status(403).json({ success: false, message: 'Usuario desactivado' });
+        }
+
+        // Comparar contraseñas
+        const validPassword = await bcrypt.compare(password, user.password);
+
+        if (!validPassword) {
+            return res.status(403).json({ success: false, message: 'Usuario o contraseña incorrectos' });
+        }
+
+        // Generar token
+        const token = jwt.sign(
+            {
                 email: user.email,
                 nombre: user.nombre,
                 apellido: user.apellido,
                 rol: user.rol
-            }, 'mi clave secreta', {
-                expiresIn: '1h'
-            }); // Expira en 1 hora
+            },
+            'mi clave secreta',
+            { expiresIn: '1h' }
+        );
 
-            // Guardar el token en una cookie
-            res.cookie('token', token, {
-                httpOnly: true, // La cookie solo se puede acceder en el servidor
-                secure: true, // Solo se debe enviar por https
-                samesite: 'strict', // La cookie solo se puede acceder del mismo dominio
-                maxAge: 1000 * 60 * 60 // Expira en 1 hora
-            });
+       
 
-            // Redirigir al usuario a la página principal
-            return res.status(200).render('home/index');
-        } else {
-            return res.status(403).json({
-                success: false, message: 'Usuario o contraseña incorrectos'
-            });
-        }
-    } else {
-        return res.status(404).json({
-            success: false, message: 'Usuario no encontrado'
+        // Limpiar cookies existentes y establecer una nueva
+        res.clearCookie('token');
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60 // 1 hora
         });
+
+        return res.status(200).render('home/index');
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Error en el servidor' });
     }
 };
 
@@ -61,5 +74,5 @@ exports.logout = (req, res) => {
     req.session.destroy();
 
     // Redirigir al usuario a la página de inicio de sesión
-    res.status(200).redirect('/login');
+    res.status(200).redirect('/home/login');
 };

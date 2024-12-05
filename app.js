@@ -60,7 +60,7 @@ app.get('/',(req,res)=>{
 })*/
 
 //rutas
-app.use('/',routerHome);
+app.use('/home',routerHome);
 app.use('/obra',routerObra);
 app.use('/plan',routerPlan);
 app.use('/paciente',routerPaciente);

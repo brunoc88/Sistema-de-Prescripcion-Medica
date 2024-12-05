@@ -1,7 +1,6 @@
 extends ../layout 
 
 block content 
-
     if message
         #notification.alert.alert-success
             | #{message}
@@ -15,3 +14,40 @@ block content
     div
         a(href="/contrato/crear" class="btn btn-success mx-2") Agregar Contrato
         h2 Listado de contratos
+
+    table#myTable.table.table-striped
+        thead 
+            tr
+                th Id
+                th Nombre 
+                th Apellido 
+                th Dni 
+                th Profesion 
+                th Vencimiento 
+                th Estado
+                th Acciones 
+        tbody 
+            if contratos && contratos.length > 0
+                each c in contratos 
+                    tr 
+                        td #{c.idContrato}
+                        td #{c.Profesional.nombre}
+                        td #{c.Profesional.apellido} 
+                        td #{c.Profesional.dni}
+                        td #{c.Profesional.Profesion.nombre} 
+                        td #{c.fechaCaducidad}
+                        td #{c.estado ? 'Activo' : 'Inactivo'}
+                        td
+                            div(class="btn-group")
+                                form(action=`/contrato/historial/${c.idContrato}`, method="get") 
+                                    button(type="submit", class="btn btn-secondary mx-2") Ver Contrato
+                                if c.estado && new Date(c.fechaCaducidad) >= new Date() 
+                                    form(action=`/contrato/actualizar/${c.idContrato}`, method="get") 
+                                        button(type="submit", class="btn btn-primary mx-2") Editar
+                                    form(action=`/contrato/baja/${c.idContrato}?_method=PATCH`, method="post") 
+                                        button(type="submit", class="btn btn-danger mx-2") Desactivar
+                                else 
+                                    form(action=`/contrato/activar/${c.idContrato}?_method=PATCH`, method="post") 
+                                        button(type="submit", class="btn btn-success mx-2") Activar
+                                
+            

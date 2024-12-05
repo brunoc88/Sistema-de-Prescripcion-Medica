@@ -11,6 +11,10 @@ const Contrato = sequelize.define(
             primaryKey: true,
             allowNull: false,
         },
+        fechaCreacion:{
+            type: DataTypes.DATEONLY,
+            allowNull: false,
+        },
         fechaCaducidad: {
             type: DataTypes.DATEONLY,
             allowNull: false,

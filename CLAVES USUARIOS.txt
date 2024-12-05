@@ -1,0 +1,9 @@
+Admin:
+
+email: bruno@gmail.com	
+password: 123
+
+Empleado:
+
+email: flor@gmail.com	
+password: 123
