@@ -1,5 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
 # Node.js dependencies
 node_modules/
 
@@ -23,9 +24,6 @@ Thumbs.db
 # IDE configuration files
 .vscode/
 .idea/
-
-# Package-lock file (optional, you can keep it if you want deterministic installs)
-package-lock.json
 
 # Temporary files
 *.pid

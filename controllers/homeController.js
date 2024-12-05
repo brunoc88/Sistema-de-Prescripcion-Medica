@@ -2,6 +2,16 @@ const Usuario = require('../models/usuario');
 const bcrypt = require('bcrypt');//para encriptar
 const jwt = require('jsonwebtoken')//para trabajar con token
 
+//GET vista Index Home
+exports.vistaIndexHome = async(req,res)=>{
+    try {
+        return res.status(200).render('home/index');
+    } catch (error) {
+        return  res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+
+
 //GET vista login
 exports.vistaLogin = async (req, res) => {
     try {
