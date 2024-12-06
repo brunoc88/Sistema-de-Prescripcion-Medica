@@ -1,45 +1,44 @@
-extends ../layout 
+extends ../layout
 
-block content 
-
-  if message
-    #notification.alert.alert-success
-      | #{message}
-
+block content
   if errorMessage
     #notification.alert.alert-danger
       | #{errorMessage}
+      
   div.container
     div.row.justify-content-center
       div.col-md-6.col-12
-      
         h2 Alta de Usuarios
         form(action='/usuario/alta' method='POST' class="needs-validation" enctype="multipart/form-data")
           div(class="mb-3")
             label(for='nombre' class="form-label") Nombre:
-            input(type="text" name="nombre" class="form-control" required)
-        
+            input(type="text" name="nombre" class="form-control" 
+              value=(usuario ? usuario.nombre : '') required)
+
           div(class="mb-3")
             label(for='apellido' class="form-label") Apellido:
-            input(type="text" name="apellido" class="form-control" required)
-          
+            input(type="text" name="apellido" class="form-control" 
+              value=(usuario ? usuario.apellido : '') required)
+
           div(class="mb-3")
             label(for='email' class="form-label") Email:
-            input(type="text" name="email" class="form-control" required)
+            input(type="text" name="email" class="form-control" 
+              value=(usuario ? usuario.email : '') required)
 
           div(class="mb-3")
             label(for='password' class="form-label") Password:
-            input(type="password" name="password" class="form-control" required)
-          
+            input(type="password" name="password" class="form-control" 
+              value=(usuario ? usuario.password : '') required)
+
           div(class="mb-3")
-          label(for="avatar" class="form-label") Avatar:
-          input(type="file" name="avatar" class="form-control" accept="image/*")
+            label(for="avatar" class="form-label") Avatar:
+            input(type="file" name="avatar" class="form-control" accept="image/*")
 
           div(class="mb-3")
             label(for="rol" class="form-label") Rol:
             select(name="rol" class="form-select" required)
-                option(value="admin") Admin 
-                option(value="empleado") Empleado
+              option(value="admin") Admin
+              option(value="empleado") Empleado
 
           div(class="d-grid gap-2")
             button(type="submit" class="btn btn-primary") Guardar

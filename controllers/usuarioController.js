@@ -1,6 +1,6 @@
 const Usuario = require('../models/usuario');
 
-const bcrypt = require('bcrypt');//para encriptar
+const bcrypt = require('bcrypt');//para encriptar clave
 
 //GET vista index usuario
 exports.vistaIndexUsuario = async(req,res)=>{
@@ -23,54 +23,52 @@ exports.vistaRegistrarUsuario = async(req,res)=>{
     }
 }
 //POST Crear Usuario
-exports.altaUsuario = async(req,res)=>{
+exports.altaUsuario = async (req, res) => {
     try {
-        const data = req.body;
-
-        //busco que no exista otro usuario con ese mail
-        const usuario = await Usuario.findOne({where:{email:data.email}});
-        if(!data){
-            return res.status(400).json('campos vacios!');
-        }
-        //si el usuario mando un mail que ya existe recargo pag con sus datos pre-establecidos
-        if(data.email == usuario.email){
-            
-            return res.status(409).render('usuario/alta',{
-                errorMessage: 'Ya existe un usuario registrado con ese email',
-                FormData:{
-                    nombre: data.nombre,
-                    apellido: data.nombre,
-                    email: data.email,
-                    password: data.password,
-                    rol: data.rol
-                }
-            })
-           
-        }
-        //sino hubo problemas
-        // Generar un salt para el hashing de la contraseña
-        const salt = await bcrypt.genSalt(10);
-
-        // Hashear la contraseña con el salt generado
-        const hashedPassword = await bcrypt.hash(data.password, salt);
-
-         // Asignar avatar: usar el subido o el predeterminado
-         const avatar = req.file ? `/avatars/${req.file.filename}` : `/uploads/user.png`;
-        // Crear un nuevo usuario con la contraseña hasheada
-        await Usuario.create({
-            nombre:data.nombre,
-            apellido:data.apellido,
-            email:data.email,
-            password: hashedPassword, // Guardar la contraseña hasheada
-            rol:data.rol,
-            avatar
+      const data = req.body;
+  
+      // Verificar si ya existe un usuario con ese email
+      const usuarioExistente = await Usuario.findOne({ where: { email: data.email } });
+      if (usuarioExistente) {
+      
+        // Si ya existe, enviar los datos previos para que se muestren
+        return res.status(409).render('usuario/alta', {
+            errorMessage: 'Ya existe un usuario registrado con ese email. Vuelva a seleccionar una avatar y rol!',
+            usuario: {
+                nombre: data.nombre,
+                apellido: data.apellido,
+                email: data.email,
+                password: data.password    
+            }
         });
-        return res.status(200).redirect('/usuario/index');
-    } catch (error) {
-        return res.status(500).json('Hubo un error: ' + error.errorMessage);
     }
-}
-
+    
+  
+      // Generar salt y hashear la contraseña
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(data.password, salt);
+  
+      // Definir la imagen de avatar
+      const avatar = req.file ? `/avatars/${req.file.filename}` : `/uploads/user.png`;
+  
+      // Crear el nuevo usuario
+      await Usuario.create({
+        nombre: data.nombre,
+        apellido: data.apellido,
+        email: data.email,
+        password: hashedPassword,
+        rol: data.rol,
+        avatar
+      });
+  
+      // Redirigir al index si todo fue correcto
+      return res.status(200).redirect('/usuario/index');
+    } catch (error) {
+      console.error('Error al crear el usuario:', error);
+      return res.status(500).json('Hubo un error: ' + error.message);
+    }
+};
+  
 //GET vista editar usuario
 exports.vistaEditarUsuario = async(req,res)=>{
     try {
@@ -88,6 +86,7 @@ exports.vistaEditarUsuario = async(req,res)=>{
     }
 }
 
+//PUT editar Empleado
 exports.editarUsuario = async (req, res) => {
     try {
         const id = req.params.id;
@@ -114,3 +113,38 @@ exports.editarUsuario = async (req, res) => {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 };
+
+//PATCH desactivar Usuario
+exports.bajaUsuario = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        //busco el usuario
+        const usuario = await Usuario.findByPk(id);
+        if(!usuario){
+            return res.status(404).json('Usuario no encontrado!');
+        }
+        await Usuario.update({estado:false},{where:{id:id}});
+        req.session.message = `Usuario: ${usuario.nombre + ' ' + usuario.apellido} Desactivado!`
+        return res.status(200).redirect('/usuario/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+
+//PATCH reactivar Usuario
+exports.activarUsuario = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        //busco usuario
+        const usuario = await Usuario.findByPk(id);
+        if(!usuario){
+            return res.status(404).json('Usuario no encontrado!');
+        }
+        await Usuario.update({estado:true},{where:{id:id}});
+        req.session.message = `Usuario: ${usuario.nombre + ' ' + usuario.apellido} activado con exito!`
+        return res.status(200).redirect('/usuario/index');
+
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}

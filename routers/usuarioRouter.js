@@ -10,8 +10,8 @@ usuarioRouter.get('/index',usuarioController.vistaIndexUsuario);
 usuarioRouter.get('/crear',usuarioController.vistaRegistrarUsuario);
 //POST para crear usuario
 // En la ruta para crear un usuario
- // 'avatar' es el nombre del campo en el formulario HTML
- // Guardar el usuario con el avatar
+// 'avatar' es el nombre del campo en el formulario HTML
+// Guardar el usuario con el avatar
 usuarioRouter.post('/alta',upload.single('avatar'),usuarioController.altaUsuario);
 //GET vista editar usuario
 usuarioRouter.get('/editar/:id',usuarioController.vistaEditarUsuario);
@@ -19,5 +19,9 @@ usuarioRouter.get('/editar/:id',usuarioController.vistaEditarUsuario);
 //PUT actualiza Usuario
 usuarioRouter.put('/actualizar/:id', upload.single('avatar'), usuarioController.editarUsuario);
 
+//PATCH desactivar Usuario
+usuarioRouter.patch('/baja/:id',usuarioController.bajaUsuario);
 
+//PATCH reactivar Usuario
+usuarioRouter.patch('/activar/:id',usuarioController.activarUsuario);
 module.exports = usuarioRouter;
