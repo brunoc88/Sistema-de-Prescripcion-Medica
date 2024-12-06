@@ -6,7 +6,7 @@ const REFEPS = require('../api/refeps');
 const { where } = require('sequelize');
 
 
-
+//Get vista Index Profesional
 exports.indexProfesional = async(req,res)=>{
     try {
         //listar profesionales con su profesion y especialidad
@@ -33,7 +33,7 @@ exports.indexProfesional = async(req,res)=>{
         return res.status(500).json('Hubo un error: '+error.message);
     }
 }
-
+//Get vista alta Profesional
 exports.vistaAltaProfesional = async(req,res)=>{
     try {
         //listo las profesiones activas
@@ -47,7 +47,7 @@ exports.vistaAltaProfesional = async(req,res)=>{
     }
 }
 
-
+//POST alta profesional
 exports.altaProfesional = async (req, res) => {
 
     try {
@@ -94,6 +94,7 @@ exports.altaProfesional = async (req, res) => {
     }
 };
 
+//PATCH reactivar profesional(solamente se puede por nuevo contrato!)
 exports.reactivarUnProfesional = async(req,res)=>{
     try {
         const id = req.params.id
@@ -102,6 +103,24 @@ exports.reactivarUnProfesional = async(req,res)=>{
         
         req.session.errorMessage = "solamente se puede reactivar mediante contrato";
         return res.redirect('/profesional/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' +error.message);
+    }
+}
+//PATCH bajar Profesional(solamente bajando el contrato vigente!)
+exports.bajaProfesional = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        //buscar profesional
+        const profesional = await Profesional.findByPk(id);
+
+        if(!profesional){
+            return res.status(404).json('No se encontro!');
+        }
+        if(profesional.estado){
+            req.session.errorMessage = 'Solamente se puede desactivar dando baja al contrato!';
+            return res.redirect('/profesional/index');
+        }
     } catch (error) {
         return res.status(500).json('Hubo un error: ' +error.message);
     }

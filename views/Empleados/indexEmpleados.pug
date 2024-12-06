@@ -1,0 +1,84 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Sidebar a la derecha
+    style.
+      /* Estilos para el body y html */
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Sidebar a la derecha */
+      .sidebar {
+        height: 100vh; /* 100% del alto de la pantalla */
+        width: 250px;
+        position: fixed;
+        top: 0;
+        right: 0; /* Sidebar pegada a la derecha */
+        background-color: #6f42c1; /* Color violeta */
+        color: white;
+        padding-top: 20px;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        z-index: 9999; /* Asegura que esté por encima del contenido */
+      }
+
+      .sidebar .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+      }
+
+      .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        margin: 10px 0;
+      }
+
+      .sidebar ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        padding: 10px 15px;
+        display: block;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .sidebar ul li a:hover {
+        background-color: #520e8e; /* Violeta más oscuro al pasar el ratón */
+        color: white;
+      }
+
+      /* Contenido principal desplazado */
+      .content {
+        margin-right: 250px; /* Desplaza el contenido principal hacia la izquierda para hacer espacio a la sidebar */
+        padding: 20px;
+      }
+
+  body
+    .sidebar
+      img.avatar(src="https://via.placeholder.com/80", alt="Avatar")
+      ul
+        li
+          a(href="#mi-perfil") Mi perfil
+        li
+          a(href="#mis-turnos") Mis turnos
+        li
+          a(href="#mis-pacientes") Mis pacientes
+        li
+          a(href="#mis-recetas") Mis recetas
+        li
+          a(href="#salir") Salir
+
+    block content

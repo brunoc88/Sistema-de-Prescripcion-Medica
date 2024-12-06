@@ -5,12 +5,11 @@ const jwt = require('jsonwebtoken')//para trabajar con token
 //GET vista Index Home
 exports.vistaIndexHome = async(req,res)=>{
     try {
-        return res.status(200).render('home/index');
+        return res.status(200).render('home/index', { usuario: req.user.rol });
     } catch (error) {
         return  res.status(500).json('Hubo un error: ' + error.message);
     }
 }
-
 
 //GET vista login
 exports.vistaLogin = async (req, res) => {
@@ -66,7 +65,12 @@ exports.login = async (req, res) => {
             maxAge: 1000 * 60 * 60 // 1 hora
         });
 
-        return res.status(200).render('home/index');
+        //si el usuario es admin va tener sus vistas
+        if(user.rol == 'admin'){
+            return res.status(200).render('home/index');
+        }
+        //como el profesional va a tener las sullas
+        return res.status(200).render('empleados/indexEmpleados');
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Error en el servidor' });
     }

@@ -15,6 +15,5 @@ profesionRoute.patch('/actualizar/:id',profesionController.actualizarProfesion);
 //PATCH reactivar Profesion
 profesionRoute.patch('/activar/:id',profesionController.reactivarProfesion);
 
-
 module.exports = profesionRoute;
 
