@@ -2,7 +2,7 @@ const express = require('express');//solicito express
 const sequelize = require('./config/db');//solicito db
 const app = express();
 const path = require('path');
-const methodOverride = require('method-override');
+const methodOverride = require('method-override');//permitir mandar put como patch
 const session = require('express-session');//middleware para mensajes
 const cookieParser = require('cookie-parser');//nos va a permitir guardar el token en las cookies
 
@@ -35,6 +35,7 @@ app.use(express.json());//datos enviados como json
 app.use(express.urlencoded({ extended: false }));// datos enviados como formulario
 // Configurar la carpeta pública
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/avatars', express.static(path.join(__dirname, 'public/uploads/avatars')));//configuro ruta de avatars
 
 // Usamos cookie-parser para manejar las cookies
 app.use(cookieParser());

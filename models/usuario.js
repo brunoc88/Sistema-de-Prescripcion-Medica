@@ -35,6 +35,10 @@ const Usuario = sequelize.define(
     estado:{
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    avatar: {
+        type: DataTypes.STRING,
+        allowNull: true, // El avatar es opcional
     }
     },{
         freezeTableName: true,

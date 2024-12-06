@@ -5,7 +5,11 @@ const bcrypt = require('bcrypt');//para encriptar
 //GET vista index usuario
 exports.vistaIndexUsuario = async(req,res)=>{
     try {
-        return res.status(200).render('usuario/index');
+        const usuarios = await Usuario.findAll();
+        if(!usuarios){
+            return res.status(404).json('No se encontraron usuarior!');
+        }
+        return res.status(200).render('usuario/index',{usuarios});
     } catch (error) {
         return res.status(500).json('Hubor un error: '+ error.errorMessage);
     }
@@ -48,15 +52,27 @@ exports.altaUsuario = async(req,res)=>{
         // Hashear la contraseña con el salt generado
         const hashedPassword = await bcrypt.hash(data.password, salt);
 
+         // Asignar avatar: usar el subido o el predeterminado
+         const avatar = req.file ? `/avatars/${req.file.filename}` : `/uploads/user.png`;
         // Crear un nuevo usuario con la contraseña hasheada
         await Usuario.create({
             nombre:data.nombre,
             apellido:data.apellido,
             email:data.email,
             password: hashedPassword, // Guardar la contraseña hasheada
-            rol:data.rol
+            rol:data.rol,
+            avatar
         });
         return res.status(200).redirect('/usuario/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.errorMessage);
+    }
+}
+
+//GET vista editar usuario
+exports.vistaEditarUsuario = async(req,res)=>{
+    try {
+        return res.status(200).render('usuario/editar');
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.errorMessage);
     }

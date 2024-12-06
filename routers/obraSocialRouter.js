@@ -1,6 +1,6 @@
 const express = require('express');
 const obraSocialController = require('../controllers/obraSocialController');
-const { verifyToken, verifyRole } = require('../public/js/authMiddleware');
+const { verifyToken, verifyRole } = require('../middlewares/authMiddleware');
 const routerObra = express.Router();
 
 //solo el administrador puede hacer ABM de Obras

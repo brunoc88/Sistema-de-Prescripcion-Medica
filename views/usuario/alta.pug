@@ -14,7 +14,7 @@ block content
       div.col-md-6.col-12
       
         h2 Alta de Usuarios
-        form(action='/usuario/alta' method='POST' class="needs-validation")
+        form(action='/usuario/alta' method='POST' class="needs-validation" enctype="multipart/form-data")
           div(class="mb-3")
             label(for='nombre' class="form-label") Nombre:
             input(type="text" name="nombre" class="form-control" required)
@@ -30,6 +30,10 @@ block content
           div(class="mb-3")
             label(for='password' class="form-label") Password:
             input(type="password" name="password" class="form-control" required)
+          
+          div(class="mb-3")
+          label(for="avatar" class="form-label") Avatar:
+          input(type="file" name="avatar" class="form-control" accept="image/*")
 
           div(class="mb-3")
             label(for="rol" class="form-label") Rol:

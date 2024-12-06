@@ -5,7 +5,7 @@ const Profesion = require('../models/profesion');
 const Especialidad = require('../models/especialidad');
 const Usuario = require('../models/usuario');
 const PDFDocument = require('pdfkit');//necesario para pdf
-const fs = require('fs'); //necesario para el manejo de archivos
+
 
 //GET vista index de Contrato
 exports.vistaIndexContrato = async (req, res) => {

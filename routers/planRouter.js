@@ -1,6 +1,5 @@
 const express = require('express');
 const planController = require('../controllers/planController');
-const { verifyToken, verifyRole } = require('../public/js/authMiddleware');
 const routerPlan = express.Router();
 
 //Solamente el admin puede hacer ABM de Planes
