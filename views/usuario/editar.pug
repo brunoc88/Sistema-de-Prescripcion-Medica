@@ -1,26 +1,47 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Document
-    body 
+extends ../layout 
 
-      form(action="/usuarios" method="POST" enctype="multipart/form-data")
-        label(for="nombre") Nombre:
-        input(type="text" name="nombre" required)
+block content 
 
-        label(for="apellido") Apellido:
-        input(type="text" name="apellido" required)
+  if message
+    #notification.alert.alert-success
+      | #{message}
 
-        label(for="email") Email:
-        input(type="email" name="email" required)
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
+  div.container
+    div.row.justify-content-center
+      div.col-md-6.col-12
+      
+        h2 Editar Usuario
+        form(action=`/usuario/actualizar/${usuario.id}?_method= PUT'` method='POST' class="needs-validation" enctype="multipart/form-data")
+          div(class="mb-3")
+            label(for='nombre' class="form-label") Nombre:
+            input(type="text" name="nombre" value = `${usuario.nombre}` class="form-control" required)
+        
+          div(class="mb-3")
+            label(for='apellido' class="form-label") Apellido:
+            input(type="text" name="apellido" value = `${usuario.apellido}` class="form-control" required)
+          
+          div(class="mb-3")
+            label(for='email' class="form-label") Email:
+            input(type="text" name="email" value = `${usuario.email}` class="form-control" required)
 
-        label(for="password") Contraseña:
-        input(type="password" name="password" required)
+          div(class="mb-3")
+            label(for='password' class="form-label") Password:
+            input(type="password" name="password" value = `${usuario.password}` class="form-control" required)
+          
+          div(class="mb-3")
+          label(for="avatar" class="form-label") Avatar:
+          input(type="file" name="avatar" value = `${usuario.avatar}` class="form-control" accept="image/*")
 
-        label(for="avatar") Avatar:
-        input(type="file" name="avatar" accept="image/*")
+          div(class="mb-3")
+            label(for="rol" class="form-label") Rol:
+            select(name="rol" value = `${usuario.rol}` class="form-select" required)
+                option(value="admin") Admin 
+                option(value="empleado") Empleado
 
-        button(type="submit") Crear Usuario
+          div(class="d-grid gap-2")
+            button(type="submit" class="btn btn-primary") Guardar
+            a(href="/usuario/index" class="btn btn-secondary") Volver
 

@@ -14,5 +14,10 @@ usuarioRouter.get('/crear',usuarioController.vistaRegistrarUsuario);
  // Guardar el usuario con el avatar
 usuarioRouter.post('/alta',upload.single('avatar'),usuarioController.altaUsuario);
 //GET vista editar usuario
-usuarioRouter.get('/editar',usuarioController.vistaEditarUsuario);
+usuarioRouter.get('/editar/:id',usuarioController.vistaEditarUsuario);
+
+//PUT actualiza Usuario
+usuarioRouter.put('/actualizar/:id', upload.single('avatar'), usuarioController.editarUsuario);
+
+
 module.exports = usuarioRouter;

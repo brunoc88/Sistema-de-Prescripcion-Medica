@@ -28,12 +28,13 @@ exports.altaUsuario = async(req,res)=>{
         const data = req.body;
 
         //busco que no exista otro usuario con ese mail
-        const usuario = Usuario.findAll({where:{email:data.email}});
+        const usuario = await Usuario.findOne({where:{email:data.email}});
         if(!data){
             return res.status(400).json('campos vacios!');
         }
         //si el usuario mando un mail que ya existe recargo pag con sus datos pre-establecidos
         if(data.email == usuario.email){
+            
             return res.status(409).render('usuario/alta',{
                 errorMessage: 'Ya existe un usuario registrado con ese email',
                 FormData:{
@@ -44,6 +45,7 @@ exports.altaUsuario = async(req,res)=>{
                     rol: data.rol
                 }
             })
+           
         }
         //sino hubo problemas
         // Generar un salt para el hashing de la contraseña
@@ -72,8 +74,43 @@ exports.altaUsuario = async(req,res)=>{
 //GET vista editar usuario
 exports.vistaEditarUsuario = async(req,res)=>{
     try {
-        return res.status(200).render('usuario/editar');
+        const id = req.params.id;
+        //busco el usuario
+        const usuario = await Usuario.findOne({where:{id:id}});
+
+        if(!usuario){
+            return res.status(404).json('Usuario no encontrado!');
+        }
+
+        return res.status(200).render('usuario/editar',{usuario});
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.errorMessage);
     }
 }
+
+exports.editarUsuario = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+
+        // Verifico si el usuario existe
+        const usuario = await Usuario.findOne({ where: { id: id } });
+
+        if (!usuario) {
+            return res.status(404).json('Usuario no encontrado');
+        }
+
+        // Asignar avatar: usar el subido o el predeterminado
+        const avatar = req.file ? `/avatars/${req.file.filename}` : usuario.avatar;
+
+        // Actualizo el usuario
+        await Usuario.update(
+            { nombre: data.nombre, apellido: data.apellido, email: data.email, password: data.password, avatar: avatar, rol: data.rol },
+            { where: { id: id } }
+        );
+
+        res.json('Usuario actualizado');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+};
