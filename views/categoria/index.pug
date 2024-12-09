@@ -1,0 +1,50 @@
+extends ../layout 
+
+block content
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h1 index de categorias
+
+    h2 Crear Categoria
+
+    form(action="/categoria/alta" method="POST")
+        div(class="mb-3")
+            label(for="nombre") Nombre de la categoria:
+            input(type="text" name="nombre" class="form-control w-auto", required)
+            button(type="submit" class="btn btn-success mx-2") Agregar Categoria
+
+    h2 Listado de Categorias
+    table#myTable.table.table-striped 
+        thead 
+            tr 
+                th Id 
+                th Nombre 
+                th Estado 
+                th Acciones 
+        tbody 
+            if categorias && categorias.length > 0
+                each c in categorias 
+                    tr 
+                        td #{c.idCategoria} 
+                        td #{c.nombre} 
+                        td #{c.estado ?'Activo' : 'Inactivo'} 
+                        td
+                            div(class="btn-group")
+                                form(action=`/categoria/editar/${c.idCategoria}`, method="GET")
+                                    button(type="submit" class="btn btn-primary mx-2") Editar
+                                if c.estado == 1
+                                    form(action=`/categoria/bajar/${c.idCategoria}?_method=PATCH`, method='POST')
+                                        button(type="submit" class="btn btn-danger mx-2") Desactivar
+                                else
+                                    form(action=`/categoria/activar/${c.idCategoria}?_method=PATCH`, method='POST')
+                                        button(type="submit" class="btn btn-success mx-2") Activar
+            else
+                tr
+                    td(colspan="4") No hay categorias registradas
