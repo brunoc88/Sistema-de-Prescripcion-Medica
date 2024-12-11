@@ -1,0 +1,59 @@
+extends ../layout 
+
+block content 
+
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
+
+  div.container
+    div.row.justify-content-center
+      div.col-md-6.col-12
+        h2 Alta de Medicamento
+        form(action='/medicamento/alta' method='POST' class="needs-validation")
+          div(class="mb-3")
+            label(for='nombre' class="form-label") Nombre:
+            input(type="text" name="nombre" class="form-control" required)
+
+          div(class="mb-3")
+            label(for='concentracion' class="form-label") Concentracion:
+            input(type="text" name="concentracion" class="form-control" required)
+
+          div(class="mb-3")
+            label(for="id_forma" class="form-label") Forma Farmaceutica:
+            select(name="id_forma" id="id_forma" class="form-select" required)
+              if formas && formas.length > 0
+                each f in formas 
+                  option(value=`${f.idForma}`) #{f.nombre}
+              else 
+                option(value="" disabled) No hay formas disponibles
+
+          div(class="mb-3")
+            label(for='cantidad' class="form-label") Cantidad:
+            input(type="text" name="cantidad" class="form-control" required)
+
+          div(class="mb-3")
+            label(for="id_familia" class="form-label") Familia:
+            select(name="id_familia" id="id_familia" class="form-select" required)
+              if familias && familias.length > 0
+                each f in familias 
+                  option(value=`${f.idFamilia}`) #{f.nombre}
+              else 
+                option(value="" disabled) No hay familias disponibles
+
+          div(class="mb-3")
+            label(for="id_categoria" class="form-label") Categoria:
+            select(name="id_categoria" id="id_categoria" class="form-select" required)
+              if categorias && categorias.length > 0
+                each c in categorias 
+                  option(value=`${c.idCategoria}`) #{c.nombre}
+              else 
+                option(value="" disabled) No hay categorias disponibles
+
+          div(class="d-grid gap-2")
+            button(type="submit" class="btn btn-primary") Guardar
+            a(href="/profesional/index" class="btn btn-secondary") Volver

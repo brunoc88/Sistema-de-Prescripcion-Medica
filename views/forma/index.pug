@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  h1 Formas Farmacéuticas
+
+  h2 Crear Forma 
+
+  if message
+    #notification.alert.alert-success
+      | #{message}
+
+  if errorMessage
+    #notification.alert.alert-danger
+      | #{errorMessage}
+
+  form(action="/forma/alta", method="POST")
+    div(class="mb-3")
+      label(for="nombre") Nombre de la Forma:
+      input(type="text", name="nombre", class="form-control w-auto", required)
+    button(type="submit", class="btn btn-success mx-2") Agregar Forma
+
+  h2 Listado de Formas Farmacéuticas
+  table#myTable.table.table-striped
+    thead
+      tr
+        th ID
+        th Nombre
+        th Estado
+        th Acciones
+    tbody
+      if formas && formas.length > 0
+        each f in formas
+          tr
+            td #{f.idForma}
+            td #{f.nombre}
+            td #{f.estado ? 'Activo' : 'Inactivo'}
+            td
+              div(class="btn-group")
+                form(action=`/forma/editar/${f.idForma}`, method="GET")
+                  button(type="submit", class="btn btn-primary mx-2") Editar
+                if f.estado == 1
+                  form(action=`/forma/bajar/${f.idForma}?_method=PATCH`, method='POST')
+                    button(type="submit", class="btn btn-danger mx-2") Desactivar
+                else
+                  form(action=`/forma/activar/${f.idForma}?_method=PATCH`, method='POST')
+                    button(type="submit", class="btn btn-success mx-2") Activar
+      else
+        tr
+          td(colspan="4") No hay Formas Farmacéuticas registradas

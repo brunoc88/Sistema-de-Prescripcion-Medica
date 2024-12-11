@@ -18,8 +18,8 @@ const routerHome = require('./routers/homeRouter');
 const routerContrato = require('./routers/contratoRouter');
 const routerCategoria = require('./routers/categoriaRouter');
 const routerFamilia = require('./routers/familiaRouter');
-
-
+const routerForma = require('./routers/formaRouter');
+const routerMedicamento = require('./routers/medicamentoRouter');
 
 //api --> sistema externo al nuestro
 const routerRefeps = require('./api/apiRouter');
@@ -76,8 +76,8 @@ app.use('/usuario',routerUsuario);
 app.use('/contrato',routerContrato);
 app.use('/categoria',routerCategoria);
 app.use('/familia',routerFamilia);
-
-
+app.use('/forma',routerForma);
+app.use('/medicamento',routerMedicamento);
 
 
 
