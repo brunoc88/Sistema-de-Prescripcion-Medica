@@ -1,0 +1,54 @@
+extends ../layout 
+
+block content 
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h1 Index Medicamentos
+
+    div
+        a(href="/medicamento/crear" class="btn btn-success mx-2") Agregar Medicamento
+        h2 Listado de Medicamentos
+
+    table#myTable.table.table-striped
+        thead 
+            tr 
+                th Id 
+                th Nombre
+                th Concentración
+                th Forma Farmacéutica
+                th Cantidad de unidades
+                th Familia
+                th Categoria
+                th Estado
+                th Acciones
+        tbody
+                if medicamentos && medicamentos.length > 0
+                    each m in medicamentos 
+                        tr
+                            td #{m.idMedicamento} 
+                            td #{m.nombre}
+                            td #{m.concentracion}
+                            td #{m.Forma.nombre}
+                            td #{m.cantidad}
+                            td #{m.Familium.nombre}
+                            td #{m.Categorium.nombre}
+                            td #{m.estado ? 'Activo' : 'Inactivo'} 
+                            td 
+                                div(class="btn-group")
+                                    // Botón para editar profesional
+                                    form(action=`/medicamento/editar/${m.idMedicamento}`, method="GET")
+                                        button(type="submit" class="btn btn-primary mx-2") Editar
+                                    // Botón para activar/desactivar profesional
+                                    if m.estado == 1
+                                        form(action=`/medicamento/bajar/${m.idMedicamento}?_method=PATCH`, method="POST")
+                                            button(type="submit" class="btn btn-danger") Desactivar
+                                    else
+                                        form(action=`/medicamento/activar/${m.idMedicamento}?_method=PATCH`, method="POST")
+                                            button(type="submit" class="btn btn-success mx-2") Activar

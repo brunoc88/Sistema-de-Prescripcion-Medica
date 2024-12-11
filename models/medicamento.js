@@ -24,6 +24,10 @@ const Medicamento = sequelize.define(
         cantidad:{
             type: DataTypes.STRING,
             allowNull: false
+        },
+        estado:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
         }
     },{
         freezeTableName: true,

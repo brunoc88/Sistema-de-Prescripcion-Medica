@@ -13,8 +13,8 @@ block content
   div.container
     div.row.justify-content-center
       div.col-md-6.col-12
-        h2 Alta de Medicamento
-        form(action='/medicamento/alta' method='POST' class="needs-validation")
+        h2 Editar de Medicamento
+        form(action=`/medicamento/actualizar/${medicamento.idMedicamento}?_method=PUT`, method='POST' class="needs-validation")
           div(class="mb-3")
             label(for='nombre' class="form-label") Nombre:
             input(type="text" name="nombre"  class="form-control" value = (medicamento? medicamento.nombre : '') required )
