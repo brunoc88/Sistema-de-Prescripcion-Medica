@@ -20,9 +20,12 @@ const routerCategoria = require('./routers/categoriaRouter');
 const routerFamilia = require('./routers/familiaRouter');
 const routerForma = require('./routers/formaRouter');
 const routerMedicamento = require('./routers/medicamentoRouter');
+const routerTipoPrestaciones = require('./routers/tipoPrestacionesRouter');
+//const routerPrestaciones = require('./routers/prestacionesRouter');
 
 //api --> sistema externo al nuestro
 const routerRefeps = require('./api/apiRouter');
+//const prestacionesRouter = require('./routers/prestacionesRouter');
 
 
 // Configurar Pug como motor de vistas
@@ -78,7 +81,8 @@ app.use('/categoria',routerCategoria);
 app.use('/familia',routerFamilia);
 app.use('/forma',routerForma);
 app.use('/medicamento',routerMedicamento);
-
+app.use('/tipoPrestaciones',routerTipoPrestaciones);
+//app.use('/prestaciones',prestacionesRouter);
 
 
 //api

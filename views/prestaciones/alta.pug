@@ -1,0 +1,38 @@
+extends ../layout 
+
+block content 
+
+    // Mensajes de notificación
+    if message
+        #notification.alert.alert-success
+            | #{message}
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    div.container
+        div.row.justify-content-center
+            div.col-md-6.col-12
+                h1.text-center.mb-4 Alta de Prestacion
+                form(action="/prestaciones/alta" method="post" class="needs-validation")
+                    div(class="mb-3")
+                        // Se usa el operador ternario para asignar el valor del campo a partir de FormData. Si no hay datos, se deja vacío ('').
+                        label(for="nombre" class="form-label") Nombre:
+                        input(type="text" name="nombre" class="form-control" required value=(FormData ? FormData.nombre : ''))
+
+                    div(class="mb-3")
+                        label(for="lado" class="form-label") Lado:
+                        input(type="text" name="lado" class="form-control" value=(FormData ? FormData.lado : ''))
+
+                    div(class="mb-3")
+                        label(for="indicacion" class="form-label") Indicacion:
+                        textarea(name="indicacion" class="form-control" required rows="4" placeholder="Escriba las indicaciónes aquí...")= (FormData ? FormData.indicacion : '')
+
+                    div(class="mb-3")
+                        label(for="justificacion" class="form-label") Justificación:
+                        textarea(name="justificacion" class="form-control" required rows="4" placeholder="Escriba la justificación aquí...")= (FormData ? FormData.justificacion : '')
+
+
+                    div(class="d-grid gap-2")
+                        button(type="submit" class="btn btn-primary") Guardar
+                        a(href="/prestaciones/index" class="btn btn-secondary") Volver
