@@ -12,4 +12,7 @@ EDITAR USUARIO
 
 VALIDACIONES EN EDITAR
 
--ARREGLAR INPUT DE VISTA EDITAR OBRAS, PACIENTES, ESPECIALIDADES
+-A la hora de actualizar paciente arreglar de que muestra la primera obra social por defecto(no recupera esa parte)
+-Tambien actualiza el paciente por mas que no se cambiara ningun campo
+
+-A la hora de producir el fallo de duplicado en editar medicamentos y corregirlo me crea un nuevo medicamento

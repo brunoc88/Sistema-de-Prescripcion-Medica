@@ -1,0 +1,89 @@
+. Médico Generalista - Cardiólogo
+Nombre: Juan Pablo
+Apellido: Fernández
+DNI: 32.458.123
+Email: jpfernandez@saludargentina.com
+Matrícula: 457832-MG
+Domicilio: Calle San Martín 456, Córdoba
+num_refps: 125874
+Médico Generalista - Pediatra
+
+Nombre: Mariana
+Apellido: Gómez
+DNI: 29.784.543
+Email: mgomez@medicosunidos.com
+Matrícula: 348721-MG
+Domicilio: Av. Rivadavia 9876, Buenos Aires
+num_refps: 145679
+Enfermero/a - Cirujano General
+
+Nombre: Soledad
+Apellido: Martínez
+DNI: 36.789.654
+Email: smartinez@cuidadoscriticos.org
+Matrícula: 872349-EN
+Domicilio: Las Heras 123, Mendoza
+num_refps: 239876
+Enfermero/a - Dermatólogo
+
+Nombre: Alejandro
+Apellido: López
+DNI: 34.567.321
+Email: alopez@hospitalesunidos.org
+Matrícula: 793452-EN
+Domicilio: Moreno 678, Salta
+num_refps: 267543
+Técnico en Radiología - Ginecólogo
+
+Nombre: Martín
+Apellido: Ruiz
+DNI: 31.234.567
+Email: mruiz@radimaging.com
+Matrícula: 452678-TR
+Domicilio: San Juan 234, Neuquén
+num_refps: 457891
+Técnico en Radiología - Oncólogo
+
+Nombre: Carla
+Apellido: Figueroa
+DNI: 28.987.123
+Email: cfigueroa@radiotec.com
+Matrícula: 567981-TR
+Domicilio: Colón 876, San Luis
+num_refps: 485976
+Kinesiólogo/a - Traumatólogo
+
+Nombre: Diego
+Apellido: Castro
+DNI: 33.456.789
+Email: dcastro@recoverykin.com
+Matrícula: 798453-KI
+Domicilio: Santa Fe 345, Tucumán
+num_refps: 478562
+Kinesiólogo/a - Reumatólogo
+
+Nombre: Lucía
+Apellido: Ayala
+DNI: 35.678.912
+Email: layala@terapiakine.com
+Matrícula: 689754-KI
+Domicilio: Güemes 123, Jujuy
+num_refps: 497283
+Médico Cirujano - Oftalmólogo
+
+Nombre: Juan
+Apellido: Pérez
+DNI: 38.765.432
+Email: jperez@visionperfecta.com
+Matrícula: 412367-CIR
+Domicilio: Libertador 1045, Buenos Aires
+num_refps: 598340
+Médico Cirujano - Neurocirujano
+
+Nombre: Ana
+Apellido: González
+DNI: 34.892.134
+Email: agonzalez@neuroclinic.com
+Matrícula: 501234-CIR
+Domicilio: Rivadavia 567, Rosario
+num_refps: 671283

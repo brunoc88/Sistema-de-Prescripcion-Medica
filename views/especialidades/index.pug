@@ -10,7 +10,7 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 Especialidades!
+    h1 Crear Especialidad!
 
      
     form(action="/especialidades/alta", method="post")
@@ -19,6 +19,7 @@ block content
             input(type="text" , name="nombre", class = "form-control w-auto",required) 
         button(type = "submit",class="btn btn-success mx-2") Agregar Especialidad
 
+    h2(class = 'text-center') Listado de Especialidades
     table#myTable.table.table-striped
         thead 
             tr 

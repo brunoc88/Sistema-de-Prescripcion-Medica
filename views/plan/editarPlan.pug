@@ -16,11 +16,11 @@ block content
       form(action=`/plan/editarEnviar/${plan.idPlan}?_method=PUT`, method="post")
         div(class="mb-3")
           label(for="nombre") Nombre del Plan:
-          input(type="text", name="nombre", value=plan.nombre, class="form-control", required)
+          input(type="text", name="nombre", value=plan.nombre, class="form-control w-auto", required)
 
         div(class="mb-3")
           label(for="obra") Obra Social:
-          input(type="text", value=plan.ObraSocial.nombre, class="form-control", readonly)
+          input(type="text", value=plan.ObraSocial.nombre, class="form-control w-auto", readonly)
           input(type="hidden", name="idObra", value=plan.ObraSocial.id)
 
         button(type="submit", class="btn btn-primary mt-2") Guardar

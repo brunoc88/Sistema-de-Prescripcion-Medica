@@ -2,21 +2,22 @@ extends ../layout
 
 block content
   
-  h1 Obras Sociales
 
-  h2 Editar Obra Social
 
-  if message
-    #notification.alert.alert-success
-      | #{message}
+  h1 Editar Obra Social
 
-  if errorMessage
-    #notification.alert.alert-danger
-      | #{errorMessage}
+    if message
+      #notification.alert.alert-success
+        | #{message}
+
+    if errorMessage
+      #notification.alert.alert-danger
+       | #{errorMessage}
+
   form(action=`/obra/editarEnviar/${obra.id}?_method=PATCH`, method='POST')
     div(class="mb-3")
       label(for="nombre") Nombre de la Obra Social:
-      input(type="text", name="nombre", value=`${obra.nombre}`, class="form-control", required)
+      input(type="text", name="nombre", value=`${obra.nombre}`, class="form-control w-auto", required)
     div(class="btn-group")
       button(type="submit", class="btn btn-primary mt-2") Guardar
       a(href='/obra/index', class="btn btn-secondary mt-2") Volver

@@ -1,9 +1,9 @@
 extends ../layout
 
 block content
-  h1 Prestaciones Medicas
+  
 
-  h2 Crear Prestacion
+  h1 Crear Tipo de Prestacion
 
   if message
     #notification.alert.alert-success
@@ -19,7 +19,7 @@ block content
       input(type="text", name="nombre", class="form-control w-auto", required)
     button(type="submit", class="btn btn-success mx-2") Agregar Prestacion
 
-  h2 Listado de Prestaciones Medicas
+  h2(class='text-center') Listado de Tipos de Prestaciones Medicas
   table#myTable.table.table-striped
     thead
       tr

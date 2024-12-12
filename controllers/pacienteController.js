@@ -261,7 +261,7 @@ exports.bajaPaciente = async (req, res) => {
         await Paciente.update({ estado: false }, { where: { idPaciente: id } });
 
         //res.status(200).send('Paciente dado de baja!');
-        req.session.message = `Paciente ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} eliminado con exito!}`;
+        req.session.message = `Paciente ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} eliminado con exito!`;
         return res.status(200).redirect('/paciente/index');
     } catch (error) {
         res.status(500).json({ message: 'Error al dar de baja al Paciente', error: error.message });
@@ -277,7 +277,7 @@ exports.reactivarPaciente = async (req, res) => {
             return res.status(404).json('No se encontro paciente!');
         }
         await Paciente.update({ estado: true }, { where: { idPaciente: id } });
-        req.session.message = `Paciente: ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} Activado con `
+        req.session.message = `Paciente: ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} Activado con exito!`;
         return res.status(200).redirect('/paciente/index');
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);

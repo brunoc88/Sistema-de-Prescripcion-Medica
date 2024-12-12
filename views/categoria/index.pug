@@ -10,9 +10,9 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 index de categorias
+    
 
-    h2 Crear Categoria
+    h1 Crear Categoria
 
     form(action="/categoria/alta" method="POST")
         div(class="mb-3")
@@ -20,7 +20,7 @@ block content
             input(type="text" name="nombre" class="form-control w-auto", required)
             button(type="submit" class="btn btn-success mx-2") Agregar Categoria
 
-    h2 Listado de Categorias
+    h2(class='text-center') Listado de Categorias
     table#myTable.table.table-striped 
         thead 
             tr 

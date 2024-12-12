@@ -10,7 +10,7 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 Profesiones!
+    h1 Crear Profesion!
 
      
     form(action="/profesion/alta", method="post")
@@ -19,6 +19,7 @@ block content
             input(type="text" , name="nombre", class = "form-control w-auto",required) 
         button(type = "submit",class="btn btn-success mx-2") Agregar Profesion
 
+    h2(class = 'text-center') Listado de Profesiones
     table#myTable.table.table-striped
         thead 
             tr 

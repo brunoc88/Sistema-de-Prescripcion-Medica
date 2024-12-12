@@ -1,9 +1,9 @@
 extends ../layout
 
 block content
-  h1 Formas Farmacéuticas
+  
 
-  h2 Crear Forma 
+  h1 Crear Forma!
 
   if message
     #notification.alert.alert-success
@@ -19,7 +19,7 @@ block content
       input(type="text", name="nombre", class="form-control w-auto", required)
     button(type="submit", class="btn btn-success mx-2") Agregar Forma
 
-  h2 Listado de Formas Farmacéuticas
+  h2(class='text-center') Listado de Formas Farmacéuticas
   table#myTable.table.table-striped
     thead
       tr

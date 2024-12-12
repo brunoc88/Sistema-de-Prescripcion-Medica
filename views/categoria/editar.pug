@@ -1,7 +1,7 @@
 extends ../layout 
 
 block content 
-    h1 Editar Profesion 
+    h1 Editar Categoria
 
     if message
         #notification.alert.alert-success
@@ -11,7 +11,7 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 Profesiones!
+    
 
      
     form(action=`/categoria/actualizar/${categoria.idCategoria}?_method=PATCH`, method="post")

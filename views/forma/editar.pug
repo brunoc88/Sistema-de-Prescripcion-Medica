@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   
-  h1 Formas Farmacéuticas
+  
 
   h2 Editar Forma Farmacéutica
 
@@ -16,7 +16,7 @@ block content
   form(action=`/forma/actualizar/${forma.idForma}?_method=PATCH`, method='POST')
     div(class="mb-3")
       label(for="nombre") Nombre de la Obra Social:
-      input(type="text", name="nombre", value=`${forma.nombre}`, class="form-control", required)
+      input(type="text", name="nombre", value=`${forma.nombre}`, class="form-control w-auto", required)
     div(class="btn-group")
       button(type="submit", class="btn btn-primary mt-2") Guardar
       a(href='/forma/index', class="btn btn-secondary mt-2") Volver

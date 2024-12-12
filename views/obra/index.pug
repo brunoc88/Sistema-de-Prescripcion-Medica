@@ -1,9 +1,9 @@
 extends ../layout
 
 block content
-  h1 Obras Sociales
+  
 
-  h2 Crear Obra Social
+  h1 Crear Obra Social!
 
   if message
     #notification.alert.alert-success
@@ -19,7 +19,7 @@ block content
       input(type="text", name="nombre", class="form-control w-auto", required)
     button(type="submit", class="btn btn-success mx-2") Agregar Obra Social
 
-  h2 Listado de Obras Sociales
+  h2(class = 'text-center') Listado de Obras Sociales
   table#myTable.table.table-striped
     thead
       tr
