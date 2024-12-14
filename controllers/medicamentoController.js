@@ -28,10 +28,22 @@ exports.vistaIndexMedicamentos = async (req, res) => {
 //GET vista Alta Medicamento
 exports.vistaAltaMedicamento = async (req, res) => {
     try {
-        //listo las formas, familias y categorias activas
-        const formas = await Forma.findAll({ where: { estado: true } });
-        const familias = await Familia.findAll({ where: { estado: true } });
-        const categorias = await Categoria.findAll({ where: { estado: true } });
+        // Listo las formas, familias y categorías activas en orden alfabético
+        const formas = await Forma.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const familias = await Familia.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const categorias = await Categoria.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
 
         return res.status(200).render('medicamento/alta', { formas, familias, categorias })
 
@@ -66,7 +78,7 @@ exports.altaMedicamento = async (req, res) => {
         if (medicamento) {
             return res.status(409).render('medicamento/alta', {
                 errorMessage: 'Ya existe un medicamento con esas características!',
-                medicamento, 
+                medicamento,
                 categorias,
                 familias,
                 formas
@@ -83,7 +95,7 @@ exports.altaMedicamento = async (req, res) => {
 };
 
 //GET vista editar Medicamento
-exports.vistaEditarMedicamento = async(req,res)=>{
+exports.vistaEditarMedicamento = async (req, res) => {
     try {
         const id = req.params.id;
         //busco el medicamento para pasar a la vista
@@ -95,15 +107,28 @@ exports.vistaEditarMedicamento = async(req,res)=>{
             }, {
                 model: Categoria
             }],
-            where: {idMedicamento:id} 
+            where: { idMedicamento: id }
         })
-        //listo las formas, familias y categorias activas
-        const formas = await Forma.findAll({ where: { estado: true } });
-        const familias = await Familia.findAll({ where: { estado: true } });
-        const categorias = await Categoria.findAll({ where: { estado: true } });
-       // res.json(medicamento);
+        // Listo las formas, familias y categorías activas en orden alfabético
+        const formas = await Forma.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const familias = await Familia.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const categorias = await Categoria.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        // res.json(medicamento);
         return res.status(200).render('medicamento/editar',
-            {medicamento,
+            {
+                medicamento,
                 formas,
                 familias,
                 categorias
@@ -116,7 +141,7 @@ exports.vistaEditarMedicamento = async(req,res)=>{
 
 
 //PUT actualizar Medicamento 
-exports.actualizarMedicamento = async(req,res)=>{
+exports.actualizarMedicamento = async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
@@ -134,21 +159,34 @@ exports.actualizarMedicamento = async(req,res)=>{
 
         // Cargamos las familias, formas y categorías como tambien vamos a pararle los datos del medicamento
         //el cual ingreso previo al error
-        const formas = await Forma.findAll({ where: { estado: true } });
-        const familias = await Familia.findAll({ where: { estado: true } });
-        const categorias = await Categoria.findAll({ where: { estado: true } });
+        // Listo las formas, familias y categorías activas en orden alfabético
+        const formas = await Forma.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const familias = await Familia.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
+        const categorias = await Categoria.findAll({
+            where: { estado: true },
+            order: [['nombre', 'ASC']]
+        });
+
 
         if (medicamento) {
-            return res.status(409).render('medicamento/alta', {
+            return res.status(409).render('medicamento/editar', {
                 errorMessage: 'Ya existe un medicamento con esas características!',
-                medicamento, 
+                medicamento,
                 categorias,
                 familias,
                 formas
             });
         }
         //actualizacion del medicamento
-        await Medicamento.update(data,{where:{idMedicamento:id}})
+        await Medicamento.update(data, { where: { idMedicamento: id } })
         req.session.message = 'Medicamento actualizado con exito!';
         return res.status(200).redirect('/medicamento/index');
     } catch (error) {

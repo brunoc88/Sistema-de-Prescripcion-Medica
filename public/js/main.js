@@ -1,32 +1,42 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const obraSelect = document.getElementById("obra"); // Aquí seleccionamos el select de obra social
-    const obraNombre = obraSelect.value;  // Este es el valor de la obra social seleccionada
+    const obraSelect = document.getElementById("obra"); // Select de obra social
+    const planSelect = document.getElementById("id_plan"); // Select de planes
 
-    // Asegurarse de que haya una obra seleccionada al cargar la página
-    if (obraNombre) {
-        const planSelect = document.getElementById("id_plan"); // Seleccionamos el select de planes
-        planSelect.innerHTML = "";  // Limpiamos las opciones de planes para evitar mostrar datos obsoletos de una selección anterior
+    // Función para cargar los planes basados en la obra social seleccionada
+    async function cargarPlanes(obraNombre) {
+        planSelect.innerHTML = ""; // Limpiamos las opciones de planes
+
+        if (!obraNombre) {
+            // Si no hay una obra seleccionada, mostramos una opción deshabilitada
+            const option = document.createElement("option");
+            option.value = "";
+            option.disabled = true;
+            option.selected = true;
+            option.textContent = "Seleccione una obra social primero";
+            planSelect.appendChild(option);
+            return;
+        }
 
         try {
-            // Hacemos una solicitud a nuestro servidor para obtener los planes disponibles para la obra social seleccionada
+            // Llamada al servidor para obtener los planes disponibles
             const response = await fetch(`/plan/obraPlanes/${obraNombre}`);
 
             if (!response.ok) {
                 throw new Error('No se pudieron obtener los planes');
             }
 
-            const planes = await response.json(); // Esto nos dará un array de objetos con la información de los planes.
+            const planes = await response.json();
 
-            // Si hay planes disponibles, los agregamos al select
             if (planes.length > 0) {
+                // Agregar los planes al select
                 planes.forEach(plan => {
-                    const option = document.createElement("option"); // Creamos una nueva opción para el select
-                    option.value = plan.idPlan; // Asignamos el ID del plan como valor
-                    option.textContent = plan.nombre; // El nombre del plan es lo que verá el usuario en la lista
-                    planSelect.appendChild(option); // Agregamos la opción creada al select
+                    const option = document.createElement("option");
+                    option.value = plan.idPlan;
+                    option.textContent = plan.nombre;
+                    planSelect.appendChild(option);
                 });
             } else {
-                // Si no hay planes disponibles, mostramos un mensaje en el select
+                // Mostrar mensaje si no hay planes disponibles
                 const option = document.createElement("option");
                 option.value = "";
                 option.disabled = true;
@@ -34,45 +44,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 planSelect.appendChild(option);
             }
         } catch (error) {
-            console.error(error); 
-            alert('Hubo un error al obtener los planes');
+            console.error(error);
+            // Mostrar mensaje de error en el select
+            const option = document.createElement("option");
+            option.value = "";
+            option.disabled = true;
+            option.textContent = "Error al cargar planes";
+            planSelect.appendChild(option);
         }
     }
 
-    // Evento que escucha cuando el usuario cambia de obra social
+    // Evento inicial: cargar planes para la obra social seleccionada al cargar la página
+    await cargarPlanes(obraSelect.value);
+
+    // Evento: cargar planes cuando cambia la obra social seleccionada
     obraSelect.addEventListener('change', async (event) => {
-        const selectedObra = event.target.value; // Obtenemos la nueva obra social seleccionada
-        const planSelect = document.getElementById("id_plan");
-        planSelect.innerHTML = "";  // Limpiamos el select de planes
-
-        if (selectedObra) {
-            try {
-                const response = await fetch(`/plan/obraPlanes/${selectedObra}`);
-
-                if (!response.ok) {
-                    throw new Error('No se pudieron obtener los planes');
-                }
-
-                const planes = await response.json();
-
-                if (planes.length > 0) {
-                    planes.forEach(plan => {
-                        const option = document.createElement("option");
-                        option.value = plan.idPlan;
-                        option.textContent = plan.nombre;
-                        planSelect.appendChild(option);
-                    });
-                } else {
-                    const option = document.createElement("option");
-                    option.value = "";
-                    option.disabled = true;
-                    option.textContent = "No hay planes disponibles";
-                    planSelect.appendChild(option);
-                }
-            } catch (error) {
-                console.error(error);
-                alert('Hubo un error al obtener los planes');
-            }
-        }
+        const selectedObra = event.target.value;
+        await cargarPlanes(selectedObra);
     });
 });

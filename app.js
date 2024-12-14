@@ -21,7 +21,8 @@ const routerFamilia = require('./routers/familiaRouter');
 const routerForma = require('./routers/formaRouter');
 const routerMedicamento = require('./routers/medicamentoRouter');
 const routerTipoPrestaciones = require('./routers/tipoPrestacionesRouter');
-//const routerPrestaciones = require('./routers/prestacionesRouter');
+//const routerPrestaciones = require('./routers/prestacionesRouter');//a la hora de crear una en la receta
+
 
 //api --> sistema externo al nuestro
 const routerRefeps = require('./api/apiRouter');

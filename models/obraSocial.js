@@ -35,5 +35,4 @@ Plan.belongsTo(ObraSocial, {
 })
 
 
-
 module.exports = ObraSocial;

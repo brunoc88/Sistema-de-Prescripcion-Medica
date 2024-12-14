@@ -2,6 +2,8 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const Profesion = require('./profesion');
 const Especialidad = require('./especialidad');
+const obraSocial = require('./obraSocial');
+
 
 const Profesional = sequelize.define(
     'Profesional',{
@@ -72,5 +74,17 @@ Profesional.belongsTo(Especialidad,{
     foreignKey: 'id_especialidad',
     targetKey: 'idEspecialidad'
 })
+
+Profesional.belongsToMany(obraSocial, {
+    through: 'obras_profesional', // Nombre de la tabla intermedia.
+    foreignKey: 'id_profesional',
+    otherKey: 'id_obra_social',
+});
+
+obraSocial.belongsToMany(Profesional, {
+    through: 'obras_profesional', // Nombre de la tabla intermedia.
+    foreignKey: 'id_obra_social',
+    otherKey: 'id_profesional',
+});
 
 module.exports = Profesional;
