@@ -15,3 +15,4 @@ VALIDACIONES EN EDITAR
 -A la hora de actualizar paciente arreglar de que muestra la primera obra social por defecto(no recupera esa parte)
 -Tambien actualiza el paciente por mas que no se cambiara ningun campo
 
+HACER TURNOS!
