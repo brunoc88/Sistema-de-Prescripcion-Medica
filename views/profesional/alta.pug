@@ -8,7 +8,7 @@ block content
   if errorMessage
     #notification.alert.alert-danger
       | #{errorMessage}
-  
+
   div.container
     div.row.justify-content-center
       div.col-md-6.col-12
@@ -16,38 +16,38 @@ block content
         form(action='/profesional/alta' method='POST' class="needs-validation")
           div(class="mb-3")
             label(for='nombre' class="form-label") Nombre:
-            input(type="text" name="nombre" class="form-control" required)
+            input(type="text" name="nombre" value =(profesional? profesional.nombre : '') class="form-control" required)
 
           div(class="mb-3")
             label(for='apellido' class="form-label") Apellido:
-            input(type="text" name="apellido" class="form-control" required)
+            input(type="text" name="apellido" value =(profesional? profesional.apellido : '') class="form-control" required)
 
           div(class="mb-3")
             label(for='domicilio' class="form-label") Domicilio:
-            input(type="text" name="domicilio" class="form-control" required)
+            input(type="text" name="domicilio" value =(profesional? profesional.domicilio : '') class="form-control" required)
 
           div(class="mb-3")
             label(for='dni' class="form-label") DNI:
-            input(type="text" name="dni" class="form-control" required)
+            input(type="text" name="dni" value =(profesional? profesional.dni : '') class="form-control" required)
 
           div(class="mb-3")
             label(for='email' class="form-label") Email:
-            input(type="text" name="email" class="form-control" required)
+            input(type="text" name="email" value =(profesional? profesional.email : '') class="form-control" required)
 
           div(class="mb-3")
             label(for='matricula' class="form-label") Matrícula:
-            input(type="text" name="matricula" class="form-control" required)
-        
+            input(type="text" name="matricula" value =(profesional? profesional.matricula : '') class="form-control" required)
+
           div(class="mb-3")
             label(for='num_refeps' class="form-label") Num Refeps:
-            input(type="text" name="num_refeps" class="form-control" required)
+            input(type="text" name="num_refeps" value =(profesional? profesional.num_refeps : '') class="form-control" required)
 
           div(class="mb-3")
             label(for="id_profesion" class="form-label") Profesión:
             select(name="id_profesion" id="id_profesion" class="form-select" required)
               if profesiones && profesiones.length > 0
                 each pro in profesiones
-                  option(value=`${pro.idProfesion}`) #{pro.nombre}
+                  option(value=`${pro.idProfesion}` selected=(profesional? profesional.id_profesion == pro.idProfesion : '')) #{pro.nombre}
               else
                 option(value="" disabled) No hay profesiones disponibles
 
@@ -56,18 +56,20 @@ block content
             select(name="id_especialidad" id="id_especialidad" class="form-select" required)
               if especialidades && especialidades.length > 0
                 each especialidad in especialidades
-                  option(value=`${especialidad.idEspecialidad}`) #{especialidad.nombre}
+                  option(value=`${especialidad.idEspecialidad}` selected=(profesional? profesional.id_especialidad == especialidad.idEspecialidad : '')) #{especialidad.nombre}
               else
                 option(value="" disabled) No hay especialidades disponibles
 
           div(class="mb-3")
-            label(for="obrasSociales" class="form-label") Obras Sociales:
-            select(multiple name="obrasSociales" id="obrasSociales" class="form-select form-select-lg" required)
+            label(for="obrasSeleccionadas" class="form-label") Obras Sociales:
+            select(multiple name="obrasSeleccionadas" class="form-select form-select-lg" required)
               if obrasSociales && obrasSociales.length > 0
                 each obra in obrasSociales
-                  option(value=`${obra.id}`) #{obra.nombre}
+                  option(value=`${obra.id}` selected=(obrasSeleccionadas && obrasSeleccionadas.includes(String(obra.id)))) #{obra.nombre}
+
               else
                   option(value="" disabled) No hay Obras Sociales disponibles
+
 
 
           div(class="d-grid gap-2")

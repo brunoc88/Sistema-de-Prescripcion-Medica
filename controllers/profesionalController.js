@@ -54,7 +54,6 @@ exports.vistaAltaProfesional = async (req, res) => {
     }
 };
 
-
 //POST alta profesional
 exports.altaProfesional = async (req, res) => {
 
@@ -67,15 +66,51 @@ exports.altaProfesional = async (req, res) => {
 
         //busco primero por dni
         const buscarProfesionalDni = await Profesional.findOne({ where: { dni: data.dni } })
+        //SI HAY UN ERROR LE PASO LOS DATOS 
+        // Listo las obras sociales activas
+        const obrasSociales = await Obras.findAll({ where: { estado: true } });
+        // Listo las profesiones activas
+        const profesiones = await Profesion.findAll({ where: { estado: true } });
+        // Listo las especialidades activas
+        const especialidades = await Especialidad.findAll({ where: { estado: true } });
 
+        const obrasSeleccionadas = data.obrasSeleccionadas;
 
         if (buscarProfesionalDni) {
-            return res.status(409).json('Ya existe un profesional registrado con ese DNI!');
+            return res.status(409).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'Ya existe un profesional registrado con ese DNI!'
+            })
+            //return res.status(409).json(obrasSeleccionadas);
         }
-        //busco despues por si no existe con ese dni que no haya alguien registrado con esa matricula
+
+        //busco por email 
+        const buscarPorEmail = await Profesional.findAll({ where: { email: data.email } });
+        if (buscarPorEmail.length > 0) {
+            return res.status(409).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'Ya existe un profesional registrado con ese Email!'
+            })
+        }
+        //busco despuesque no haya alguien registrado con esa matricula
         const buscarPorMatricula = await Profesional.findOne({ where: { matricula: data.matricula } });
         if (buscarPorMatricula) {
-            return res.status(409).json('Ya existe un profesional registrado con esa matrícula!');
+            return res.status(409).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'Ya existe un profesional registrado con esa matrícula!'
+            })
         }
         //busco la profesion del profesionl para pasarla como patron de busqueda
         const ProfesionDelProfesional = await Profesion.findOne(
@@ -86,19 +121,63 @@ exports.altaProfesional = async (req, res) => {
 
         console.log("Profesion de " + data.nombre + "" + ProfesionDelProfesional.nombre);
         //SI TANTO EL NOMBRE,APELLIDO,PROFESION,NUMERO DE REGISTRO Y SI ESTA HABILIDATO EN LA API
-        const buscarRefeps = await REFEPS.findOne({ where: { num_registro: data.num_refeps, estado: true, nombre: data.nombre, apellido: data.apellido, profesion: ProfesionDelProfesional.nombre } });
+        // Log de búsqueda
+        console.log("Datos de búsqueda para REFEPS:");
+        console.log("Num Refeps: " + data.num_refeps);
+        console.log("Nombre: " + data.nombre);
+        console.log("Apellido: " + data.apellido);
+        console.log("Profesión: " + ProfesionDelProfesional.nombre);
 
+        // Realiza la búsqueda de acuerdo con todos los parámetros.
+        const buscarRefeps = await REFEPS.findOne({
+            where: {
+                num_registro: data.num_refeps,
+                estado: true,
+                nombre: data.nombre,
+                apellido: data.apellido,
+                profesion: ProfesionDelProfesional.nombre
+            }
+        });
 
+        // Verifica si no se encontró el número de registro
+        const buscarNumRefeps = await REFEPS.findOne({
+            where: {
+                num_registro: data.num_refeps
+            }
+        });
+
+        console.log("Resultado de la búsqueda en REFEPS:", buscarRefeps);
+
+        // Si no se encuentra el número de registro
+        if (!buscarNumRefeps) {
+            return res.status(404).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'Número de registro inválido.'
+            });
+        }
+
+        // Si no se encuentra el profesional con la combinación de parámetros
         if (!buscarRefeps) {
-            return res.status(404).json('No hay profesional registrado o no coincide su numero de regristro en la API');
+            return res.status(409).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'No hay profesional registrado o no coincide su número de registro en la API.'
+            });
         }
 
         // Crear el nuevo profesional
         const nuevoProfesional = await Profesional.create(data);
 
         // Asociar el profesional con las obras sociales seleccionadas
-        if (data.obrasSociales && data.obrasSociales.length > 0) {
-            await nuevoProfesional.addObraSocial(data.obrasSociales);
+        if (data.obrasSeleccionadas && data.obrasSeleccionadas.length > 0) {
+            await nuevoProfesional.addObraSocial(data.obrasSeleccionadas);
         }
 
         //return res.status(200).json(data);

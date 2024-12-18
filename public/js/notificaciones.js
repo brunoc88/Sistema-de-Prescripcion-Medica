@@ -18,6 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Después de 0.5 segundos (el tiempo de duración de la transición), eliminamos el elemento del DOM
       setTimeout(() => notification.remove(), 500); // 500 milisegundos es el tiempo que tarda la transición de opacidad
-    }, 2000); // es el tiempo que esperamos antes de iniciar el desvanecimiento
+    }, 5000); // es el tiempo que esperamos antes de iniciar el desvanecimiento
   }
 });
