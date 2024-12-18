@@ -119,14 +119,22 @@ exports.altaProfesional = async (req, res) => {
                 where: { idProfesion: data.id_profesion }
             });
 
-        console.log("Profesion de " + data.nombre + "" + ProfesionDelProfesional.nombre);
+        
         //SI TANTO EL NOMBRE,APELLIDO,PROFESION,NUMERO DE REGISTRO Y SI ESTA HABILIDATO EN LA API
         // Log de búsqueda
-        console.log("Datos de búsqueda para REFEPS:");
-        console.log("Num Refeps: " + data.num_refeps);
-        console.log("Nombre: " + data.nombre);
-        console.log("Apellido: " + data.apellido);
-        console.log("Profesión: " + ProfesionDelProfesional.nombre);
+      
+        //busco primero si existe alguien ya registrado en la tabla profesional con esas caracteristicas
+        const buscarProfesionalRefeps = await Profesional.findOne({where:{nombre:data.nombre, apellido:data.apellido,num_refeps:data.num_refeps}});
+        if(buscarProfesionalRefeps){
+            return res.status(409).render('profesional/alta', {
+                profesional: data,
+                obrasSociales,
+                profesiones,
+                especialidades,
+                obrasSeleccionadas,
+                errorMessage: 'ya exite alguien con ese numero de refeps registrado'
+            });
+        }
 
         // Realiza la búsqueda de acuerdo con todos los parámetros.
         const buscarRefeps = await REFEPS.findOne({
@@ -146,7 +154,7 @@ exports.altaProfesional = async (req, res) => {
             }
         });
 
-        console.log("Resultado de la búsqueda en REFEPS:", buscarRefeps);
+      
 
         // Si no se encuentra el número de registro
         if (!buscarNumRefeps) {
