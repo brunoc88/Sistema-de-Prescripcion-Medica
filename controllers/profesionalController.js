@@ -119,13 +119,13 @@ exports.altaProfesional = async (req, res) => {
                 where: { idProfesion: data.id_profesion }
             });
 
-        
+
         //SI TANTO EL NOMBRE,APELLIDO,PROFESION,NUMERO DE REGISTRO Y SI ESTA HABILIDATO EN LA API
         // Log de búsqueda
-      
+
         //busco primero si existe alguien ya registrado en la tabla profesional con esas caracteristicas
-        const buscarProfesionalRefeps = await Profesional.findOne({where:{nombre:data.nombre, apellido:data.apellido,num_refeps:data.num_refeps}});
-        if(buscarProfesionalRefeps){
+        const buscarProfesionalRefeps = await Profesional.findOne({ where: { nombre: data.nombre, apellido: data.apellido, num_refeps: data.num_refeps } });
+        if (buscarProfesionalRefeps) {
             return res.status(409).render('profesional/alta', {
                 profesional: data,
                 obrasSociales,
@@ -154,7 +154,7 @@ exports.altaProfesional = async (req, res) => {
             }
         });
 
-      
+
 
         // Si no se encuentra el número de registro
         if (!buscarNumRefeps) {
@@ -195,6 +195,123 @@ exports.altaProfesional = async (req, res) => {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 };
+
+//GET vista editar Profesional
+exports.vistaEditarProfesional = async (req, res) => {
+    try {
+        const id = req.params.id;
+        // Listo las obras sociales activas
+        const obrasSociales = await Obras.findAll({ where: { estado: true } });
+        // Listo las profesiones activas
+        const profesiones = await Profesion.findAll({ where: { estado: true } });
+        // Listo las especialidades activas
+        const especialidades = await Especialidad.findAll({ where: { estado: true } });
+        //busco profesional para pasar a la vista
+        const profesional = await Profesional.findByPk(id, {
+            include: [{
+                model: Profesion
+            }, {
+                model: Especialidad
+            }, {
+                model: Obras,
+                through: {
+                    attributes: [], // Opcional: Excluye los datos de la tabla intermedia
+                }
+            }]
+        });
+        
+        const obrasSeleccionadas = profesional.ObraSocials.map(obra => obra.id.toString());
+        return res.status(200).render('profesional/editar', {
+            profesional,
+            obrasSociales,
+            especialidades,
+            profesiones,
+            obrasSeleccionadas
+        });
+    } catch (error) {
+        res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+//PUT actualizar Profesional 
+exports.actualizarProfesional = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        //busco profesional 
+        const profesional = await Profesional.findByPk(id);
+
+    
+        //por si hay un error
+        // Listo las obras sociales activas
+        const obrasSociales = await Obras.findAll({ where: { estado: true } });
+        // Listo las profesiones activas
+        const profesiones = await Profesion.findAll({ where: { estado: true } });
+        // Listo las especialidades activas
+        const especialidades = await Especialidad.findAll({ where: { estado: true } });
+
+        if(profesional.estado){//signifca que esta bajo contrato
+            //si es asi solo se puede editar domicilio y email
+            if(data.nombre != profesional.nombre || data.apellido != profesional.apellido || data.dni != profesional.dni || data.num_refeps != profesional.num_refeps || data.id_profesion != profesional.id_profesion || data.id_especialidad != profesional.id_especialidad || data.matricula != profesional.matricula){
+                return res.status(400).render('profesional/editar',{
+                    errorMessage: 'Solamente email & domicilio pueden ser modificados al estar con contrato!',
+                    obrasSociales,
+                    profesiones,
+                    especialidades,
+                    profesional,
+                    obrasSeleccionadas: data.obrasSeleccionadas
+                })
+            }
+
+            if(data.nombre == profesional.nombre && data.apellido == profesional.apellido  && data.dni == profesional.dni && data.num_refeps == profesional.num_refeps && data.id_profesion == profesional.id_profesion && data.id_especialidad == profesional.id_especialidad && data.matricula == profesional.matricula && data.email == profesional.email && data.domicilio == profesional.domicilio){
+                return res.status(400).render('profesional/editar',{
+                    errorMessage: 'no se produjeron cambios!',
+                    obrasSociales,
+                    profesiones,
+                    especialidades,
+                    profesional,
+                    obrasSeleccionadas: data.obrasSeleccionadas
+                })
+            }
+           
+            
+
+            
+            if(profesional.email != data.email && profesional.domicilio != data.domicilio){
+                await Profesional.update({email:data.email,domicilio:data.domicilio},{where:{idProfesional:id}});
+                req.session.message = `Email: ${data.email} y Domicilio: ${data.domicilio} Actualizados con exito!`;
+                return res.status(200).redirect('/profesional/index');
+            } 
+            if (profesional.email != data.email){
+                await Profesional.update({email:data.email},{where:{idProfesional:id}});
+                req.session.message = `Email: ${data.email} Actualizado con exito!`;
+                return res.status(200).redirect('/profesional/index');
+            }
+            if(profesional.domicilio != data.domicilio){
+                await Profesional.update({domicilio:data.domicilio},{where:{idProfesional:id}});
+                req.session.message = `Domicilio: ${data.domicilio} Actualizado con exito!`;
+                return res.status(200).redirect('/profesional/index');
+            }
+               
+                
+        }else{
+            if(data.nombre == profesional.nombre && data.apellido == profesional.apellido  && data.dni == profesional.dni && data.num_refeps == profesional.num_refeps && data.id_profesion == profesional.id_profesion && data.id_especialidad == profesional.id_especialidad && data.matricula == profesional.matricula && data.email == profesional.email && data.domicilio == profesional.domicilio){
+                return res.status(400).render('profesional/editar',{
+                    errorMessage: 'no se produjeron cambios!',
+                    obrasSociales,
+                    profesiones,
+                    especialidades,
+                    profesional,
+                    obrasSeleccionadas: data.obrasSeleccionadas
+                })
+            }
+            await Profesional.update(data,{where:{idProfesional:id}});
+            req.session.message = `Profesional ${data.nombre} ${data.apellido} actualizado con exito!`
+            return res.status(200).redirect('/profesional/index');
+        }   
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
 
 //PATCH reactivar profesional(solamente se puede por nuevo contrato!)
 exports.reactivarUnProfesional = async (req, res) => {

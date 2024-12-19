@@ -22,10 +22,8 @@ function verifyRole(role) {
         if (req.user && req.user.rol === role) {
             next(); // Si el usuario tiene el rol requerido, continúa
         } else {
-            return res.status(403).send(`
-                <h1>403 - Acceso denegado</h1>
-                <p>No tienes permiso para acceder a esta página.</p>
-                <a href="/">Volver al inicio</a>
+            return res.status(404).send(`
+                <h1>404 - Not found!</h1>
             `);
         }
     };

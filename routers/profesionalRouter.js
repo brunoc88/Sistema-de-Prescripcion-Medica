@@ -8,6 +8,10 @@ profesionalRouter.get('/index',profesionalController.indexProfesional);
 profesionalRouter.get('/crear',profesionalController.vistaAltaProfesional);
 //POST alta de profesional
 profesionalRouter.post('/alta',profesionalController.altaProfesional);
+//GET vista editar Profesional
+profesionalRouter.get('/editar/:id',profesionalController.vistaEditarProfesional);
+//PUT actualizar Profesional
+profesionalRouter.put('/actualizar/:id',profesionalController.actualizarProfesional);
 //PATCH activar Profesional(Solamente por contrato!)
 profesionalRouter.patch('/activar/:id',profesionalController.reactivarUnProfesional);
 //PATCH desactivar Profesional(solamente bajando contrato!)
