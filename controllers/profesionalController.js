@@ -219,7 +219,7 @@ exports.vistaEditarProfesional = async (req, res) => {
                 }
             }]
         });
-        
+
         const obrasSeleccionadas = profesional.ObraSocials.map(obra => obra.id.toString());
         return res.status(200).render('profesional/editar', {
             profesional,
@@ -233,14 +233,14 @@ exports.vistaEditarProfesional = async (req, res) => {
     }
 }
 //PUT actualizar Profesional 
-exports.actualizarProfesional = async(req,res)=>{
+exports.actualizarProfesional = async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
         //busco profesional 
         const profesional = await Profesional.findByPk(id);
 
-    
+
         //por si hay un error
         // Listo las obras sociales activas
         const obrasSociales = await Obras.findAll({ where: { estado: true } });
@@ -249,10 +249,51 @@ exports.actualizarProfesional = async(req,res)=>{
         // Listo las especialidades activas
         const especialidades = await Especialidad.findAll({ where: { estado: true } });
 
-        if(profesional.estado){//signifca que esta bajo contrato
+        //compruebo si se modificaron las obras sociales
+
+        // 1. Busca al profesional
+        const profesionalObras = await Profesional.findByPk(id, {
+            include: [Obras] // Incluye las obras sociales actuales
+        });
+
+        // Revisar si el profesional existe
+        if (!profesionalObras) {
+            return res.status(404).json({ message: 'Profesional no encontrado' });
+        }
+
+        // Asegurarse de que 'obrasSeleccionadas' es un arreglo
+        let obrasNuevas = data.obrasSeleccionadas;
+        if (!Array.isArray(obrasNuevas)) {
+            obrasNuevas = obrasNuevas ? [obrasNuevas] : []; // Si no es un arreglo, convertirlo a uno
+        }
+        // 2. Obtén los IDs actuales de las obras sociales
+        const obrasActuales = profesionalObras.ObraSocials.map((obra) => obra.id);
+        // 3. Ordenar ambos arreglos para asegurarnos de que las comparaciones no dependan del orden
+        const obrasActualesOrdenadas = obrasActuales.sort();
+        const obrasNuevasOrdenadas = obrasNuevas.sort();
+        // 4. Comparar si ambos arreglos contienen los mismos IDs
+        const obrasHanCambiado = !obrasActualesOrdenadas.every((id, index) => id == obrasNuevasOrdenadas[index]);
+       console.log("=====================================");
+       console.log('OBRAS ACTUALES : ' + obrasActualesOrdenadas);
+       console.log('OBRAS NUEVAS : ' + obrasNuevasOrdenadas);
+
+
+        if (obrasHanCambiado) {
+            // Eliminar las obras sociales que ya no están seleccionadas
+            await profesionalObras.removeObraSocials(obrasActuales.filter((id) => !obrasNuevas.includes(id)));
+
+            // Agregar las nuevas obras sociales seleccionadas
+            await profesionalObras.addObraSocials(obrasNuevas.filter((id) => !obrasActuales.includes(id)));
+
+            // Mensaje de éxito
+            req.session.message = 'Obras sociales actualizadas!';
+            return res.status(200).redirect('/profesional/index');
+        }
+
+        if (profesional.estado) {//signifca que esta bajo contrato
             //si es asi solo se puede editar domicilio y email
-            if(data.nombre != profesional.nombre || data.apellido != profesional.apellido || data.dni != profesional.dni || data.num_refeps != profesional.num_refeps || data.id_profesion != profesional.id_profesion || data.id_especialidad != profesional.id_especialidad || data.matricula != profesional.matricula){
-                return res.status(400).render('profesional/editar',{
+            if (data.nombre != profesional.nombre || data.apellido != profesional.apellido || data.dni != profesional.dni || data.num_refeps != profesional.num_refeps || data.id_profesion != profesional.id_profesion || data.id_especialidad != profesional.id_especialidad || data.matricula != profesional.matricula) {
+                return res.status(400).render('profesional/editar', {
                     errorMessage: 'Solamente email & domicilio pueden ser modificados al estar con contrato!',
                     obrasSociales,
                     profesiones,
@@ -262,8 +303,12 @@ exports.actualizarProfesional = async(req,res)=>{
                 })
             }
 
-            if(data.nombre == profesional.nombre && data.apellido == profesional.apellido  && data.dni == profesional.dni && data.num_refeps == profesional.num_refeps && data.id_profesion == profesional.id_profesion && data.id_especialidad == profesional.id_especialidad && data.matricula == profesional.matricula && data.email == profesional.email && data.domicilio == profesional.domicilio){
-                return res.status(400).render('profesional/editar',{
+            if (data.nombre == profesional.nombre && data.apellido == profesional.apellido 
+                && data.dni == profesional.dni && data.num_refeps == profesional.num_refeps 
+                && data.id_profesion == profesional.id_profesion && data.id_especialidad == profesional.id_especialidad 
+                && data.matricula == profesional.matricula && data.email == profesional.email && data.domicilio == profesional.domicilio
+                && !obrasHanCambiado) {
+                return res.status(400).render('profesional/editar', {
                     errorMessage: 'no se produjeron cambios!',
                     obrasSociales,
                     profesiones,
@@ -272,42 +317,316 @@ exports.actualizarProfesional = async(req,res)=>{
                     obrasSeleccionadas: data.obrasSeleccionadas
                 })
             }
-           
-            
 
-            
-            if(profesional.email != data.email && profesional.domicilio != data.domicilio){
-                await Profesional.update({email:data.email,domicilio:data.domicilio},{where:{idProfesional:id}});
-                req.session.message = `Email: ${data.email} y Domicilio: ${data.domicilio} Actualizados con exito!`;
-                return res.status(200).redirect('/profesional/index');
-            } 
-            if (profesional.email != data.email){
-                await Profesional.update({email:data.email},{where:{idProfesional:id}});
-                req.session.message = `Email: ${data.email} Actualizado con exito!`;
-                return res.status(200).redirect('/profesional/index');
+
+
+            //buso si el nuevo email y el nuevo domicilio ingresados esta disponible
+            const emailDisponible = await Profesional.findOne({ where: { email: data.email } });
+            const domicilioDisponible = await Profesional.findOne({ where: { domicilio: data.domicilio } });
+
+
+
+            if (profesional.email != data.email && profesional.domicilio != data.domicilio) {
+                if (!emailDisponible && !domicilioDisponible) {
+                    await Profesional.update({ email: data.email, domicilio: data.domicilio }, { where: { idProfesional: id } });
+                    req.session.message = `Email: ${data.email} y Domicilio: ${data.domicilio} Actualizados con exito!`;
+                    return res.status(200).redirect('/profesional/index');
+                } else {
+                    return res.status(409).render('profesional/editar', {
+                        errorMessage: 'Email y/o Domicilio ya en uso!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas
+                    })
+                }
             }
-            if(profesional.domicilio != data.domicilio){
-                await Profesional.update({domicilio:data.domicilio},{where:{idProfesional:id}});
-                req.session.message = `Domicilio: ${data.domicilio} Actualizado con exito!`;
-                return res.status(200).redirect('/profesional/index');
+            if (profesional.email != data.email) {
+                if (!emailDisponible) {
+                    await Profesional.update({ email: data.email }, { where: { idProfesional: id } });
+                    req.session.message = `Email: ${data.email} Actualizado con exito!`;
+                    return res.status(200).redirect('/profesional/index');
+                } else {
+                    return res.status(409).render('profesional/editar', {
+                        errorMessage: 'Email ya en uso!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas
+                    })
+                }
             }
-               
-                
-        }else{
-            if(data.nombre == profesional.nombre && data.apellido == profesional.apellido  && data.dni == profesional.dni && data.num_refeps == profesional.num_refeps && data.id_profesion == profesional.id_profesion && data.id_especialidad == profesional.id_especialidad && data.matricula == profesional.matricula && data.email == profesional.email && data.domicilio == profesional.domicilio){
-                return res.status(400).render('profesional/editar',{
-                    errorMessage: 'no se produjeron cambios!',
+            if (profesional.domicilio != data.domicilio) {
+                if (!domicilioDisponible) {
+                    await Profesional.update({ domicilio: data.domicilio }, { where: { idProfesional: id } });
+                    req.session.message = `Domicilio: ${data.domicilio} Actualizado con exito!`;
+                    return res.status(200).redirect('/profesional/index');
+                } else {
+                    return res.status(409).render('profesional/editar', {
+                        errorMessage: 'Domicilio ya en uso!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas
+                    })
+                }
+            }
+
+
+
+        } else {
+            // Creo un objeto para guardar los atributos cambiados
+            let update = {};
+
+
+            // Verifico si no se produjeron cambios
+            if (
+                data.nombre == profesional.nombre &&
+                data.apellido == profesional.apellido &&
+                data.dni == profesional.dni &&
+                data.num_refeps == profesional.num_refeps &&
+                data.id_profesion == profesional.id_profesion &&
+                data.id_especialidad == profesional.id_especialidad &&
+                data.matricula == profesional.matricula &&
+                data.email == profesional.email &&
+                data.domicilio == profesional.domicilio
+            ) {
+                return res.status(400).render('profesional/editar', {
+                    errorMessage: 'No se produjeron cambios!',
                     obrasSociales,
                     profesiones,
                     especialidades,
                     profesional,
                     obrasSeleccionadas: data.obrasSeleccionadas
-                })
+                });
             }
-            await Profesional.update(data,{where:{idProfesional:id}});
-            req.session.message = `Profesional ${data.nombre} ${data.apellido} actualizado con exito!`
+
+            // Validación de email
+            //va a ser el unico con este tipo de respuesta. esto se debe a la acumulacion de errores
+            if (profesional.email !== data.email) {
+                const emailDisponible = await Profesional.findOne({ where: { email: data.email } });
+                if (!emailDisponible) {
+                    update.email = data.email;
+                } else {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'Email no disponible!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+            }
+            if (profesional.domicilio !== data.domicilio) {
+                const domicilioDisponible = await Profesional.findOne({ where: { domicilio: data.domicilio } });
+                if (!domicilioDisponible) {
+                    update.domicilio = data.domicilio;
+                } else {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'Domicilio no disponible!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+            }
+            if (profesional.dni !== data.dni) {
+                const dniDisponible = await Profesional.findOne({ where: { dni: data.dni } });
+                if (!dniDisponible) {
+                    update.dni = data.dni;
+                } else {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'DNI no disponible!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+            }
+
+            if (profesional.matricula !== data.matricula) {
+                const matriculaDisponible = await Profesional.findOne({ where: { matricula: data.matricula } });
+                if (!matriculaDisponible) {
+                    update.matricula = data.matricula;
+                } else {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'Matricula no disponible!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+            }
+
+            if (profesional.num_refeps !== data.num_refeps) {
+                //busco si ninguno de los Profesinales registrados tiene el mismo num refeps
+                const num_refepsDisponible = await Profesional.findOne({ where: { num_refeps: data.num_refeps } });
+                if (num_refepsDisponible) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'Num de Referencia en uso!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                //busco si el num existe en mi tabla refeps(api)
+                const num_refepsApi = await REFEPS.findOne({ where: { num_registro: data.num_refeps } });
+                if (!num_refepsApi) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'Num de Referencia No existe en la API!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                //busco la profesion para pasarla despues como parametro de busqueda
+                const profesionProfesional = await Profesion.findByPk(profesional.id_profesion);
+                if (!profesionProfesional) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No existe profesion!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                //buscamos que el num de referencia coincida con el nombre, apellido y profesion
+                const num_refepsApiProfesionalExistente = await REFEPS.findOne({ where: { num_registro: data.num_refeps, nombre: data.nombre, apellido: data.apellido, profesion: profesionProfesional.nombre } });
+                if (!num_refepsApiProfesionalExistente) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No hay coincidencia!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                update.num_refeps = data.num_refeps;
+            }
+
+            //cambio de nombre
+            if (profesional.nombre != data.nombre) {
+                //busco si hay coincidencia
+                //busco la profesion para pasarla despues como parametro de busqueda
+                const profesionProfesional = await Profesion.findByPk(profesional.id_profesion);
+                if (!profesionProfesional) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No existe profesion!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                //buscamos que el num de referencia coincida con el nombre, apellido y profesion
+                const num_refepsApiProfesionalExistente = await REFEPS.findOne({ where: { num_registro: data.num_refeps, nombre: data.nombre, apellido: data.apellido, profesion: profesionProfesional.nombre } });
+                if (!num_refepsApiProfesionalExistente) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No hay coincidencia de nombre en la API!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                update.nombre = data.nombre;
+            }
+
+            //cambio de apellido
+            if (profesional.apellido != data.apellido) {
+                //busco si hay coincidencia
+                //busco la profesion para pasarla despues como parametro de busqueda
+                const profesionProfesional = await Profesion.findByPk(profesional.id_profesion);
+                if (!profesionProfesional) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No existe profesion!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                //buscamos que el num de referencia coincida con el nombre, apellido y profesion
+                const num_refepsApiProfesionalExistente = await REFEPS.findOne({ where: { num_registro: data.num_refeps, nombre: data.nombre, apellido: data.apellido, profesion: profesionProfesional.nombre } });
+                if (!num_refepsApiProfesionalExistente) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: 'No hay coincidencia de apellido en la API!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+                update.apellido = data.apellido;
+            }
+
+            if (profesional.id_profesion != data.id_profesion) {
+                // Buscar la nueva profesión en la base de datos
+                const nuevaProfesion = await Profesion.findByPk(data.id_profesion);
+                if (!nuevaProfesion) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: '¡La profesión seleccionada no existe!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+
+                // Verificar coincidencia en la API con el num_refeps y la nueva profesión
+                const num_refepsApiProfesionalExistente = await REFEPS.findOne({
+                    where: {
+                        num_registro: data.num_refeps,
+                        nombre: data.nombre,
+                        apellido: data.apellido,
+                        profesion: nuevaProfesion.nombre, // Verificamos con la nueva profesión
+                    },
+                });
+
+                if (!num_refepsApiProfesionalExistente) {
+                    return res.status(400).render('profesional/editar', {
+                        errorMessage: '¡No hay coincidencia en la API para la nueva profesión!',
+                        obrasSociales,
+                        profesiones,
+                        especialidades,
+                        profesional,
+                        obrasSeleccionadas: data.obrasSeleccionadas,
+                    });
+                }
+
+                // Si todo está bien, actualizamos el campo
+                update.id_profesion = data.id_profesion;
+            }
+
+            if (profesional.id_especialidad != data.id_especialidad) {
+                update.id_especialidad = data.id_especialidad;
+            }
+            // Actualizo los datos del profesional
+            await Profesional.update(update, { where: { idProfesional: id } });
+            req.session.message = `Profesional ${data.nombre} ${data.apellido} actualizado con éxito!`;
             return res.status(200).redirect('/profesional/index');
-        }   
+        }
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
