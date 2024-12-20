@@ -1,9 +1,5 @@
 FALTA:
 
-PROFESIONAL:
-
-EDITAR PROFESIONAL ---> validacion y actualizacion de obras sociales
-
 
 USUARIO:
 

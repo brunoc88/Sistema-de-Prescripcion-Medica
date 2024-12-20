@@ -273,9 +273,7 @@ exports.actualizarProfesional = async (req, res) => {
         const obrasNuevasOrdenadas = obrasNuevas.sort();
         // 4. Comparar si ambos arreglos contienen los mismos IDs
         const obrasHanCambiado = !obrasActualesOrdenadas.every((id, index) => id == obrasNuevasOrdenadas[index]);
-       console.log("=====================================");
-       console.log('OBRAS ACTUALES : ' + obrasActualesOrdenadas);
-       console.log('OBRAS NUEVAS : ' + obrasNuevasOrdenadas);
+
 
 
         if (obrasHanCambiado) {
