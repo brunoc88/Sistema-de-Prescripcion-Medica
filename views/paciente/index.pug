@@ -12,7 +12,9 @@ block content
 
     h1 Crea un Paciente!
     div
-        a(href="/paciente/crear" class="btn btn-success mx-2") Agregar Paciente
+        a(href="/paciente/crear" class="btn btn-success mx-2") 
+          i(class="fas fa-plus" style="color: white;")
+          |Agregar Paciente
         h2(class='text-center') Listado de pacientes 
 
     table#myTable.table.table-striped
@@ -45,11 +47,19 @@ block content
                     td 
                         div(class="btn-group")
                             form(action=`/paciente/editar/${p.idPaciente}`, method="GET")
-                                button(type="submit", class="btn btn-primary mx-2") Editar
+                                button(type="submit", class="btn btn-primary mx-2") 
+                                    i(class="fas fa-edit")
+                                    |Editar
                             if p.estado == 1 
                                 form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
-                                    button(type="submit", class="btn btn-danger" id="btn") Desactivar
+                                    button(type="submit", class="btn btn-danger mx-2" id="btn") Desactivar 
+                                     i(class="fas fa-toggle-off")
+
+                                form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
+                                    button(type="submit", class="btn btn-warning mx-2" id="btn") Generar Turno 
+                                     i(class="fas fa-clock")
                             else
                                 form(action=`/paciente/activar/${p.idPaciente}?_method=PATCH`, method="POST")
-                                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar
+                                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar 
+                                     i(class="fas fa-toggle-off")
 

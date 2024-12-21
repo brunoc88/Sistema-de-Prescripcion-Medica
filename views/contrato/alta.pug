@@ -18,10 +18,11 @@ block content
                 form(action="/contrato/alta", method="post", class="needs-validation") 
                     div(class="mb-3")
                         label(for="usuario" class="form-label") Usuario: 
-                        select(name="id_usuario" class="form-select" required)
-                            if usuarios && usuarios.length > 0
-                                each u in usuarios 
-                                    option(value=`${u.id}` ) #{u.nombre + ' ' + u.apellido} 
+                         // Visible input para mostrar el nombre completo del usuario
+                        input(type="text" value=`${usuario.nombre + ' ' + usuario.apellido}` class="form-control" readonly) 
+                        // Hidden input para enviar el ID del usuario en el POST
+                        input(type="hidden" name="id_usuario" value=`${usuario.id}`)
+
 
                     div(class="mb-3")
                         label(for="profesional" class="form-label") Profesional:

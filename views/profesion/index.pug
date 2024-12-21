@@ -10,14 +10,16 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 Crear Profesion!
+    h2 Crear Profesion!
 
      
     form(action="/profesion/alta", method="post")
         div(class = "mb-3")
             label(for="nombre") Nombre:
             input(type="text" , name="nombre", class = "form-control w-auto",required) 
-        button(type = "submit",class="btn btn-success mx-2") Agregar Profesion
+        button(type = "submit",class="btn btn-success mx-2") 
+            i(class="fas fa-plus" style="color: white;")
+            |Agregar Profesion
 
     h2(class = 'text-center') Listado de Profesiones
     table#myTable.table.table-striped
@@ -37,13 +39,17 @@ block content
                         td 
                             div(class="btn-group")
                                 form(action=`/profesion/editar/${p.idProfesion}`, method="get") 
-                                    button(type="submit", class="btn btn-primary mx-2") Editar
+                                    button(type="submit", class="btn btn-primary mx-2") 
+                                        i(class="fas fa-edit")
+                                        |Editar
                                 if p.estado == 1
                                     form(action=`/profesion/baja/${p.idProfesion}?_method=PATCH`, method="post") 
-                                        button(type="submit", class="btn btn-danger mx-2") Desactivar
+                                        button(type="submit", class="btn btn-danger mx-2") Desactivar 
+                                            i(class="fas fa-toggle-off")
                                 else 
                                     form(action=`/profesion/activar/${p.idProfesion}?_method=PATCH`, method="post") 
                                         button(type="submit", class="btn btn-success mx-2") Activar   
+                                            i(class="fas fa-toggle-off") 
             else 
                 tr
                     td(colspan="4") No hay profesiones registradas       

@@ -13,7 +13,9 @@ block content
     h1 Crear Medicamento!
 
     div
-        a(href="/medicamento/crear" class="btn btn-success mx-2") Agregar Medicamento
+        a(href="/medicamento/crear" class="btn btn-success mx-2") 
+         i(class="fas fa-plus" style="color: white;")
+         |Agregar Medicamento
         h2(class='text-center') Listado de Medicamentos
 
     table#myTable.table.table-striped
@@ -44,11 +46,15 @@ block content
                                 div(class="btn-group")
                                     // Botón para editar profesional
                                     form(action=`/medicamento/editar/${m.idMedicamento}`, method="GET")
-                                        button(type="submit" class="btn btn-primary mx-2") Editar
+                                        button(type="submit" class="btn btn-primary mx-2") 
+                                            i(class="fas fa-edit")
+                                            |Editar
                                     // Botón para activar/desactivar profesional
                                     if m.estado == 1
                                         form(action=`/medicamento/bajar/${m.idMedicamento}?_method=PATCH`, method="POST")
-                                            button(type="submit" class="btn btn-danger") Desactivar
+                                            button(type="submit" class="btn btn-danger") Desactivar 
+                                                i(class="fas fa-toggle-off")
                                     else
                                         form(action=`/medicamento/activar/${m.idMedicamento}?_method=PATCH`, method="POST")
-                                            button(type="submit" class="btn btn-success mx-2") Activar
+                                            button(type="submit" class="btn btn-success mx-2") Activar 
+                                                i(class="fas fa-toggle-off")

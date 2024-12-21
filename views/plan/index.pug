@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  h1 Crear un Plan!
+  h2 Crear un Plan!
   if message
     #notification.alert.alert-success
       | #{message}
@@ -26,9 +26,11 @@ block content
             else
               option(value="") No hay obras sociales disponibles
           
-        button(type="submit", class="btn btn-success mx-2") Agregar Plan
+        button(type="submit", class="btn btn-success mx-2") 
+          i(class="fas fa-plus" style="color: white;")
+          |Agregar Plan
 
-  h2 Listado de planes creados
+  h2(class= 'text-center') Listado de Planes creados
   table#myTable.table.table-striped.table-hover
     thead
       tr
@@ -41,20 +43,24 @@ block content
       if planes && planes.length > 0
         each p in planes
           tr
-            td #{p.idPlan}  <!-- Asegúrate de que esta columna está presente -->
-            td #{p.nombre}  <!-- Asegúrate de que esta columna está presente -->
-            td #{p.ObraSocial ? p.ObraSocial.nombre : 'No disponible'}  <!-- Maneja posibles valores nulos -->
-            td #{p.estado ? 'Activo' : 'Inactivo'}  <!-- Asegúrate de que esta columna está presente -->
+            td #{p.idPlan}  
+            td #{p.nombre}  
+            td #{p.ObraSocial ? p.ObraSocial.nombre : 'No disponible'}  
+            td #{p.estado ? 'Activo' : 'Inactivo'}  
             td
               div(class="btn-group")
                 form(action=`/plan/editar/${p.idPlan}`, method="GET")
-                  button(type="submit", class="btn btn-primary mx-2") Editar
+                  button(type="submit", class="btn btn-primary mx-2") 
+                    i(class="fas fa-edit")
+                    |Editar
                 if p.estado == 1 && p.ObraSocial.estado == 1
                   form(action=`/plan/baja/${p.idPlan}?_method=PATCH`, method="post")
-                    button(type="submit", class="btn btn-danger" id="btn") Desactivar
+                    button(type="submit", class="btn btn-danger" id="btn") Desactivar 
+                      i(class="fas fa-toggle-off")
                 else
                   form(action=`/plan/activar/${p.idPlan}?_method=PATCH`, method="POST")
-                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar
+                    button(type="submit", class="btn btn-success mx-2" id="btn") Activar 
+                      i(class="fas fa-toggle-off")
       else
         tr
           td(colspan="5") No hay planes creados

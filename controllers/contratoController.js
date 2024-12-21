@@ -19,22 +19,7 @@ exports.vistaIndexContrato = async (req, res) => {
                 }
             }
         });
-        //listo los nombres que no tienen contratos para mostrarlos al usuario
-        const sinContrato = [];
-        for (var contrato of contratos) {
-            if (!contrato.estado) {
-                sinContrato.push(contrato.Profesional.nombre + " " + contrato.Profesional.apellido);
-            }
-        }
-        //res.json(contratos);
-        //res.json(sinContrato);
-        // Si hay profesionales sin contrato, se crea un mensaje
-        //con join combierte todos los nombres en una sola cadena!
-        let mensaje = sinContrato.length > 0 ? `Contratos caducados de: ${sinContrato.join(', ')}` : 'No hay contratos caducados.';
-
-        // Asignamos el mensaje a la sesión
-        //req.session.errorMessage = mensaje;
-        //res.json(contratos);
+       
         return res.status(200).render('contrato/index', { contratos });
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error);
@@ -46,18 +31,15 @@ exports.vistaAltaContrato = async (req, res) => {
     try {
         //actualizo los contratos por si vencieron, osea desactico el contrato y a la vez el paciente
         await actualizarContratos();
-        //listo los usuarios activos y su rol sea de admin
-        const usuarios = await Usuario.findAll({ where: { estado: true, rol: 'admin' } });
+       
+        //extraigo la info del usuruario logueado por medio del token
+        const usuario = req.user;
         //listo los profesionales inactivos sin contrato
         const profesionales = await Profesional.findAll({ where: { estado: false } });
 
-        //busco que existen usuarios
-        if (!usuarios || !profesionales) {
-            return res.status(404).json('no existen registrados!');
-        }
-
         //renderiso la vista y paso la lista de usuarios y profesionales
-        return res.status(200).render('contrato/alta', { usuarios, profesionales });
+        return res.status(200).render('contrato/alta', { usuario, profesionales });
+        //res.json(usuario);
 
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error);

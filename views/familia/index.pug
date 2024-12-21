@@ -3,7 +3,7 @@ extends ../layout
 block content
   
 
-  h1 Crear Familia!
+  h2 Crear Familia!
 
   if message
     #notification.alert.alert-success
@@ -17,7 +17,9 @@ block content
     div(class="mb-3")
       label(for="nombre") Nombre de la Familia:
       input(type="text", name="nombre", class="form-control w-auto", required)
-    button(type="submit", class="btn btn-success mx-2") Agregar Familia
+    button(type="submit", class="btn btn-success mx-2") 
+      i(class="fas fa-plus" style="color: white;")
+      |Agregar Familia
 
   h2(class='text-center') Listado de Familia de medicamentos
   table#myTable.table.table-striped
@@ -37,13 +39,17 @@ block content
             td
               div(class="btn-group")
                 form(action=`/familia/editar/${f.idFamilia}`, method="GET")
-                  button(type="submit", class="btn btn-primary mx-2") Editar
+                  button(type="submit", class="btn btn-primary mx-2") 
+                    i(class="fas fa-edit")
+                    |Editar
                 if f.estado == 1
                   form(action=`/familia/bajar/${f.idFamilia}?_method=PATCH`, method='POST')
-                    button(type="submit", class="btn btn-danger mx-2") Desactivar
+                    button(type="submit", class="btn btn-danger mx-2") Desactivar 
+                     i(class="fas fa-toggle-off")
                 else
                   form(action=`/familia/activar/${f.idFamilia}?_method=PATCH`, method='POST')
-                    button(type="submit", class="btn btn-success mx-2") Activar
+                    button(type="submit", class="btn btn-success mx-2") Activar 
+                     i(class="fas fa-toggle-off")
       else
         tr
           td(colspan="4") No hay familias registradas

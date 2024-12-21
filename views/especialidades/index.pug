@@ -10,14 +10,16 @@ block content
         #notification.alert.alert-danger
             | #{errorMessage}
 
-    h1 Crear Especialidad!
+    h2 Crear Especialidad!
 
      
     form(action="/especialidades/alta", method="post")
         div(class = "mb-3")
             label(for="nombre") Nombre:
             input(type="text" , name="nombre", class = "form-control w-auto",required) 
-        button(type = "submit",class="btn btn-success mx-2") Agregar Especialidad
+        button(type = "submit",class="btn btn-success mx-2") 
+            i(class="fas fa-plus" style="color: white;")
+            |Agregar Especialidad
 
     h2(class = 'text-center') Listado de Especialidades
     table#myTable.table.table-striped
@@ -37,13 +39,17 @@ block content
                         td 
                             div(class="btn-group")
                                 form(action=`/especialidades/editar/${e.idEspecialidad}`, method="get") 
-                                    button(type="submit", class="btn btn-primary mx-2") Editar
+                                    button(type="submit", class="btn btn-primary mx-2") 
+                                        i(class="fas fa-edit")
+                                        |Editar
                                 if e.estado == 1
                                     form(action=`/especialidades/baja/${e.idEspecialidad}?_method=PATCH`, method="post") 
-                                        button(type="submit", class="btn btn-danger mx-2") Desactivar
+                                        button(type="submit", class="btn btn-danger mx-2") Desactivar 
+                                            i(class="fas fa-toggle-off")
                                 else 
                                     form(action=`/especialidades/activar/${e.idEspecialidad}?_method=PATCH`, method="post") 
-                                        button(type="submit", class="btn btn-success mx-2") Activar   
+                                        button(type="submit", class="btn btn-success mx-2") Activar 
+                                            i(class="fas fa-toggle-off")  
             else 
                 tr
                     td(colspan="4") No hay Especialidades registradas                  
