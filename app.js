@@ -21,6 +21,7 @@ const routerFamilia = require('./routers/familiaRouter');
 const routerForma = require('./routers/formaRouter');
 const routerMedicamento = require('./routers/medicamentoRouter');
 const routerTipoPrestaciones = require('./routers/tipoPrestacionesRouter');
+const routerTurnos = require('./routers/turnosRouter');
 //const routerPrestaciones = require('./routers/prestacionesRouter');//a la hora de crear una en la receta
 
 
@@ -83,6 +84,7 @@ app.use('/familia',routerFamilia);
 app.use('/forma',routerForma);
 app.use('/medicamento',routerMedicamento);
 app.use('/tipoPrestaciones',routerTipoPrestaciones);
+app.use('/turnos',routerTurnos);
 //app.use('/prestaciones',prestacionesRouter);
 
 

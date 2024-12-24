@@ -55,7 +55,7 @@ block content
                                     button(type="submit", class="btn btn-danger mx-2" id="btn") Desactivar 
                                      i(class="fas fa-toggle-off")
 
-                                form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
+                                form(action=`/turnos/crear/${p.idPaciente}`, method="GET")
                                     button(type="submit", class="btn btn-warning mx-2" id="btn") Generar Turno 
                                      i(class="fas fa-clock")
                             else
