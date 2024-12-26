@@ -159,3 +159,31 @@ exports.bajarTurno = async(req,res)=>{
     }
 }
 
+// GET turnos actuales del Profesional
+exports.turnosEmpleado = async(req,res)=>{
+    try {
+        const usuario = req.user;//obtengo el profesional para hacer las busquedas
+        const profesional = await Profesional.findOne({where:{email:usuario.email}});
+
+        //guardo fecha actual para comparar
+        const hoy = new Date();
+        const turnos = await Turno.findAll({where:{id_profesional:profesional.idProfesional,fecha:hoy,estado:true},
+            include:[
+                {model:Paciente,
+                 include:[{
+                    model: Plan,
+                    include:[{
+                        model: ObrasSociales
+                    }]
+                 }]    
+            }]
+        });
+        
+        
+        return res.status(200).render('empleado/turnos',{
+            turnos
+        })
+    } catch (error) {
+        return res.status(500).json('Hubo un error ' + error.message);
+    }
+}

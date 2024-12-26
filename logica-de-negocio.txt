@@ -56,7 +56,16 @@ PACIENTES:
 
 -A LA HORA DE CREAR O ACTUALIZAR PACIENTE SE LE MUESTRA LAS OBRAS SOCIALES QUE ESTEN ACTIVAS COMO A SU VEZ LOS PLANES RELACIONADOS A TAL OBRA TAMBIEN LO ESTEN
 -SE BUSCA SIEMPRE QUE NO HAYA DUPLICADOS POR MEDIO DEL DNI
+-SI SE DA DE BAJA UN PACIENTE SE DARAN DE BAJA LOS TURNOS RELACIONADOS DESDE LA FECHA ACTUAL EN ADELANTE
+-COMO TAMBIEN VA A DESAPARECER LA OPCION DE GENERAR TURNO.
+-SE VA A PODER VER EL HISTORIAL DE TURNOS DEL PACIENTE HACIENDO CLICK EN EL BOTON 'TURNOS' QUE SE ENCUENTRA ENTRE EL BOTON EDITAR Y DESCARTIVAR
 
+
+--TURNOS--
+
+-Cuando queramos generar un turno se debera ir a PACIENTE, hay se procedera a buscar el paciente.
+-Si se encuentra en la parte de acciones va a tener el boton Generar Turnos sino se lo agrega al sistema para proceder con la accion.
+-El turno solo se puede descativar una vez creado, por lo que si quiere sacar turno va a tener que crear uno nuevo.
 
 
 --CONTRATATOS--

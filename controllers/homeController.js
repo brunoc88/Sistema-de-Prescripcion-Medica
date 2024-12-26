@@ -71,7 +71,7 @@ exports.login = async (req, res) => {
             return res.status(200).render('home/index');
         }
         //como el profesional va a tener las sullas
-        return res.status(200).render('empleados/indexEmpleados');
+        return res.status(200).render('empleado/index');
     } catch (error) {
         return res.status(500).json({ success: false, message: 'Error en el servidor' });
     }

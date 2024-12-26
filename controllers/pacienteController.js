@@ -7,6 +7,7 @@ const Profesion = require('../models/profesion');
 const Especialidad = require('../models/especialidad');
 
 const { Op} = require('sequelize');
+const { json } = require('body-parser');
 
 
 
@@ -265,6 +266,14 @@ exports.bajaPaciente = async (req, res) => {
 
         // Actualizar el estado del paciente a false
         await Paciente.update({ estado: false }, { where: { idPaciente: id } });
+
+        //descartivar turnos activos relacionados al paciente
+
+        const turnos = await Turno.findAll({where:{estado:true,id_paciente:buscarPaciente.idPaciente}});
+
+        for (const t of turnos) {
+            await Turno.update({estado:false},{where:{idTurno:t.idTurno}})
+        }
 
         //res.status(200).send('Paciente dado de baja!');
         req.session.message = `Paciente ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} eliminado con exito!`;

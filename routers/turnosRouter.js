@@ -1,5 +1,6 @@
 const express = require('express');
 const turnosController = require('../controllers/turnosController');
+const { verifyToken, verifyRole } = require('../middlewares/authMiddleware');
 const turnoRouter = express.Router();
 
 // GET vista Profesionales disponibles segun Obra Social
@@ -10,5 +11,6 @@ turnoRouter.get('/validacion/:id',turnosController.vistaTurno);
 turnoRouter.post('/alta',turnosController.altaTurno);
 // PATCH bajar turno
 turnoRouter.patch('/baja/:id',turnosController.bajarTurno);
-
+// GET turnos actuales del Profesional
+turnoRouter.get('/misTurnos',verifyToken, verifyRole("empleado"),turnosController.turnosEmpleado);
 module.exports = turnoRouter;
