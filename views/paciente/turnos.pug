@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+    
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    
+    div
+        
+        h2(class='text-center') Turnos de: #{paciente.nombre + ' ' + paciente.apellido + ' ' + 'dni(' + paciente.dni + ')'}
+
+    table#myTable.table.table-striped
+        thead
+            tr
+                th ID
+                th Profesional
+                th Profesion 
+                th Especialidad
+                th Fecha
+                th Estado
+                th Acciones   
+
+        tbody
+            if turnos.length > 0 
+                each t in turnos
+                 tr 
+                    td #{t.idTurno}
+                    td #{t.Profesional.nombre + ' ' + t.Profesional.apellido}
+                    td #{t.Profesional.Profesion.nombre}
+                    td #{t.Profesional.Especialidad.nombre}
+                    td #{t.fecha}
+                    td #{t.estado ? 'Activo' : 'Inactivo'}
+                    td 
+                        div(class="btn-group")
+                            
+                            if t.estado == 1 
+                                form(action=`/turnos/baja/${t.idTurno}?_method=PATCH`, method="POST")
+                                    button(type="submit", class="btn btn-danger mx-2" id="btn") Desactivar 
+                                     i(class="fas fa-toggle-off")
+                            

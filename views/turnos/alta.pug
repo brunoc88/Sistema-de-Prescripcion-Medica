@@ -1,0 +1,57 @@
+extends ../layout
+
+block content
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    div.container.mt-5
+        div.row.justify-content-center
+            div.col-md-8
+                h2.text-center Alta de Turno
+                form(action='/turnos/alta' method='POST' class="needs-validation p-4 border rounded shadow-sm")
+                    
+                    div(class="mb-3")
+                        label(for='nombrePaciente' class="form-label fw-bold") Nombre del Paciente:
+                        input#nombrePaciente.form-control(type="text" name="nombrePaciente" value=`${paciente.nombre + ' ' + paciente.apellido}` readonly)
+                        
+                    div(class="mb-3")
+                        label(for='dni' class="form-label fw-bold") DNI:
+                        input#dni.form-control(type="text" name="dni" value=`${paciente.dni}` readonly)
+
+                    div(class="mb-3")
+                        label(for='obraSocial' class="form-label fw-bold") Obra Social:
+                        input#obraSocial.form-control(type="text" name="obraSocial" value=`${paciente.Plan.ObraSocial.nombre}` readonly)
+                        
+                    div(class="mb-3")
+                        label(for='plan' class="form-label fw-bold") Plan:
+                        input#plan.form-control(type="text" name="plan" value=`${paciente.Plan.nombre}` readonly)
+
+                    div(class="mb-3")
+                        label(for='nombreProfesional' class="form-label fw-bold") Nombre del Profesional:
+                        input#nombreProfesional.form-control(type="text" name="nombreProfesional" value=`${profesional.nombre + ' ' + profesional.apellido}` readonly)
+
+                    div(class="mb-3")
+                        label(for='profesion' class="form-label fw-bold") Profesión:
+                        input#profesion.form-control(type="text" name="profesion" value=`${profesional.Profesion.nombre}` readonly)
+
+                    div(class="mb-3")
+                        label(for='especialidad' class="form-label fw-bold") Especialidad:
+                        input#especialidad.form-control(type="text" name="especialidad" value=`${profesional.Especialidad.nombre}` readonly)
+
+                    div(class="mb-3")
+                        label(for='matricula' class="form-label fw-bold") Matrícula:
+                        input#matricula.form-control(type="text" name="matricula" value=`${profesional.matricula}` readonly)
+
+                    div(class="mb-3")
+                        label(for='fecha' class="form-label fw-bold") Fecha:
+                        input#fecha.form-control(type="date" name="fecha" min=`${new Date().toISOString().split('T')[0]}` required)
+
+                    div(class="d-grid gap-2")
+                        button(type="submit" class="btn btn-primary btn-lg") Confirmar
+                        a(href="/paciente/index" class="btn btn-secondary btn-lg") Volver

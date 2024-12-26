@@ -10,6 +10,7 @@ VALIDACIONES EN EDITAR
 -A la hora de actualizar paciente arreglar de que muestra la primera obra social por defecto(no recupera esa parte)
 -Tambien actualiza el paciente por mas que no se cambiara ningun campo
 
-HACER TURNOS!
+MEDITAR SI AL BAJAR OBRAS SE BAJAN PACIENTES Y TURNOS
+- YA QUE SI EL PACIENTE SE DA DE BAJA INFORMAR DE ACTIVAR OBRA O CAMBIAR DE OBRA
 
-
+COMO TAMBIEN SI SE LLEGA A BAJAR UN PACIENTE BAJAR LOS TURNOS DE LA FECHA DE BAJA EN ADELANTE

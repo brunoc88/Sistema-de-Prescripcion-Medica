@@ -1,0 +1,54 @@
+extends ../layout 
+
+block content 
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    
+
+    div
+        h2(class='text-center') Profesionales de #{paciente.Plan.ObraSocial.nombre}
+
+    table#myTable.table.table-striped
+        thead 
+            tr 
+                th Id 
+                th Nombre
+                th Apellido
+                th Domicilio 
+                th Dni
+                th Profesión
+                th Especialidad
+                th Matrícula 
+                th Estado
+                th Acciones
+        tbody
+            if profesionales && profesionales.length > 0
+                each pro in profesionales 
+                    tr
+                        td #{pro.idProfesional} 
+                        td #{pro.nombre}
+                        td #{pro.apellido}
+                        td #{pro.domicilio}
+                        td #{pro.dni}
+                        td #{pro.Profesion.nombre}
+                        td #{pro.Especialidad.nombre}
+                        td #{pro.matricula}
+                        td #{pro.estado ? 'Activo' : 'Inactivo'} 
+                        td 
+                            div(class="btn-group")
+                                
+                            a(href=`/turnos/validacion/${pro.idProfesional}?id_paciente=${paciente.idPaciente}`, class="btn btn-success mx-2")
+                                | Seleccionar 
+                                i(class="fas fa-check-circle")
+
+
+            else 
+                td No se encontraron profesionales
+                               

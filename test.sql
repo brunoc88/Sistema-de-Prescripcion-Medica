@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2024 a las 02:03:22
+-- Tiempo de generación: 26-12-2024 a las 03:15:54
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -69,8 +69,8 @@ CREATE TABLE `contrato` (
 --
 
 INSERT INTO `contrato` (`idContrato`, `fechaCreacion`, `fechaCaducidad`, `estado`, `id_profesional`, `id_usuario`) VALUES
-(1, '2024-12-13', '2024-12-25', 0, 1, 1),
-(2, '2024-12-13', '2024-12-16', 1, 1, 1);
+(4, '2024-12-18', '2024-12-26', 1, 1, 1),
+(5, '2024-12-20', '2024-12-28', 1, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -234,7 +234,8 @@ INSERT INTO `obrasocial` (`id`, `nombre`, `estado`) VALUES
 (1, 'OSDE', 1),
 (2, 'PAMI', 1),
 (3, 'SWISS MEDICAL', 1),
-(4, 'OSCAC', 1);
+(4, 'OSCAC', 1),
+(5, 'OSFATUN', 1);
 
 -- --------------------------------------------------------
 
@@ -254,9 +255,11 @@ CREATE TABLE `obras_profesional` (
 --
 
 INSERT INTO `obras_profesional` (`createdAt`, `updatedAt`, `id_profesional`, `id_obra_social`) VALUES
-('2024-12-14 00:44:00', '2024-12-14 00:44:00', 1, 1),
-('2024-12-14 00:44:00', '2024-12-14 00:44:00', 1, 2),
-('2024-12-14 00:44:00', '2024-12-14 00:44:00', 1, 3);
+('2024-12-25 22:56:50', '2024-12-25 22:56:50', 1, 1),
+('2024-12-25 22:56:50', '2024-12-25 22:56:50', 1, 3),
+('2024-12-20 02:13:49', '2024-12-20 02:13:49', 4, 4),
+('2024-12-18 01:57:09', '2024-12-18 01:57:09', 22, 4),
+('2024-12-20 02:07:40', '2024-12-20 02:07:40', 29, 3);
 
 -- --------------------------------------------------------
 
@@ -274,6 +277,15 @@ CREATE TABLE `paciente` (
   `estado` tinyint(1) NOT NULL DEFAULT 1,
   `id_plan` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `paciente`
+--
+
+INSERT INTO `paciente` (`idPaciente`, `nombre`, `apellido`, `dni`, `fechaNacimiento`, `sexo`, `estado`, `id_plan`) VALUES
+(1, 'Jorge', 'Cerutti', '111', '1966-04-28', 'Hombre', 1, 1),
+(2, 'Bruno', 'Cerutti', '345', '1988-08-17', 'Hombre', 1, 2),
+(3, 'Thiago', 'Gutierrez', '444', '2008-12-30', 'Hombre', 1, 6);
 
 -- --------------------------------------------------------
 
@@ -298,7 +310,8 @@ INSERT INTO `plan` (`idPlan`, `nombre`, `estado`, `idObra`) VALUES
 (3, 'A-22', 1, 2),
 (4, '23CE14', 1, 3),
 (5, '24P80', 1, 3),
-(6, '10/10', 1, 4);
+(6, '10/10', 1, 4),
+(7, '1018', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -352,7 +365,10 @@ CREATE TABLE `profesional` (
 --
 
 INSERT INTO `profesional` (`idProfesional`, `nombre`, `apellido`, `domicilio`, `dni`, `email`, `matricula`, `num_refeps`, `estado`, `id_profesion`, `id_especialidad`) VALUES
-(1, 'Juan Pablo', 'Fernández', 'Calle San Martín 456, Córdoba', '32.458.123', 'jpfernandez@gmail.com', '457832-MG', '125874', 1, 1, 3);
+(1, 'Juan Pablo', 'Fernández', 'Calle San Martín 456, Córdoba', '32.458.123', 'jp@gmail.com', '457832-MG', '125874', 1, 1, 3),
+(4, 'Maria', 'Gómez', 'Av. Rivadavia 9876, Buenos Aires', '36.789.654', 'mgomez@gmail.com', '348722-MG', '145679', 1, 2, 2),
+(22, 'Soledad', 'Martínez', 'Las Heras 123, Mendoza', '29.784.543', 'smartinez@gmail.com', '872349-EN', '239876', 0, 2, 7),
+(29, 'Alejandro', 'López', 'Moreno 678, Salta', '34.567.321', 'alopez@gmail.com', '793452-EN', '267543', 0, 4, 10);
 
 -- --------------------------------------------------------
 
@@ -374,7 +390,11 @@ CREATE TABLE `refeps` (
 --
 
 INSERT INTO `refeps` (`idRefeps`, `nombre`, `apellido`, `profesion`, `estado`, `num_registro`) VALUES
-(1, 'Juan Pablo', 'Fernández', 'Médico General', 1, '125874');
+(1, 'Juan Pablo', 'Fernández', 'Médico General', 1, '125874'),
+(3, 'Maria', 'Gómez', 'Enfermero/a', 1, '145679'),
+(4, 'Soledad', 'Martínez', 'Enfermero/a', 1, '239876'),
+(5, 'Alejandro', 'López', 'Radiologo/a', 1, '267543'),
+(6, 'Martín', 'Ruiz', 'Radiologo/a', 1, '457891');
 
 -- --------------------------------------------------------
 
@@ -413,6 +433,30 @@ INSERT INTO `tipoprestacion` (`idTipo`, `nombre`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `turno`
+--
+
+CREATE TABLE `turno` (
+  `idTurno` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `estado` tinyint(1) NOT NULL DEFAULT 1,
+  `id_profesional` int(11) DEFAULT NULL,
+  `id_paciente` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `turno`
+--
+
+INSERT INTO `turno` (`idTurno`, `fecha`, `estado`, `id_profesional`, `id_paciente`) VALUES
+(1, '2024-12-31', 0, 1, 1),
+(3, '2024-12-26', 1, 1, 1),
+(4, '2024-12-26', 1, 1, 2),
+(5, '2024-12-27', 1, 1, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
@@ -432,7 +476,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `nombre`, `apellido`, `rol`, `email`, `password`, `estado`, `avatar`) VALUES
-(1, 'Bruno', 'Cerutti', 'admin', 'bruno@gmail.com', '$2b$10$xxiGDHxs0/L3/ELwJBROUOuE6QebaBSpMnmxq42LlhChFBO2GrhlS', 1, '/avatars/1734135298630-hacker.png');
+(1, 'Bruno', 'Cerutti', 'admin', 'bruno@gmail.com', '$2b$10$xxiGDHxs0/L3/ELwJBROUOuE6QebaBSpMnmxq42LlhChFBO2GrhlS', 1, '/avatars/1734135298630-hacker.png'),
+(2, 'flor', 'fariaz', 'empleado', 'flor@gmail.com', '$2b$10$0zSqC08vHbQHOBSW4AqAPusZDDW90qa28FALi6By9awMgF.sWtXFu', 1, '/uploads/user.png'),
+(3, 'Jorge', 'Cerutti', 'admin', 'jorge@gmail.com', '$2b$10$VZ4Ec.u0evdMntdLbYmPG.O9nMQMFk52jlmYNFH69XOEwJN4jXDrm', 1, '/avatars/1734732805538-profile1.png');
 
 --
 -- Índices para tablas volcadas
@@ -545,6 +591,14 @@ ALTER TABLE `tipoprestacion`
   ADD PRIMARY KEY (`idTipo`);
 
 --
+-- Indices de la tabla `turno`
+--
+ALTER TABLE `turno`
+  ADD PRIMARY KEY (`idTurno`),
+  ADD KEY `id_profesional` (`id_profesional`),
+  ADD KEY `id_paciente` (`id_paciente`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -567,7 +621,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
@@ -597,19 +651,19 @@ ALTER TABLE `medicamento`
 -- AUTO_INCREMENT de la tabla `obrasocial`
 --
 ALTER TABLE `obrasocial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `paciente`
 --
 ALTER TABLE `paciente`
-  MODIFY `idPaciente` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPaciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `plan`
 --
 ALTER TABLE `plan`
-  MODIFY `idPlan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idPlan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `profesion`
@@ -621,13 +675,13 @@ ALTER TABLE `profesion`
 -- AUTO_INCREMENT de la tabla `profesional`
 --
 ALTER TABLE `profesional`
-  MODIFY `idProfesional` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idProfesional` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `refeps`
 --
 ALTER TABLE `refeps`
-  MODIFY `idRefeps` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idRefeps` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tipoprestacion`
@@ -636,10 +690,16 @@ ALTER TABLE `tipoprestacion`
   MODIFY `idTipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT de la tabla `turno`
+--
+ALTER TABLE `turno`
+  MODIFY `idTurno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
@@ -685,6 +745,13 @@ ALTER TABLE `plan`
 ALTER TABLE `profesional`
   ADD CONSTRAINT `profesional_ibfk_1` FOREIGN KEY (`id_profesion`) REFERENCES `profesion` (`idProfesion`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `profesional_ibfk_2` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`idEspecialidad`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `turno`
+--
+ALTER TABLE `turno`
+  ADD CONSTRAINT `turno_ibfk_1` FOREIGN KEY (`id_profesional`) REFERENCES `profesional` (`idProfesional`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `turno_ibfk_2` FOREIGN KEY (`id_paciente`) REFERENCES `paciente` (`idPaciente`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

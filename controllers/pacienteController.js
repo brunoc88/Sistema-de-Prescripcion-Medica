@@ -1,7 +1,13 @@
 const Paciente = require('../models/paciente');
 const Plan = require('../models/plan');
 const Obra = require('../models/obraSocial');
+const Turno = require('../models/turno');
+const Profesional = require('../models/profesional');
+const Profesion = require('../models/profesion');
+const Especialidad = require('../models/especialidad');
+
 const { Op} = require('sequelize');
+
 
 
 //listar pacientes en el index
@@ -279,6 +285,50 @@ exports.reactivarPaciente = async (req, res) => {
         await Paciente.update({ estado: true }, { where: { idPaciente: id } });
         req.session.message = `Paciente: ${buscarPaciente.nombre + ' ' + buscarPaciente.apellido} Activado con exito!`;
         return res.status(200).redirect('/paciente/index');
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+
+// GET Historial de turnos del paciente
+exports.historialTurnos = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        const paciente = await Paciente.findByPk(id);
+        //busco si tiene turnos
+        const turnos = await Turno.findAll({where:{id_paciente: id},
+            include: [{
+                model: Profesional,
+                attributes: ['nombre','apellido'],
+                include:[
+                    {model: Profesion},{model:Especialidad} 
+                ]
+            }],
+            order: [['fecha', 'DESC']] // Ordenar por 'fecha' en orden descendente
+        });
+
+        //por si hay error
+        const pacientes = await Paciente.findAll({
+            include:[{
+                model: Plan,
+                include:[{
+                    model: Obra
+                }]
+            }]
+        });
+        if (!turnos || turnos.length === 0) {
+            return res.render('paciente/index', {
+                errorMessage: 'El paciente no tiene turnos',
+                pacientes
+            });
+        }
+        
+        //return res.status(200).json(turnos);
+        return res.status(200).render('paciente/turnos',{
+            turnos,
+            paciente
+        });
+
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }

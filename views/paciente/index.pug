@@ -50,6 +50,10 @@ block content
                                 button(type="submit", class="btn btn-primary mx-2") 
                                     i(class="fas fa-edit")
                                     |Editar
+                            form(action=`/paciente/turnos/${p.idPaciente}`, method="GET")
+                                button(type="submit", class="btn btn-primary mx-2") 
+                                    |Turnos 
+                                    i(class="fas fa-history")
                             if p.estado == 1 
                                 form(action=`/paciente/baja/${p.idPaciente}?_method=PATCH`, method="POST")
                                     button(type="submit", class="btn btn-danger mx-2" id="btn") Desactivar 
