@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const tipoPrestacion = require('../models/tipoPrestaciones');
 
 const Prestacion = sequelize.define(
     'Prestacion',{
@@ -7,10 +8,6 @@ const Prestacion = sequelize.define(
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
-            allowNull: false
-        },
-        nombre:{
-            type: DataTypes.STRING,
             allowNull: false
         },
         lado:{
@@ -24,15 +21,20 @@ const Prestacion = sequelize.define(
         justificacion:{
             type: DataTypes.STRING,
             allowNull: false
-        },
-        estado:{
-            type: DataTypes.BOOLEAN,
-            defaultValue: true
         }
     },{
         freezeTableName: true,
         timestamps: false
     }
 )
+
+tipoPrestacion.hasMany(Prestacion, {
+    foreignKey: 'id_tipo_prestacion',
+    sourceKey: 'idTipo'
+});
+Prestacion.belongsTo(tipoPrestacion, {
+    foreignKey: 'id_tipo_prestacion',
+    targetKey: 'idTipo'
+});
 
 module.exports = Prestacion;
