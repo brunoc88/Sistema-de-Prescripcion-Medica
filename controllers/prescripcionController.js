@@ -34,16 +34,16 @@ exports.vistaRecetaMedicamentos = async (req, res) => {
             where: { idPaciente: turno.id_paciente },
             include: [{
                 model: Plan,
-                include:[{
+                include: [{
                     model: ObraSocial
                 }
                 ]
             }
             ]
         })
-        
-        const medico = await Profesional.findOne({where:{idProfesional:turno.id_profesional}});
-        return res.status(200).render('prescripcion/altaMedicacion',{medicamentos, paciente, medico, turno});
+
+        const medico = await Profesional.findOne({ where: { idProfesional: turno.id_profesional } });
+        return res.status(200).render('prescripcion/altaMedicacion', { medicamentos, paciente, medico, turno });
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error);
     }
@@ -56,33 +56,41 @@ exports.altaPrescripcionMedicamentos = async (req, res) => {
         const fecha = new Date();
 
         // Crear la prescripción
-        const pre = {
+        const prescripcion = {
             diagnostico: data.diagnostico,
             fecha: fecha,
             fechaVigencia: data.fechaVigencia,
             id_turno: data.id_turno,
         };
 
-        // Guardar la prescripción y obtener la instancia creada
-        const nuevaPrescripcion = await Prescripcion.create(pre);
+        // Insertar la prescripción
+        const nuevaPrescripcion = await Prescripcion.create(prescripcion);
 
-        // Obtener el ID de la prescripción recién creada
-        const idPrescripcion = nuevaPrescripcion.id_prescripcion; // Asumiendo que la columna es 'id_prescripcion'
+        // Asegúrate de que `medicamentos` sea siempre un arreglo, incluso si solo hay un medicamento
+        const medicamentos = Array.isArray(data['medicamentos[][id_medicamento]'])
+            ? data['medicamentos[][id_medicamento]']
+            : [data['medicamentos[][id_medicamento]']];
 
-        // Crear la relación con medicamentos
-        const preMe = {
-            nombreComercial: data.nombreComercial,
-            dosis: data.dosis,
-            administracion: data.administracion,
-            idMedicamento: data.idMedicamento,
-            id_prescripcion: idPrescripcion, // Utilizar el ID recién creado
-        };
-
-        // Guardar la relación en la tabla MedicamentoPrescripcion
-        await MedicamentoPrescripcion.create(preMe);
+        // Iterar sobre los medicamentos y crear las relaciones
+        if (Array.isArray(medicamentos)) {
+            for (let i = 0; i < medicamentos.length; i++) {
+                const medicamento = {
+                    id_medicamento: medicamentos[i],
+                    nombreComercial: data['medicamentos[][nombreComercial]'][i] || null,
+                    dosis: data['medicamentos[][dosis]'][i],
+                    administracion: data['medicamentos[][administracion]'][i],
+                    id_prescripcion: nuevaPrescripcion.idPrescripcion
+                };
+        
+                // Guardar el medicamento en la base de datos
+                await MedicamentoPrescripcion.create(medicamento);
+            }
+        }
 
         return res.status(200).json('Prescripción creada con éxito!');
     } catch (error) {
-        return res.status(500).json('Hubo un error: ' + error);
+        console.error(error);
+        return res.status(500).json('Hubo un error: ' + error.message);
     }
 };
+
