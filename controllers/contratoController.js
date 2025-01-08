@@ -9,7 +9,7 @@ const PDFDocument = require('pdfkit');//necesario para pdf
 //GET vista index de Contrato
 exports.vistaIndexContrato = async (req, res) => {
     try {
-        //Listo los contratos tanto activos como inactivos
+        //Listo los contratos 
 
         const contratos = await Contrato.findAll({
             include: {

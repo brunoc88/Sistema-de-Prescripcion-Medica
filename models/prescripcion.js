@@ -29,7 +29,7 @@ const Prescripcion = sequelize.define(
     }
 )
 
-Turno.hasOne(Prescripcion,{
+Turno.hasMany(Prescripcion,{
     foreignKey: 'id_turno',
     sourceKey: 'idTurno'
 })
@@ -39,16 +39,14 @@ Prescripcion.belongsTo(Turno,{
     targetKey: 'idTurno'
 })
 
-Prescripcion.belongsToMany(Prestacion,{
-    through: 'prescripcionPrestacion',
-    foreignKey: 'id_prescripcion'
+Prescripcion.hasMany(Prestacion,{
+    foreignKey: 'id_prescripcion',
+    sourceKey: 'idPrescripcion'
 })
 
-Prestacion.belongsToMany(Prescripcion,{
-    through: 'prescripcionPrestacion',
-    foreignKey: 'id_prestacion'
+Prestacion.belongsTo(Prescripcion,{
+    foreignKey: 'id_prescripcion',
+    targetKey: 'idPrescripcion'
 })
-
-
 
 module.exports = Prescripcion;

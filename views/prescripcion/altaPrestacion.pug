@@ -1,7 +1,6 @@
-extends ../layout 
+extends ../layout2
 
 block content 
-
     // Mensajes de notificación
     if message
         #notification.alert.alert-success
@@ -13,26 +12,59 @@ block content
     div.container
         div.row.justify-content-center
             div.col-md-6.col-12
-                h1.text-center.mb-4 Alta de Prestacion
-                form(action="/prestaciones/alta" method="post" class="needs-validation")
-                    div(class="mb-3")
-                        // Se usa el operador ternario para asignar el valor del campo a partir de FormData. Si no hay datos, se deja vacío ('').
-                        label(for="nombre" class="form-label") Nombre:
-                        input(type="text" name="nombre" class="form-control" required value=(FormData ? FormData.nombre : ''))
+                h1.text-center.mb-4 Prescripcion de Prestación
+                form(action="/prescripcion/altaPrestaciones" method="post" class="needs-validation")
+                    input(type="hidden" name="id_turno" value=`${turno.idTurno}`)
 
                     div(class="mb-3")
-                        label(for="lado" class="form-label") Lado:
-                        input(type="text" name="lado" class="form-control" value=(FormData ? FormData.lado : ''))
+                        label(for="paciente" class="form-label") Paciente: 
+                        input(type="text" value=`${paciente.nombre + ' ' + paciente.apellido}` class="form-control" readonly) 
 
                     div(class="mb-3")
-                        label(for="indicacion" class="form-label") Indicacion:
-                        textarea(name="indicacion" class="form-control" required rows="4" placeholder="Escriba las indicaciónes aquí...")= (FormData ? FormData.indicacion : '')
+                        label(for="obra" class="form-label") Obra Social / Plan: 
+                        input(type="text" value=`${paciente.Plan.ObraSocial.nombre + ' / ' + paciente.Plan.nombre}` class="form-control" readonly) 
+
+                    // Contenedor de prestaciones
+                    div#prestaciones-container
+                        div.prestacion-item
+                            div(class="mb-3")
+                                label(for="prestacion" class="form-label") Nombre:
+                                select(name="prestaciones[][id_tipo_prestacion]" class="form-control")
+                                    if tipos && tipos.length > 0
+                                        each tipo in tipos
+                                            option(value=tipo.idTipo) #{tipo.nombre} 
+                                    else
+                                        option(value="" disabled) No hay prestaciones disponibles
+
+                            div(class="mb-3")
+                                label(for="lado" class="form-label") Lado:
+                                select(name="prestaciones[][lado]" class="form-control")
+                                    option(value="No aplica") No aplica
+                                    option(value="Izquierdo") Izquierdo
+                                    option(value="Derecho") Derecho
+
+                            div(class="mb-3")
+                                label(for="indicacion" class="form-label") Indicación:
+                                textarea(name="prestaciones[][indicacion]" class="form-control" rows="4" required placeholder="Escriba las indicaciones aquí...")
+
+                            div(class="mb-3")
+                                label(for="justificacion" class="form-label") Justificación:
+                                textarea(name="prestaciones[][justificacion]" class="form-control" rows="4" required placeholder="Escriba la justificación aquí...")
+
+                    // Botón para agregar más prestaciones
+                    div(class="d-flex justify-content-end mb-3")
+                        button(type="button" class="btn btn-success" id="add-prestacion") Agregar Prestación
 
                     div(class="mb-3")
-                        label(for="justificacion" class="form-label") Justificación:
-                        textarea(name="justificacion" class="form-control" required rows="4" placeholder="Escriba la justificación aquí...")= (FormData ? FormData.justificacion : '')
+                        label(for="diagnostico" class="form-label") Diagnóstico:
+                        textarea(name="diagnostico" class="form-control" required rows="4" placeholder="Escriba el diagnóstico aquí...")
 
+                    div(class="mb-3")
+                        label(for='vigencia' class="form-label fw-bold") Vigencia:
+                        input#fecha.form-control(type="date" name="fechaVigencia" min=`${new Date().toISOString().split('T')[0]}`)
 
                     div(class="d-grid gap-2")
                         button(type="submit" class="btn btn-primary") Guardar
-                        a(href="/prestaciones/index" class="btn btn-secondary") Volver
+                        a(href="/turnos/misTurnos" class="btn btn-secondary") Volver
+
+    script(src='/js/recetarioPrestaciones.js')

@@ -12,7 +12,7 @@ block content
           th Apellido
           th Obra Social 
           th Plan
-          th Acciones
+          th Recetar
       tbody
         if turnos && turnos.length > 0
           each t in turnos
@@ -24,9 +24,19 @@ block content
               td #{t.Paciente.Plan.nombre}   
               td
                 div(class="btn-group")
-                  a(href=`/prescripcion/recetaMedicamentos?idTurno=${t.idTurno}`, class="btn btn-success mx-2")|Atender 
-                   i(class="fas fa-edit")
-                  
+                  a(href=`/prescripcion/recetaMedicamentos?idTurno=${t.idTurno}`, class="btn btn-secondary mx-2")
+                    | Medicamentos 
+                    i(class="fas fa-edit")
+
+                  a(href=`/prescripcion/recetaPrestaciones?idTurno=${t.idTurno}`, class="btn btn-warning mx-2")
+                    | Prestaciones 
+                    i(class="fas fa-edit")
+
+                  if t.estado == 1 
+                    form(action=`/paciente/baja/${t.Paciente.idPaciente}?_method=PATCH`, method="POST", class="d-inline")
+                      button(type="submit", class="btn btn-danger mx-2" id="btn")
+                        | Desactivar 
+                        i(class="fas fa-toggle-off")
         else
           tr
             td(colspan="6", class="text-center") No hay turnos registrados

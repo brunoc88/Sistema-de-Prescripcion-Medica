@@ -33,7 +33,7 @@ block content
                             select(name="medicamentos[][id_medicamento]" class="form-control")
                                 if medicamentos && medicamentos.length > 0
                                     each medicamento in medicamentos
-                                        option(value=medicamento.idMedicamento) #{medicamento.nombre} - #{medicamento.concentracion} - #{medicamento.Forma.nombre}
+                                        option(value=medicamento.idMedicamento) #{medicamento.nombre} - #{medicamento.concentracion} - #{medicamento.Forma.nombre} - #{medicamento.cantidad}
                                 else
                                     option(value="" disabled) No hay medicamentos disponibles
 

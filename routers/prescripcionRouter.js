@@ -8,4 +8,11 @@ routerPrescripcion.get('/recetaMedicamentos',prescripcionController.vistaRecetaM
 // POST alta Prescripcion medicamentos
 routerPrescripcion.post('/altaMedicacion',prescripcionController.altaPrescripcionMedicamentos);
 
+// GET vista Prestaciones
+routerPrescripcion.get('/recetaPrestaciones',prescripcionController.vistaPrescripcionPrestaciones);
+
+// POST alta Prescripcion Prestacion
+routerPrescripcion.post('/altaPrestaciones',prescripcionController.altaPrescripcionPrestaciones);
+
+
 module.exports = routerPrescripcion;
