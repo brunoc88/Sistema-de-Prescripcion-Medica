@@ -88,8 +88,8 @@ exports.altaPrescripcionMedicamentos = async (req, res) => {
                 await MedicamentoPrescripcion.create(medicamento);
             }
         }
-
-        return res.status(200).json('Prescripción creada con éxito!');
+        req.session.message = 'Prescripcion Medica creada con exito!';
+        return res.status(200).redirect('/turnos/misTurnos');
     } catch (error) {
         console.error(error);
         return res.status(500).json('Hubo un error: ' + error.message);
@@ -161,8 +161,8 @@ exports.altaPrescripcionPrestaciones = async(req,res)=>{
                 }
             }
             
-
-        return res.status(200).json('Prescripción creada con éxito!');
+        req.session.message = 'Prescripcion Prestacion creada con exito!';
+        return res.status(200).redirect('/turnos/misTurnos');
     } catch (error) {
         console.error(error);
         return res.status(500).json('Hubo un error: ' + error.message);

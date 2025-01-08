@@ -2,6 +2,14 @@ extends ../layout2
 
 block content 
 
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
     h1(class='text-center') TURNOS DE HOY!
 
     table#myTable.table.table-striped
