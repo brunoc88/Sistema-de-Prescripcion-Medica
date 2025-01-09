@@ -14,5 +14,10 @@ routerPrescripcion.get('/recetaPrestaciones',prescripcionController.vistaPrescri
 // POST alta Prescripcion Prestacion
 routerPrescripcion.post('/altaPrestaciones',prescripcionController.altaPrescripcionPrestaciones);
 
+// GET obtener todas las prescripciones realizada en la fecha del turno
+routerPrescripcion.get('/verPrescripciones/:id',prescripcionController.verPrescripciones);
+
+// PATCH bajar turno de profesional
+routerPrescripcion.patch('/bajarTurno/:id',prescripcionController.bajarTurno);
 
 module.exports = routerPrescripcion;

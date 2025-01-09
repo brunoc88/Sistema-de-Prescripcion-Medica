@@ -21,6 +21,7 @@ block content
           th Obra Social 
           th Plan
           th Recetar
+          th acciones
       tbody
         if turnos && turnos.length > 0
           each t in turnos
@@ -32,18 +33,27 @@ block content
               td #{t.Paciente.Plan.nombre}   
               td
                 div(class="btn-group")
-                  a(href=`/prescripcion/recetaMedicamentos?idTurno=${t.idTurno}`, class="btn btn-secondary mx-2")
-                    | Medicamentos 
-                    i(class="fas fa-edit")
-
-                  a(href=`/prescripcion/recetaPrestaciones?idTurno=${t.idTurno}`, class="btn btn-warning mx-2")
-                    | Prestaciones 
-                    i(class="fas fa-edit")
-
+                  form(action=`/prescripcion/verPrescripciones/${t.idTurno}`, method="GET", class="d-inline")
+                      button(type="submit", class="btn btn-dark mx-2" id="btn")
+                        | Prescripciones
+                        
                   if t.estado == 1 
-                    form(action=`/paciente/baja/${t.Paciente.idPaciente}?_method=PATCH`, method="POST", class="d-inline")
+                    form(action=`/prescripcion/bajarTurno/${t.idTurno}?_method=PATCH`, method="POST", class="d-inline")
                       button(type="submit", class="btn btn-danger mx-2" id="btn")
-                        | Desactivar 
+                        | Atender! 
+                        i(class="fas fa-toggle-off")
+                  
+
+                    a(href=`/prescripcion/recetaMedicamentos?idTurno=${t.idTurno}`, class="btn btn-secondary mx-2")
+                      | Medicamentos 
+                      i(class="fas fa-edit")
+
+                    a(href=`/prescripcion/recetaPrestaciones?idTurno=${t.idTurno}`, class="btn btn-warning mx-2")
+                      | Prestaciones 
+                      i(class="fas fa-edit")
+                  else 
+                    button(type="submit", class="btn btn-success mx-2" id="btn")
+                        | Atendido! 
                         i(class="fas fa-toggle-off")
         else
           tr

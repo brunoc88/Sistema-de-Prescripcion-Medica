@@ -12,6 +12,7 @@ const MedicamentoPrescripcion = require('../models/medicamentoPrescripcion');
 const TipoPrestacion = require('../models/tipoPrestaciones');
 const Prestacion = require('../models/prestacion');
 
+
 // GET vista Receta de Medicamentos
 exports.vistaRecetaMedicamentos = async (req, res) => {
     try {
@@ -83,7 +84,7 @@ exports.altaPrescripcionMedicamentos = async (req, res) => {
                     administracion: data['medicamentos[][administracion]'][i],
                     id_prescripcion: nuevaPrescripcion.idPrescripcion
                 };
-        
+
                 // Guardar el medicamento en la base de datos
                 await MedicamentoPrescripcion.create(medicamento);
             }
@@ -97,7 +98,7 @@ exports.altaPrescripcionMedicamentos = async (req, res) => {
 };
 
 // GET vista Prestaciones
-exports.vistaPrescripcionPrestaciones = async (req,res) =>{
+exports.vistaPrescripcionPrestaciones = async (req, res) => {
     try {
 
         //obtengo los datos del medico y paciente por medio del turno
@@ -116,16 +117,16 @@ exports.vistaPrescripcionPrestaciones = async (req,res) =>{
             ]
         })
 
-        const tipos = await TipoPrestacion.findAll({where:{estado:true}});
+        const tipos = await TipoPrestacion.findAll({ where: { estado: true } });
 
-        return res.status(200).render('prescripcion/altaPrestacion',{tipos, turno, paciente})
+        return res.status(200).render('prescripcion/altaPrestacion', { tipos, turno, paciente })
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 }
 
 // POST alta Prescripcion Prestacion
-exports.altaPrescripcionPrestaciones = async(req,res)=>{
+exports.altaPrescripcionPrestaciones = async (req, res) => {
     try {
         const data = req.body;
         const fecha = new Date();
@@ -141,30 +142,85 @@ exports.altaPrescripcionPrestaciones = async(req,res)=>{
         // Insertar la prescripción
         const nuevaPrescripcion = await Prescripcion.create(prescripcion);
 
-        
+
         const prestaciones = Array.isArray(data['prestaciones[][id_tipo_prestacion]'])
             ? data['prestaciones[][id_tipo_prestacion]']
             : [data['prestaciones[][id_tipo_prestacion]']];
 
-            if (Array.isArray(prestaciones)) {
-                for (let i = 0; i < prestaciones.length; i++) {
-                    const prestacion = {
-                        id_tipo_prestacion: prestaciones[i], // Correcto, mapeando al campo que recibes
-                        lado: data['prestaciones[][lado]'][i],
-                        indicacion: data['prestaciones[][indicacion]'][i],
-                        justificacion: data['prestaciones[][justificacion]'][i],
-                        id_prescripcion: nuevaPrescripcion.idPrescripcion
-                    };
-                    
-                    // Guardar la prestación en la base de datos
-                    await Prestacion.create(prestacion);
-                }
+        if (Array.isArray(prestaciones)) {
+            for (let i = 0; i < prestaciones.length; i++) {
+                const prestacion = {
+                    id_tipo_prestacion: prestaciones[i], // Correcto, mapeando al campo que recibes
+                    lado: data['prestaciones[][lado]'][i],
+                    indicacion: data['prestaciones[][indicacion]'][i],
+                    justificacion: data['prestaciones[][justificacion]'][i],
+                    id_prescripcion: nuevaPrescripcion.idPrescripcion
+                };
+
+                // Guardar la prestación en la base de datos
+                await Prestacion.create(prestacion);
             }
-            
+        }
+
         req.session.message = 'Prescripcion Prestacion creada con exito!';
         return res.status(200).redirect('/turnos/misTurnos');
     } catch (error) {
         console.error(error);
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+
+// GET obtener todas las prescripciones realizada en la fecha del turno
+exports.verPrescripciones = async (req, res) => {
+    try {
+        const id = req.params.id; //id del turno
+
+       
+        const pre = await Prescripcion.findAll({
+            where: { id_turno: id },  // Asegura que solo se obtienen las prescripciones del turno especificado
+            include: [
+                {
+                    model: MedicamentoPrescripcion,
+                    include: [
+                        {
+                            model: Medicamento,
+                            include: [
+                                { model: Forma },
+                                { model: Familia },
+                                { model: Categoria }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    model: Prestacion,
+                    include: { model: TipoPrestacion }
+                }
+            ]
+        });
+
+
+        if(!pre || pre.length == 0){
+            req.session.errorMessage = 'No cuenta con una prescripcion!';
+            return res.redirect('/turnos/misTurnos');
+        }
+        //res.json(pre);
+        return res.status(200).render('empleado/prescripciones', { prescripciones: pre, id_turno:id })
+
+    } catch (error) {
+        return res.status(500).json('Hubo un error: ' + error.message);
+    }
+}
+
+// PATCH bajar turno de profesional
+exports.bajarTurno = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        
+        await Turno.update({estado:false},{where:{idTurno:id}});
+        req.session.message = 'Turno desactivado!';
+        return res.status(200).redirect('/turnos/misTurnos');
+    } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
 }

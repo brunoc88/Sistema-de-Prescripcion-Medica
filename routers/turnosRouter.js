@@ -9,8 +9,9 @@ turnoRouter.get('/crear/:id',turnosController.vistaProfesionalesDisponibles);
 turnoRouter.get('/validacion/:id',turnosController.vistaTurno);
 // POST Alta de turno
 turnoRouter.post('/alta',turnosController.altaTurno);
-// PATCH bajar turno
+// PATCH bajar turno ADMINISTRATIVO
 turnoRouter.patch('/baja/:id',turnosController.bajarTurno);
 // GET turnos actuales del Profesional
 turnoRouter.get('/misTurnos',verifyToken, verifyRole("empleado"),turnosController.turnosEmpleado);
+
 module.exports = turnoRouter;

@@ -1,0 +1,75 @@
+doctype html
+html(lang="es")
+  head
+    title Prescripciones
+    meta(charset="utf-8")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .prescripcion {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+      .prestacion {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+      .medicamento {
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f1f1f1;
+      }
+      .no-info {
+        color: gray;
+      }
+
+  body
+    h1 Prescripciones del Turno #{id_turno}
+    each prescripcion in prescripciones
+      .prescripcion
+        h2 Diagnóstico: #{prescripcion.diagnostico}
+        p Fecha: #{prescripcion.fecha}
+        p Fecha de vigencia: #{prescripcion.fechaVigencia}
+
+        // Mostrar medicamentos si existen
+        if prescripcion.MedicamentoPrescripcions.length > 0
+          h3 Medicamentos Prescritos
+          each medicamento in prescripcion.MedicamentoPrescripcions
+            .medicamento
+              p Nombre Comercial: #{medicamento.nombreComercial}
+              p Dosis: #{medicamento.dosis}
+              p Administración: #{medicamento.administracion}
+              p Medicamento: #{medicamento.Medicamento.nombre}
+              p Forma: #{medicamento.Medicamento.Forma.nombre}
+              p Familia: #{medicamento.Medicamento.Familium.nombre}
+              p Categoría: #{medicamento.Medicamento.Categorium.nombre}
+        
+
+        // Mostrar prestaciones si existen
+        if prescripcion.Prestacions.length > 0
+          h3 Prestaciones
+          each prestacion in prescripcion.Prestacions
+            .prestacion
+              p Lado: #{prestacion.lado}
+              p Indicaciones: #{prestacion.indicacion}
+              p Justificación: #{prestacion.justificacion}
+              p Tipo de prestación: #{prestacion.TipoPrestacion.nombre}
+        
+         
+    a(href="/turnos/misTurnos") 
+        button Volver
+
+        
+    a(href="/prescripcion/descargar/#{id_turno}", download="prescripciones_#{id_turno}.json") 
+        button Descargar
+

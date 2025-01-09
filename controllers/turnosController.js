@@ -145,7 +145,7 @@ exports.altaTurno = async(req,res)=>{
     }
 }
 
-// PATCH bajar turno
+// PATCH bajar turno ADMINISTRATIVO
 exports.bajarTurno = async(req,res)=>{
     try {
         const id = req.params.id;
@@ -167,7 +167,7 @@ exports.turnosEmpleado = async(req,res)=>{
 
         //guardo fecha actual para comparar
         const hoy = new Date();
-        const turnos = await Turno.findAll({where:{id_profesional:profesional.idProfesional,fecha:hoy,estado:true},
+        const turnos = await Turno.findAll({where:{id_profesional:profesional.idProfesional,fecha:hoy},
             include:[
                 {model:Paciente,
                  include:[{
@@ -178,7 +178,6 @@ exports.turnosEmpleado = async(req,res)=>{
                  }]    
             }]
         });
-        
         
         return res.status(200).render('empleado/turnos',{
             turnos

@@ -300,45 +300,65 @@ exports.reactivarPaciente = async (req, res) => {
 }
 
 // GET Historial de turnos del paciente
-exports.historialTurnos = async(req,res)=>{
+exports.historialTurnos = async (req, res) => {
     try {
         const id = req.params.id;
+
+        // Buscar paciente
         const paciente = await Paciente.findByPk(id);
-        //busco si tiene turnos
-        const turnos = await Turno.findAll({where:{id_paciente: id},
-            include: [{
-                model: Profesional,
-                attributes: ['nombre','apellido'],
-                include:[
-                    {model: Profesion},{model:Especialidad} 
-                ]
-            }],
-            order: [['fecha', 'DESC']] // Ordenar por 'fecha' en orden descendente
+        if (!paciente) {
+            return res.status(404).json({ error: 'Paciente no encontrado.' });
+        }
+
+        // Fecha actual sin horas
+        const fechaActual = new Date();
+        const fechaActualSolo = new Date(fechaActual.toISOString().split('T')[0]);
+
+        // Desactivar turnos vencidos 
+        await Turno.update(
+            { estado: false }, // Cambiar estado a false
+            { where: { id_paciente: id, fecha: { [Op.lt]: fechaActualSolo } } } // Solo turnos anteriores a la fecha actual
+        );
+
+        // Consultar todos los turnos actualizados
+        const turnos = await Turno.findAll({
+            where: { id_paciente: id },
+            include: [
+                {
+                    model: Profesional,
+                    attributes: ['nombre', 'apellido'],
+                    include: [
+                        { model: Profesion },
+                        { model: Especialidad }
+                    ]
+                }
+            ],
+            order: [['fecha', 'DESC']] // Ordenar por fecha descendente
         });
 
-        //por si hay error
+        // Consultar todos los pacientes (por si hay error)
         const pacientes = await Paciente.findAll({
-            include:[{
-                model: Plan,
-                include:[{
-                    model: Obra
-                }]
-            }]
+            include: [
+                {
+                    model: Plan,
+                    include: [{ model: Obra }]
+                }
+            ]
         });
+
         if (!turnos || turnos.length === 0) {
             return res.render('paciente/index', {
                 errorMessage: 'El paciente no tiene turnos',
                 pacientes
             });
         }
-        
-        //return res.status(200).json(turnos);
-        return res.status(200).render('paciente/turnos',{
+
+        // Renderizar la vista con los turnos y el paciente
+        return res.status(200).render('paciente/turnos', {
             turnos,
             paciente
         });
-
     } catch (error) {
         return res.status(500).json('Hubo un error: ' + error.message);
     }
-}
+};
