@@ -35,6 +35,11 @@ html(lang="es")
 
   body
     h1 Prescripciones del Turno #{id_turno}
+    h2 Paciente: #{paciente.nombre + ' ' + paciente.apellido} Dni: #{paciente.dni} ObraSocial/Plan: #{paciente.Plan.ObraSocial.nombre + '/' + paciente.Plan.nombre}
+    h2 Profesional: #{profesional.nombre + ' ' + profesional.apellido}
+    h3 Profesion: #{profesional.Profesion.nombre}
+    h3 Especialidad: #{profesional.Especialidad.nombre}
+    h4 Matricula: #{profesional.matricula}
     each prescripcion in prescripciones
       .prescripcion
         h2 Diagnóstico: #{prescripcion.diagnostico}

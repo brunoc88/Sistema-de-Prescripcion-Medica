@@ -13,5 +13,7 @@ turnoRouter.post('/alta',turnosController.altaTurno);
 turnoRouter.patch('/baja/:id',turnosController.bajarTurno);
 // GET turnos actuales del Profesional
 turnoRouter.get('/misTurnos',verifyToken, verifyRole("empleado"),turnosController.turnosEmpleado);
+// GET listado de historial pacientes
+turnoRouter.get('/misPacientes',verifyToken, verifyRole("empleado"),turnosController.vistaPacientes);
 
 module.exports = turnoRouter;

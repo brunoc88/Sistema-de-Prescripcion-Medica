@@ -1,0 +1,41 @@
+extends ../layout2
+
+block content
+
+    if message
+        #notification.alert.alert-success
+            | #{message}
+
+    if errorMessage
+        #notification.alert.alert-danger
+            | #{errorMessage}
+
+    h2.text-center Listado de Pacientes
+
+    table#myTable.table.table-striped
+        thead
+            tr
+                th ID
+                th Nombre
+                th Apellido
+                th Obra Social 
+                th Plan
+                th acciones
+        tbody
+            if pacientes && pacientes.length > 0
+                each p in pacientes
+                    tr
+                        td #{p.Paciente.idPaciente}
+                        td #{p.Paciente.nombre}
+                        td #{p.Paciente.apellido}
+                        td #{p.Paciente.Plan.ObraSocial.nombre}
+                        td #{p.Paciente.Plan.nombre}   
+                        td 
+                            div(class="btn-group")
+                                form(action=``, method="GET" class="d-inline")
+                                    button(type="submit" class="btn btn-success mx-2" id="btn")
+                                        i(class="fas fa-eye me-2")
+                                        | Prescripciones
+            else 
+                tr
+                    td(colspan="6", class="text-center") No hay pacientes registrados 

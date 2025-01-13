@@ -34,7 +34,8 @@ block content
               td
                 div(class="btn-group")
                   form(action=`/prescripcion/verPrescripciones/${t.idTurno}`, method="GET", class="d-inline")
-                      button(type="submit", class="btn btn-dark mx-2" id="btn")
+                      button(type="submit", class="btn btn-success mx-2" id="btn")
+                        i(class="fas fa-eye me-2")
                         | Prescripciones
                         
                   if t.estado == 1 
