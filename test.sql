@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-01-2025 a las 16:04:41
+-- Tiempo de generación: 08-02-2025 a las 01:18:47
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -234,10 +234,12 @@ CREATE TABLE `medicamentoprescripcion` (
 --
 
 INSERT INTO `medicamentoprescripcion` (`idMedicamentoPres`, `nombreComercial`, `dosis`, `administracion`, `id_medicamento`, `id_prescripcion`) VALUES
-(1, 'x', '1', '1', 1, 1),
-(2, 'x', '1', '1', 1, 2),
-(3, 'xxxx', '1', '1', 4, 3),
-(4, NULL, 'q', 'q', 20, 3);
+(8, 'DOLOR CHAU', '2 C/DIA', 'ORAL', 1, 10),
+(9, 'vipa', '1 vez al dia', 'nebulizacion', 9, 10),
+(10, 'x', 'x', 'x', 13, 12),
+(11, 'x', 'x', 'x', 1, 14),
+(12, 'D', 'x', 'x', 1, 15),
+(13, 'a', 'a', 'a', 5, 16);
 
 -- --------------------------------------------------------
 
@@ -359,12 +361,13 @@ CREATE TABLE `prescripcion` (
 --
 
 INSERT INTO `prescripcion` (`idPrescripcion`, `diagnostico`, `fecha`, `fechaVigencia`, `id_turno`) VALUES
-(1, '1', '2025-01-08', '2025-01-09', 1),
-(2, '1', '2025-01-08', '2025-01-09', 1),
-(3, '11', '2025-01-08', '2025-01-09', 1),
-(4, 'a', '2025-01-08', '0000-00-00', 1),
-(5, 'a', '2025-01-08', '0000-00-00', 1),
-(6, 'a', '2025-01-08', '0000-00-00', 1);
+(10, 'DOLORES INTENSOS', '2025-01-09', '2025-01-10', 1),
+(11, 'reservado', '2025-01-09', '2025-01-16', 1),
+(12, 'x', '2025-01-09', '2025-01-30', 1),
+(13, 'x', '2025-01-09', '0000-00-00', 5),
+(14, 'x', '2025-01-09', '0000-00-00', 5),
+(15, 'x', '2025-01-13', '2025-01-14', 6),
+(16, 'aa', '2025-01-13', '2025-01-14', 6);
 
 -- --------------------------------------------------------
 
@@ -386,9 +389,8 @@ CREATE TABLE `prestacion` (
 --
 
 INSERT INTO `prestacion` (`idPrestacion`, `lado`, `indicacion`, `justificacion`, `id_tipo_prestacion`, `id_prescripcion`) VALUES
-(1, 'N', 'a', 'a', 1, 5),
-(2, 'Izquierdo', 'a', 'a', 3, 6),
-(3, 'Derecho', 'x', 'x', 10, 6);
+(4, 'I', 's', 's', 1, 11),
+(5, 'N', 'x', 'x', 1, 13);
 
 -- --------------------------------------------------------
 
@@ -528,7 +530,9 @@ CREATE TABLE `turno` (
 --
 
 INSERT INTO `turno` (`idTurno`, `fecha`, `estado`, `id_profesional`, `id_paciente`) VALUES
-(1, '2025-01-08', 1, 1, 1);
+(1, '2025-01-09', 0, 1, 1),
+(5, '2025-01-09', 0, 1, 2),
+(6, '2025-01-13', 1, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -751,7 +755,7 @@ ALTER TABLE `medicamento`
 -- AUTO_INCREMENT de la tabla `medicamentoprescripcion`
 --
 ALTER TABLE `medicamentoprescripcion`
-  MODIFY `idMedicamentoPres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idMedicamentoPres` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `obrasocial`
@@ -775,13 +779,13 @@ ALTER TABLE `plan`
 -- AUTO_INCREMENT de la tabla `prescripcion`
 --
 ALTER TABLE `prescripcion`
-  MODIFY `idPrescripcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idPrescripcion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `prestacion`
 --
 ALTER TABLE `prestacion`
-  MODIFY `idPrestacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idPrestacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `profesion`
@@ -811,7 +815,7 @@ ALTER TABLE `tipoprestacion`
 -- AUTO_INCREMENT de la tabla `turno`
 --
 ALTER TABLE `turno`
-  MODIFY `idTurno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idTurno` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
