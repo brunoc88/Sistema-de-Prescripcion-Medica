@@ -1,0 +1,41 @@
+cuando defines una relación de muchos a muchos entre dos modelos en Sequelize, como Profesional y Profesion (o Profesion y Especialidad), Sequelize automáticamente crea métodos como add<Modelo> y add<Modelo>es para gestionar esas relaciones.
+
+En tu caso:
+Si tienes un modelo Profesional y una relación de muchos a muchos con Profesion (y lo mismo con Especialidad), Sequelize generará estos métodos para agregar las relaciones:
+
+Si es una relación de uno a uno o uno a muchos:
+
+Usarías add<Modelo>, como addProfesion para agregar una Profesion a un Profesional.
+Si es una relación de muchos a muchos:
+
+Si agregas una sola Profesion a un Profesional, usarías el método addProfesion.
+Si agregas múltiples Profesiones, usarías addProfesions.
+
+express-session
+
+a traves de message pude mostrar los mensajes, ya que cuando el cliente visita el sitio
+automaticamente se genera una idsession que lo vincula al cliente mediante cookies
+las cuales van a mostrar la informacion de las acciones durante cada peticion.
+La informacion es guardada temporalmente en la memoria del navegador
+
+
+option(value=${obra.id} selected=(obrasSeleccionadas && obrasSeleccionadas.includes(String(obra.id)))) #{obra.nombre}
+
+
+Aquí se evalúa si la obra debe estar seleccionada o no. Si el array obrasSeleccionadas contiene el id de la obra actual (obra.id), la opción se marcará como selected. El valor de obra.id se convierte en una cadena usando String(obra.id) para asegurar que se compare correctamente (en caso de que obrasSeleccionadas contenga strings).
+
+DOCUMENTACION:
+
+https://expressjs.com/es/4x/api.html#res.download
+
+https://pugjs.org/api/getting-started.html
+
+https://sequelize.org/docs/v6/getting-started/
+
+https://www.npmjs.com/package/multer
+
+https://jwt.io/
+
+https://datatables.net/
+
+https://fontawesome.com/v6/search
